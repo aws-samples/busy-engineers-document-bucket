@@ -9,7 +9,8 @@ export class DocumentBucketStack extends cdk.Stack {
     // S3 Bucket
     new s3.Bucket(this, "DocumentBucket", {
       accessControl: s3.BucketAccessControl.PRIVATE,
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
     // DynamoDB Table
