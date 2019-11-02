@@ -1,3 +1,6 @@
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import cdk = require("@aws-cdk/core");
 import s3 = require("@aws-cdk/aws-s3");
 import ddb = require("@aws-cdk/aws-dynamodb");

@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import "source-map-support/register";
 import cdk = require("@aws-cdk/core");
 import { CMKStack } from "../lib/kms-cmk-stack";
