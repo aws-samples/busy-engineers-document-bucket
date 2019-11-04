@@ -4,6 +4,7 @@
 pretty:
 	prettier --no-config --write lib/**/*.ts
 	prettier --no-config --write bin/*.ts
+	prettier --no-config --write tsconfig.json
 
 clean:
 	find bin/ lib/ -name '*.js' -exec rm -v {} \;
