@@ -1,0 +1,3 @@
+{
+  "app": "npx ts-node bin/cloud9-generator.ts"
+}
