@@ -25,6 +25,6 @@ the stack as developers rather than classroom students.
     1. `cdk list`
 1. Deploy the required stacks using `cdk deploy`
     1. `cdk deploy BusyEngineersDocumentBucketStack` -- the stack containing the S3 bucket and DynamoDB table to store documents and GUID pointers.
-    1. `BusyEngineersWebsiteStack` -- the stack containing the CloudFront distribution and S3 bucket for hosting website frontend content.
+    1. `cdk deploy BusyEngineersWebsiteStack` -- the stack containing the CloudFront distribution and S3 bucket for hosting website frontend content.
         * Coming soon: Cognito configuration.
     1. `BusyEngineersFaytheCMKStack` and `BusyEngineersWalterCMKStack` -- the stacks for independent CMKs in multiple regions, for demonstrating multiple CMK use cases.
