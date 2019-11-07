@@ -17,5 +17,3 @@ cloud9:
 	cdk synth BusyEngineersCloud9Stack > ./document-bucket-cloud9-bootstrap.yaml
 	aws s3 cp ./document-bucket-cloud9-bootstrap.yaml s3://busy-engineers-cfn --acl public-read
 	rm ./document-bucket-cloud9-bootstrap.yaml
-
-	@echo "https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment"

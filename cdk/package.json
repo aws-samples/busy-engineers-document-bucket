@@ -27,6 +27,8 @@
     "@aws-cdk/aws-kms": "^1.15.0",
     "@aws-cdk/aws-s3": "^1.15.0",
     "@aws-cdk/core": "^1.15.0",
-    "source-map-support": "^0.5.16"
+    "@types/node": "^12.12.6",
+    "source-map-support": "^0.5.16",
+    "toml": "^3.0.0"
   }
 }
