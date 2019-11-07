@@ -1,17 +1,17 @@
 [config]
-"state_file" = "~/.busy_engineers_state.toml"
+state_file = "~/.busy_engineers_state.toml"
 
 [cloud9]
-"region" = "us-east-2"
-"launch_url" = "https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment"
+region = "us-east-2"
+launch_url = "https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment"
 
 [website]
-"region" = "us-east-2"
+region = "us-east-2"
 
 [faythe_cmk]
-"region" = "us-east-2"
-"alias" = "FaytheCMK"
+region = "us-east-2"
+alias = "FaytheCMK"
 
 [walter_cmk]
-"region" = "us-west-2"
-"alias" = "WalterCMK"
+region = "us-west-2"
+alias = "WalterCMK"
