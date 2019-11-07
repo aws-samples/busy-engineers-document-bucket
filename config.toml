@@ -1,4 +1,4 @@
-[config]
+[base]
 state_file = "~/.busy_engineers_state.toml"
 
 [cloud9]
