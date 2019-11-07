@@ -9,12 +9,12 @@ import { CMKStack } from "../lib/kms-cmk-stack";
 import { DocumentBucketStack } from "../lib/document-bucket-stack";
 import { WebsiteStack } from "../lib/website-stack";
 import fs = require("fs");
-import toml = require("toml");
+import toml = require("@iarna/toml");
 
 // Load our configuration file to bootstrap CFN configuration.
-const config = toml.parse(fs.readFileSync("../config.toml", "utf8"));
+const config: any = toml.parse(fs.readFileSync("../config.toml", "utf8"));
 
-const STATE_FILE = config.state_file;
+const STATE_FILE = config.base.state_file;
 const WEBSITE_REGION = config.website.region;
 const FAYTHE_CMK_REGION = config.faythe_cmk.region;
 const FAYTHE_CMK_ALIAS = config.faythe_cmk.alias;
