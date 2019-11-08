@@ -5,10 +5,40 @@ import cdk = require("@aws-cdk/core");
 import s3 = require("@aws-cdk/aws-s3");
 import cf = require("@aws-cdk/aws-cloudfront");
 import iam = require("@aws-cdk/aws-iam");
+import cognito = require("@aws-cdk/aws-cognito");
 
 export class WebsiteStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(
+    scope: cdk.Construct,
+    id: string,
+    props: cdk.StackProps,
+    config: any // FIXME Nail down typing here
+  ) {
     super(scope, id, props);
+
+    // Set up a Cognito User Pool and Identity Pool to set up authenticated website
+    // access and IAM role credential distribution.
+    const userPool = new cognito.UserPool(this, config.user_pool_name, {
+      signInType: cognito.SignInType.USERNAME,
+      userPoolName: config.user_pool_name
+    });
+
+    const identityPool = new cognito.CfnIdentityPool(
+      this,
+      config.identity_pool_name,
+      {
+        allowUnauthenticatedIdentities: false,
+        identityPoolName: config.identity_pool_name
+      }
+    );
+
+    const userPoolClient = new cognito.UserPoolClient(
+      this,
+      config.user_pool_client_name,
+      {
+        userPool: userPool
+      }
+    );
 
     // Design source: https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/ and
     // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
@@ -58,6 +88,29 @@ export class WebsiteStack extends cdk.Stack {
             behaviors: [{ isDefaultBehavior: true }]
           }
         ]
+      }
+    );
+
+    // Outputs
+    const outputs = config.outputs;
+    const userPoolExport = new cdk.CfnOutput(this, outputs.user_pool_name, {
+      value: userPool.userPoolArn,
+      exportName: outputs.user_pool_name
+    });
+    const identityPoolExport = new cdk.CfnOutput(
+      this,
+      outputs.identity_pool_name,
+      {
+        value: identityPool.ref,
+        exportName: outputs.identity_pool_name
+      }
+    );
+    const userPoolClientExport = new cdk.CfnOutput(
+      this,
+      outputs.user_pool_client_name,
+      {
+        value: userPoolClient.userPoolClientId,
+        exportName: outputs.user_pool_client_name
       }
     );
   }

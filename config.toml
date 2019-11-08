@@ -7,6 +7,14 @@ launch_url = "https://us-east-2.console.aws.amazon.com/cloudformation/home?regio
 
 [website]
 region = "us-east-2"
+user_pool_name = "BusyEngineersUserPool"
+identity_pool_name = "BusyEngineersIdentityPool"
+user_pool_client_name = "BusyEngineersUserPoolClient"
+
+[website.outputs]
+user_pool_name = "BusyEngineersUserPoolOutput"
+identity_pool_name = "BusyEngineersIdentityPoolOutput"
+user_pool_client_name = "BusyEngineersUserPoolClientOutput"
 
 [faythe_cmk]
 region = "us-east-2"
