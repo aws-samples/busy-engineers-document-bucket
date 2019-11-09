@@ -7,7 +7,7 @@ import "source-map-support/register";
 import cdk = require("@aws-cdk/core");
 import { CMKStack } from "../lib/kms-cmk-stack";
 import { DocumentBucketStack } from "../lib/document-bucket-stack";
-import { WebsiteStack } from "../lib/website-stack";
+import { WebappStack } from "../lib/webapp-stack";
 import fs = require("fs");
 import toml = require("@iarna/toml");
 
@@ -18,37 +18,48 @@ const config: Record<string, any> = toml.parse(
 
 // Map constants
 const STATE_FILE = config.base.state_file;
-const FAYTHE_CMK_REGION = config.faythe_cmk.region;
-const FAYTHE_CMK_ALIAS = config.faythe_cmk.alias;
-const WALTER_CMK_REGION = config.walter_cmk.region;
-const WALTER_CMK_ALIAS = config.walter_cmk.alias;
-
-const WEBSITE_CONFIG = config.website;
+const WEBAPP_CONFIG = config.webapp;
+const BUCKET_CONFIG = config.document_bucket;
+const FAYTHE_CONFIG = config.faythe;
+const WALTER_CONFIG = config.walter;
 
 const app = new cdk.App();
 
 // Initialize CMK Stacks
-new CMKStack(app, "BusyEngineersFaytheCMKStack", {
-  env: { region: FAYTHE_CMK_REGION },
-  alias: FAYTHE_CMK_ALIAS
-});
+new CMKStack(
+  app,
+  FAYTHE_CONFIG.stack_id,
+  {
+    env: { region: FAYTHE_CONFIG.region }
+  },
+  FAYTHE_CONFIG
+);
 
-new CMKStack(app, "BusyEngineersWalterCMKStack", {
-  env: { region: WALTER_CMK_REGION },
-  alias: WALTER_CMK_ALIAS
-});
+new CMKStack(
+  app,
+  WALTER_CONFIG.stack_id,
+  {
+    env: { region: WALTER_CONFIG.region }
+  },
+  WALTER_CONFIG
+);
 
 // Initialize Document Bucket resources
-new DocumentBucketStack(app, "BusyEngineersDocumentBucketStack", {
-  env: { region: WEBSITE_CONFIG.region }
-});
-
-// Initialize client website resources
-const websiteStack = new WebsiteStack(
+new DocumentBucketStack(
   app,
-  "BusyEngineersWebsiteStack",
+  BUCKET_CONFIG.stack_id,
   {
-    env: { region: WEBSITE_CONFIG.region }
+    env: { region: BUCKET_CONFIG.region }
   },
-  WEBSITE_CONFIG
+  BUCKET_CONFIG
+);
+
+// Initialize client webapp resources
+const webappStack = new WebappStack(
+  app,
+  WEBAPP_CONFIG.stack_id,
+  {
+    env: { region: WEBAPP_CONFIG.region }
+  },
+  WEBAPP_CONFIG
 );

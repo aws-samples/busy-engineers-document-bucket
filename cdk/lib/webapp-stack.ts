@@ -7,7 +7,7 @@ import cf = require("@aws-cdk/aws-cloudfront");
 import iam = require("@aws-cdk/aws-iam");
 import cognito = require("@aws-cdk/aws-cognito");
 
-export class WebsiteStack extends cdk.Stack {
+export class WebappStack extends cdk.Stack {
   constructor(
     scope: cdk.Construct,
     id: string,
@@ -48,17 +48,17 @@ export class WebsiteStack extends cdk.Stack {
     // See also: https://github.com/aws/aws-cdk/issues/941
     const cfOAID = new cf.CfnCloudFrontOriginAccessIdentity(
       this,
-      "BusyEngineersWebsiteCFOAID",
+      config.oaid_name,
       {
         cloudFrontOriginAccessIdentityConfig: {
-          comment: "BusyEngineersWebsiteCFtoBucket"
+          comment: config.oaid_comment
         }
       }
     );
 
     // To use CloudFront Origin Identity, the "website bucket" is a regular bucket,
     // not a S3 static website bucket.
-    const websiteBucket = new s3.Bucket(this, "BusyEngineersWebsiteBucket", {
+    const webappBucket = new s3.Bucket(this, config.bucket_name, {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
@@ -67,21 +67,21 @@ export class WebsiteStack extends cdk.Stack {
     // https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-6
     const bucketPolicy = new iam.PolicyStatement();
     bucketPolicy.addActions("s3:GetObject");
-    bucketPolicy.addResources(websiteBucket.bucketArn + "/*");
+    bucketPolicy.addResources(webappBucket.bucketArn + "/*");
     bucketPolicy.addCanonicalUserPrincipal(cfOAID.attrS3CanonicalUserId);
 
     // Attach the policy to the bucket
-    websiteBucket.addToResourcePolicy(bucketPolicy);
+    webappBucket.addToResourcePolicy(bucketPolicy);
 
     // Actually create the distribution, attaching the OAID and the Bucket
     const webDistribution = new cf.CloudFrontWebDistribution(
       this,
-      "BusyEngineersWebsiteCF",
+      config.distribution_name,
       {
         originConfigs: [
           {
             s3OriginSource: {
-              s3BucketSource: websiteBucket,
+              s3BucketSource: webappBucket,
               originAccessIdentityId: cfOAID.ref
             },
 
