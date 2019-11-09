@@ -12,9 +12,11 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.15.0",
+    "@types/iarna__toml": "^2.0.0",
     "@types/jest": "^24.0.21",
     "aws-cdk": "^1.15.0",
     "jest": "^24.9.0",
+    "prettier": "^1.19.1",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.1.0",
     "typescript": "~3.6.2"
@@ -29,7 +31,6 @@
     "@aws-cdk/aws-s3": "^1.15.0",
     "@aws-cdk/core": "^1.15.0",
     "@iarna/toml": "^2.2.3",
-    "@types/iarna__toml": "^2.0.0",
     "@types/node": "^12.12.6",
     "source-map-support": "^0.5.16"
   }
