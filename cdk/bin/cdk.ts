@@ -12,7 +12,9 @@ import fs = require("fs");
 import toml = require("@iarna/toml");
 
 // Load our configuration file to bootstrap CFN configuration.
-const config: any = toml.parse(fs.readFileSync("../config.toml", "utf8"));
+const config: Record<string, any> = toml.parse(
+  fs.readFileSync("../config.toml", "utf8")
+);
 
 // Map constants
 const STATE_FILE = config.base.state_file;

@@ -12,7 +12,7 @@ export class WebsiteStack extends cdk.Stack {
     scope: cdk.Construct,
     id: string,
     props: cdk.StackProps,
-    config: any // FIXME Nail down typing here
+    config: Record<string, any>
   ) {
     super(scope, id, props);
 
