@@ -5,21 +5,41 @@ state_file = "~/.busy_engineers_state.toml"
 region = "us-east-2"
 launch_url = "https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment"
 
-[website]
+[webapp]
+stack_id = "BusyEngineersWebappStack"
 region = "us-east-2"
 user_pool_name = "BusyEngineersUserPool"
 identity_pool_name = "BusyEngineersIdentityPool"
 user_pool_client_name = "BusyEngineersUserPoolClient"
+bucket_name = "BusyEngineersWebappBucket"
+distribution_name = "BusyEngineersWebappDistribution"
+oaid_name = "BusyEngineersOFAID"
+oaid_comment = "Origin Access Identity to allow CloudFront access to serve the Webapp bucket."
 
-[website.outputs]
+[webapp.outputs]
 user_pool_name = "BusyEngineersUserPoolOutput"
 identity_pool_name = "BusyEngineersIdentityPoolOutput"
 user_pool_client_name = "BusyEngineersUserPoolClientOutput"
 
-[faythe_cmk]
+[document_bucket]
+stack_id = "BusyEngineersDocumentBucketStack"
+region = "us-east-2"
+
+[document_bucket.document_table]
+name = "DocumentTable"
+partition_key = "uid"
+
+[document_bucket.bucket]
+name = "DocumentBucket"
+
+[faythe]
+stack_id = "BusyEngineersFaytheCMKStack"
+cmk_id = "BusyEngineersFaytheCMK"
 region = "us-east-2"
 alias = "FaytheCMK"
 
-[walter_cmk]
+[walter]
+stack_id = "BusyEngineersWalterCMKStack"
+cmk_id = "BusyEngineersWalterCMK"
 region = "us-west-2"
 alias = "WalterCMK"
