@@ -13,7 +13,7 @@ import toml = require("@iarna/toml");
 
 // Load our configuration file to bootstrap CFN configuration.
 const config: Record<string, any> = toml.parse(
-  fs.readFileSync("../config.toml", "utf8")
+  fs.readFileSync("../exercises/config.toml", "utf8")
 );
 
 // Map constants
