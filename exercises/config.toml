@@ -27,7 +27,8 @@ region = "us-east-2"
 
 [document_bucket.document_table]
 name = "DocumentTable"
-partition_key = "uid"
+partition_key = "reference"
+sort_key = "target"
 output = "DocumentTableOutput"
 export = "DocumentTable"
 

@@ -25,6 +25,11 @@ export class DocumentBucketStack extends cdk.Stack {
         name: config.document_table.partition_key,
         type: ddb.AttributeType.STRING
       },
+      sortKey: {
+        name: config.document_table.sort_key,
+        type: ddb.AttributeType.STRING
+      },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
       billingMode: ddb.BillingMode.PAY_PER_REQUEST
     });
 
