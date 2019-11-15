@@ -14,20 +14,34 @@ export class DocumentBucketStack extends cdk.Stack {
   ) {
     super(scope, id, props);
 
-    // S3 Bucket
-    new s3.Bucket(this, config.bucket.name, {
+    const s3Bucket = new s3.Bucket(this, config.bucket.name, {
       accessControl: s3.BucketAccessControl.PRIVATE,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
-    // DynamoDB Table
-    new ddb.Table(this, config.document_table.name, {
+    const ddbTable = new ddb.Table(this, config.document_table.name, {
       partitionKey: {
         name: config.document_table.partition_key,
         type: ddb.AttributeType.STRING
       },
+      sortKey: {
+        name: config.document_table.sort_key,
+        type: ddb.AttributeType.STRING
+      },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
       billingMode: ddb.BillingMode.PAY_PER_REQUEST
+    });
+
+    // Outputs
+    new cdk.CfnOutput(this, config.document_table.output, {
+      value: ddbTable.tableName,
+      exportName: config.document_table.export
+    });
+
+    new cdk.CfnOutput(this, config.bucket.output, {
+      value: s3Bucket.bucketName,
+      exportName: config.bucket.export
     });
   }
 }

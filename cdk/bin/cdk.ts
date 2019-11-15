@@ -13,7 +13,7 @@ import toml = require("@iarna/toml");
 
 // Load our configuration file to bootstrap CFN configuration.
 const config: Record<string, any> = toml.parse(
-  fs.readFileSync("../config.toml", "utf8")
+  fs.readFileSync("../exercises/config.toml", "utf8")
 );
 
 // Map constants
@@ -52,14 +52,4 @@ new DocumentBucketStack(
     env: { region: BUCKET_CONFIG.region }
   },
   BUCKET_CONFIG
-);
-
-// Initialize client webapp resources
-const webappStack = new WebappStack(
-  app,
-  WEBAPP_CONFIG.stack_id,
-  {
-    env: { region: WEBAPP_CONFIG.region }
-  },
-  WEBAPP_CONFIG
 );
