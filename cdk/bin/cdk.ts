@@ -53,13 +53,3 @@ new DocumentBucketStack(
   },
   BUCKET_CONFIG
 );
-
-// Initialize client webapp resources
-const webappStack = new WebappStack(
-  app,
-  WEBAPP_CONFIG.stack_id,
-  {
-    env: { region: WEBAPP_CONFIG.region }
-  },
-  WEBAPP_CONFIG
-);
