@@ -31,6 +31,8 @@ partition_key = "reference"
 sort_key = "target"
 output = "DocumentTableOutput"
 export = "DocumentTable"
+object_target = "S3Object"
+ctx_prefix = "CONTEXT_"
 
 [document_bucket.bucket]
 name = "DocumentBucket"
