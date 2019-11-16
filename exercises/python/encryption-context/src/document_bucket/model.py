@@ -31,7 +31,7 @@ class UUIDKey:
 @dataclass
 class BaseItem:
     partition_key: Union[UUIDKey, str]
-    sort_key: Optional[Union[str, UUID]]
+    sort_key: Optional[Union[str, UUIDKey]]
 
     def __hash__(self):
         return hash((self.partition_key, self.sort_key))
@@ -56,9 +56,6 @@ class BaseItem:
             raise DataModelException("partition_key not set correctly after init!")
         if self.sort_key is None:
             raise DataModelException("sort_key not set correctly after init!")
-
-    def get_s3_key(self) -> str:
-        raise DataModelException("Cannot use a {} as an S3 Key!".format(self.__class__))
 
     def to_item(self):
         key = {
@@ -104,13 +101,9 @@ class ContextItem(BaseItem):
         return config["document_bucket"]["document_table"]["ctx_prefix"].upper()
 
     @classmethod
-    def is_context_key_fmt(cls, key: str) -> bool:
-        return key.startswith(ContextItem._prefix())
-
-    @classmethod
     def canonicalize(cls, context_key: str) -> str:
         context_key = context_key.upper()
-        if not ContextItem.is_context_key_fmt(context_key):
+        if not context_key.startswith(ContextItem._prefix()):
             context_key = ContextItem._prefix() + context_key
         return context_key
 
@@ -139,7 +132,7 @@ class PointerItem(BaseItem):
         return super().__eq__(other)
 
     @classmethod
-    def sort_key_config(cls) -> str:
+    def _sort_key_config(cls) -> str:
         return config["document_bucket"]["document_table"]["object_target"]
 
     @classmethod
@@ -169,33 +162,23 @@ class PointerItem(BaseItem):
                 )
             )
 
-    def get_s3_key(self) -> str:
-        return str(self.partition_key)
-
     def __post_init__(self):
         self._assert_set()
         if not isinstance(self.partition_key, UUIDKey):
             self.partition_key = UUIDKey(self.partition_key)
         PointerItem._validate_reserved_ec_keys(self.context)
-        if self.sort_key != self.sort_key_config():
+        if self.sort_key != self._sort_key_config():
             raise DataModelException(
                 "Sort key should be {}, was {}".format(
-                    self.sort_key_config(), self.sort_key
+                    self._sort_key_config(), self.sort_key
                 )
             )
         self.partition_key = str(self.partition_key)
 
-    def context_from_item(self, item: Dict[str, str]) -> Dict[str, str]:
-        if item is None:
-            raise DataModelException("Got empty pointer item!")
-        del item[BaseItem.partition_key_name()]
-        del item[BaseItem.sort_key_name()]
-        return copy.deepcopy(item)
-
     def context_items(self) -> Set[ContextItem]:
         result: Set[ContextItem] = set()
         for context_key in self.context.keys():
-            result.add(ContextItem(context_key, self.get_s3_key()))
+            result.add(ContextItem(context_key, self.partition_key))
         return result
 
     @classmethod
@@ -204,7 +187,7 @@ class PointerItem(BaseItem):
 
     def to_item(self):
         item = super().to_item()
-        item = {**item, **self.context}
+        item = {**item, **copy.deepcopy(self.context)}
         return item
 
     @staticmethod

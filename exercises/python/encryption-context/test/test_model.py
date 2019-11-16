@@ -36,7 +36,7 @@ def test_uuid_item_happy_case(sample_context):
 
 def test_uuid_item_happy_case_from_key_and_context(suuid, sample_context):
     test_item = PointerItem.from_key_and_context(suuid, sample_context)
-    assert suuid in test_item.get_s3_key()
+    assert suuid in test_item.partition_key
     assert sample_context.items() <= test_item.context.items()
 
 
@@ -96,23 +96,7 @@ def test_pointer_item(sample_context):
     item = bundle.key.to_item()
     assert sample_context.items() <= item.items()
     assert bundle.key.partition_key in item.values()
-    assert bundle.key.get_s3_key() in item.values()
-
-
-def test_get_s3_key(suuid):
-    with pytest.raises(DataModelException):
-        BaseItem("foo", "bar").get_s3_key()
-
-    with pytest.raises(DataModelException):
-        ContextItem("baz", suuid).get_s3_key()
-
-    assert suuid in PointerItem(suuid).get_s3_key()
-
-
-def test_context_from_item(sample_context):
-    pointer = PointerItem.generate(sample_context)
-    context = pointer.context_from_item(pointer.to_item())
-    assert sample_context.items() == context.items()
+    assert bundle.key.partition_key in item.values()
 
 
 def test_query_expression():
@@ -153,7 +137,7 @@ def test_pointer_key_hash(suuid, sample_context):
 
 def test_object_type_neq(sample_context):
     pointer = PointerItem.generate(sample_context)
-    context = ContextItem("stuff", pointer.get_s3_key())
+    context = ContextItem("stuff", pointer.partition_key)
     assert pointer != context
 
 

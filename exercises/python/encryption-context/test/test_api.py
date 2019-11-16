@@ -8,7 +8,7 @@ import pytest
 from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
 from document_bucket.api import DocumentBucketOperations
 from document_bucket.model import (BaseItem, ContextItem, ContextQuery,
-                                   PointerItem, PointerQuery)
+                                   PointerItem)
 
 
 def standard_context():
@@ -103,7 +103,7 @@ def test_write_object_happy_case(mocked_dbo, pointer_item):
     data = bytes.fromhex("cafebabe")
     mocked_dbo._write_object(data, pointer_item)
     mocked_dbo.bucket.put_object.assert_called_with(
-        Body=data, Key=pointer_item.get_s3_key(), Metadata=pointer_item.context
+        Body=data, Key=pointer_item.partition_key, Metadata=pointer_item.context
     )
 
 
@@ -126,7 +126,7 @@ def test_populate_keys_happy_case(mocked_dbo, pointer_item):
     mocked_dbo._populate_key_records(pointer_item)
     calls = []
     for key in pointer_item.context.keys():
-        ctx_key = ContextItem(key, pointer_item.get_s3_key())
+        ctx_key = ContextItem(key, pointer_item.partition_key)
         calls.append(call(Item=ctx_key.to_item()))
     mocked_dbo.table.put_item.assert_has_calls(calls, any_order=True)
 
@@ -136,23 +136,22 @@ def test_query_for_context_key(mocked_dbo, random_context_key_ddb_result):
     # First there's a query for a specific context key, which will return a hash-and-
     # range of one unique context key and many UUIDs (sort keys). For the conceit
     # of the test, assume two queries are made in order: one to get a context key with
-    # one matching item; and one to lookup that item and its context to map to a 
-    # pointer. This is a bit incomplete and contrived, but simulating DDB gets 
+    # one matching item; and one to lookup that item and its context to map to a
+    # pointer. This is a bit incomplete and contrived, but simulating DDB gets
     # complex fast and this is better covered by DDBLocal (integration).
 
     # Pull out the context key target from the 'results'
-    test_context_target = random_context_key_ddb_result["Items"][0][BaseItem.sort_key_name()]
+    test_context_target = random_context_key_ddb_result["Items"][0][
+        BaseItem.sort_key_name()
+    ]
     # Pointer for this context key
-    test_pointer = PointerItem(partition_key=test_context_target, context=random_context(8))
+    test_pointer = PointerItem(
+        partition_key=test_context_target, context=random_context(8)
+    )
     # Create a fake pointer lookup result to return for the chosen guid
-    test_pointer_result = {
-        "Items": [
-            test_pointer.to_item()
-        ]
-    }
+    test_pointer_result = {"Items": [test_pointer.to_item()]}
     # Set up query objects
     q = ContextQuery(test_context_target)
-    p = PointerQuery(test_pointer)
     # Set up returning the fake DDB Item when we call query
     mock_query = mock.Mock()
     # Return first the "fake table", then the "fake pointer lookup result"
@@ -163,23 +162,27 @@ def test_query_for_context_key(mocked_dbo, random_context_key_ddb_result):
     # Assert we got back a matching Pointer record
     assert test_pointer in pointers
 
+
 def test_non_unique_pointer_throws(mocked_dbo, random_context_key_ddb_result):
     # If somehow there were two entries returned on a query for a given pointer UUID
-    # (i.e. something has gone wrong with enforcement of the data model), make sure 
+    # (i.e. something has gone wrong with enforcement of the data model), make sure
     # query throws.
-    bogus_result = {"Items" : [ random_pointer_item().to_item(), random_pointer_item().to_item() ] }
+    bogus_result = {
+        "Items": [random_pointer_item().to_item(), random_pointer_item().to_item()]
+    }
     mock_query = mock.Mock()
     mock_query.side_effect = [random_context_key_ddb_result, bogus_result]
     mocked_dbo.table.query = mock_query
     with pytest.raises(ValueError):
         mocked_dbo._query_for_context_key(ContextQuery("foobar"))
 
+
 def test_list_items(mocked_dbo, random_ddb_pointer_table):
     mocked_dbo.table.scan = mock.Mock(return_value=random_ddb_pointer_table)
     expected_guids = set()
     for item in random_ddb_pointer_table["Items"]:
         partition_key = item[BaseItem.partition_key_name()]
-        if not ContextItem.is_context_key_fmt(partition_key):
+        if not partition_key.startswith(ContextItem._prefix()):
             expected_guids.add(partition_key)
     pointers = mocked_dbo.list()
     actual_guids = set()

@@ -18,12 +18,12 @@ class DocumentBucketOperations:
 
     def _write_object(self, data: bytes, item: PointerItem):
         s3object = self.bucket.put_object(
-            Body=data, Key=item.get_s3_key(), Metadata=item.context
+            Body=data, Key=item.partition_key, Metadata=item.context
         )
         return s3object
 
     def _get_object(self, item: PointerItem) -> bytes:
-        s3object = self.bucket.Object(item.get_s3_key()).get()
+        s3object = self.bucket.Object(item.partition_key).get()
         return s3object["Body"].read()
 
     def _populate_key_records(self, pointer: PointerItem) -> Set[ContextItem]:
