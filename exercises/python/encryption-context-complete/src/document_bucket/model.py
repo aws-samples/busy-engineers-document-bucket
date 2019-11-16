@@ -157,9 +157,7 @@ class PointerItem(BaseItem):
         skn = BaseItem.sort_key_name()
         if pkn in context.keys() or skn in context.keys():
             raise DataModelException(
-                "Can't use DB key names ({}, {}) as Encryption Context keys!".format(
-                    pkn, skn
-                )
+                f"Can't use DB key names ({pkn}, {skn}) as Encryption Context keys!"
             )
 
     def __post_init__(self):
@@ -169,9 +167,7 @@ class PointerItem(BaseItem):
         PointerItem._validate_reserved_ec_keys(self.context)
         if self.sort_key != self._sort_key_config():
             raise DataModelException(
-                "Sort key should be {}, was {}".format(
-                    self._sort_key_config(), self.sort_key
-                )
+                f"Sort key should be {self._sort_key_config()}, was {self.sort_key}"
             )
         self.partition_key = str(self.partition_key)
 

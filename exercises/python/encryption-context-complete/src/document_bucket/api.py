@@ -43,9 +43,7 @@ class DocumentBucketOperations:
             )["Items"]
             if len(pointer_items) != 1:
                 raise ValueError(
-                    "Pointer ID not unique! Expected 1 result, got {}".format(
-                        len(pointer_items)
-                    )
+                    f"Pointer ID not unique! Expected 1 ID, got {len(pointer_items)}"
                 )
             pointer = PointerItem.from_item(pointer_items[0])
             pointers.add(pointer)
@@ -73,18 +71,20 @@ class DocumentBucketOperations:
         (plaintext, header) = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
-        if expected_context_keys not in header.encryption_context.keys():
-            raise AssertionError(
-                "Encryption context assertion failed! Expected: {} but got {}".format(
-                    expected_context_keys, header.encryption_context
-                )
+        if not expected_context_keys <= header.encryption_context.keys():
+            error_msg = (
+                "Encryption context assertion failed! "
+                f"Expected all these keys: {expected_context_keys}, "
+                f"but got {header.encryption_context}!"
             )
-        if expected_context.items() not in header.encryption_context.items():
-            raise AssertionError(
-                "Encryption context assertion failed! Expected: {} but got {}".format(
-                    expected_context, header.encryption_context
-                )
+            raise AssertionError(error_msg)
+        if not expected_context.items() <= header.encryption_context.items():
+            error_msg = (
+                "Encryption context assertion failed! "
+                f"Expected {expected_context}, "
+                f"but got {header.encryption_context}!"
             )
+            raise AssertionError(error_msg)
         return DocumentBundle.from_data_and_context(
             plaintext, header.encryption_context
         )

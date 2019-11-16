@@ -4,6 +4,7 @@ import string
 from unittest import mock
 from unittest.mock import call
 
+import aws_encryption_sdk
 import pytest
 from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
 from document_bucket.api import DocumentBucketOperations
@@ -199,3 +200,63 @@ def test_context_key(mocked_dbo):
     query = ContextQuery(key)
     mocked_dbo.search_by_context_key(key)
     mocked_dbo.table.query.assert_called_with(KeyConditionExpression=query.expression())
+
+
+def test_ec_keys_happy_case(monkeypatch, mocked_dbo):
+    key = get_pointer_key()
+    expected_keys = standard_context().keys()
+    mocked_dbo._get_object = mock.MagicMock()
+    mocked_header = mock.MagicMock()
+    mocked_header.encryption_context = standard_context()
+
+    def mock_decrypt(**kwargs):
+        return (None, mocked_header)
+
+    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    mocked_dbo.retrieve(key, expected_keys)
+
+
+def test_ec_keys_unhappy_case(monkeypatch, mocked_dbo):
+    key = get_pointer_key()
+    expected_keys = set(standard_context().keys())
+    expected_keys.add("WONT_BE_PRESENT")
+    mocked_dbo._get_object = mock.MagicMock()
+    mocked_header = mock.MagicMock()
+    mocked_header.encryption_context = standard_context()
+
+    def mock_decrypt(**kwargs):
+        return (None, mocked_header)
+
+    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    with pytest.raises(AssertionError):
+        mocked_dbo.retrieve(key, expected_keys)
+
+
+def test_ec_happy_case(monkeypatch, mocked_dbo):
+    key = get_pointer_key()
+    expected_ec = standard_context()
+    mocked_dbo._get_object = mock.MagicMock()
+    mocked_header = mock.MagicMock()
+    mocked_header.encryption_context = standard_context()
+
+    def mock_decrypt(**kwargs):
+        return (None, mocked_header)
+
+    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    mocked_dbo.retrieve(key, expected_context=expected_ec)
+
+
+def test_ec_unhappy_case(monkeypatch, mocked_dbo):
+    key = get_pointer_key()
+    expected_ec = standard_context()
+    expected_ec["UNOBTANIUM"] = "this value will not be present!"
+    mocked_dbo._get_object = mock.MagicMock()
+    mocked_header = mock.MagicMock()
+    mocked_header.encryption_context = standard_context()
+
+    def mock_decrypt(**kwargs):
+        return (None, mocked_header)
+
+    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    with pytest.raises(AssertionError):
+        mocked_dbo.retrieve(key, expected_context=expected_ec)
