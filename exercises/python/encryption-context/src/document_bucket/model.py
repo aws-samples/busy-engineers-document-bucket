@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 import uuid
 from dataclasses import dataclass, field
@@ -14,8 +16,21 @@ class DataModelException(Exception):
 
 
 @dataclass
+class UUIDKey:
+    key: Union[UUID, str]
+
+    def __post_init__(self):
+        if isinstance(self.key, str):
+            # Validate that the UUID is well formed before continuing.
+            self.key = str(UUID(self.key))
+
+    def __str__(self):
+        return str(self.key)
+
+
+@dataclass
 class BaseItem:
-    partition_key: Union[UUID, str]
+    partition_key: Union[UUIDKey, str]
     sort_key: Optional[Union[str, UUID]]
 
     def __hash__(self):
@@ -45,7 +60,7 @@ class BaseItem:
     def get_s3_key(self) -> str:
         raise DataModelException("Cannot use a {} as an S3 Key!".format(self.__class__))
 
-    def to_key(self):
+    def to_item(self):
         key = {
             BaseItem.partition_key_name(): self.partition_key,
             BaseItem.sort_key_name(): self.sort_key,
@@ -59,6 +74,18 @@ class ContextQuery:
 
     def __post_init__(self):
         self.partition_key = ContextItem.canonicalize(self.partition_key)
+
+    def expression(self) -> Dict[str, str]:
+        return Key(BaseItem.partition_key_name()).eq(self.partition_key)
+
+
+@dataclass
+class PointerQuery:
+    partition_key: UUIDKey
+
+    @staticmethod
+    def from_context_item(context_item) -> PointerQuery:
+        return PointerQuery(context_item.sort_key)
 
     def expression(self) -> Dict[str, str]:
         return Key(BaseItem.partition_key_name()).eq(self.partition_key)
@@ -92,6 +119,12 @@ class ContextItem(BaseItem):
         self.partition_key = ContextItem.canonicalize(self.partition_key)
         self.sort_key = str(UUID(self.sort_key))
 
+    @classmethod
+    def from_item(cls, item: Dict[str, str]) -> ContextItem:
+        partition_key = item.pop(BaseItem.partition_key_name())
+        sort_key = item.pop(BaseItem.sort_key_name())
+        return cls(partition_key, sort_key)
+
 
 @dataclass
 class PointerItem(BaseItem):
@@ -110,15 +143,19 @@ class PointerItem(BaseItem):
         return config["document_bucket"]["document_table"]["object_target"]
 
     @classmethod
-    def _generate_uuid(cls) -> UUID:
-        return uuid.uuid4()
+    def _generate_key(cls) -> UUIDKey:
+        return UUIDKey(uuid.uuid4())
 
     @classmethod
     def generate(cls, context: Dict[str, str]):
-        return PointerItem(partition_key=cls._generate_uuid(), context=context)
+        return PointerItem(partition_key=cls._generate_key(), context=context)
 
     @classmethod
-    def from_key_and_context(cls, key: str, context: Dict[str, str]):
+    def from_key_and_context(
+        cls, key: Union[UUIDKey, UUID, str], context: Dict[str, str]
+    ) -> PointerItem:
+        if not isinstance(key, UUIDKey):
+            key = UUIDKey(key)
         return cls(partition_key=key, context=context)
 
     @staticmethod
@@ -137,9 +174,8 @@ class PointerItem(BaseItem):
 
     def __post_init__(self):
         self._assert_set()
-        if isinstance(self.partition_key, str):
-            # Validate that the UUID is well formed before continuing.
-            self.partition_key = str(UUID(self.partition_key))
+        if not isinstance(self.partition_key, UUIDKey):
+            self.partition_key = UUIDKey(self.partition_key)
         PointerItem._validate_reserved_ec_keys(self.context)
         if self.sort_key != self.sort_key_config():
             raise DataModelException(
@@ -167,9 +203,15 @@ class PointerItem(BaseItem):
         return Key(BaseItem.sort_key_name()).eq(cls.sort_key)
 
     def to_item(self):
-        key = self.to_key()
-        item = {**key, **self.context}
+        item = super().to_item()
+        item = {**item, **self.context}
         return item
+
+    @staticmethod
+    def from_item(item: Dict[str, str]) -> PointerItem:
+        partition_key = item.pop(BaseItem.partition_key_name())
+        sort_key = item.pop(BaseItem.sort_key_name())
+        return PointerItem(partition_key, sort_key, item)
 
 
 @dataclass

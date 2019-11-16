@@ -3,8 +3,8 @@ from typing import Dict, Set
 import aws_encryption_sdk  # type: ignore
 from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
 
-from .model import (BaseItem, ContextItem, ContextQuery, DocumentBundle,
-                    PointerItem)
+from .model import (ContextItem, ContextQuery, DocumentBundle, PointerItem,
+                    PointerQuery)
 
 
 class DocumentBucketOperations:
@@ -29,18 +29,25 @@ class DocumentBucketOperations:
     def _populate_key_records(self, pointer: PointerItem) -> Set[ContextItem]:
         context_items: Set[ContextItem] = pointer.context_items()
         for context_item in context_items:
-            self.table.put_item(Item=context_item.to_key())
+            self.table.put_item(Item=context_item.to_item())
         return context_items
 
-    # JSONDecoder
     def _query_for_context_key(self, query: ContextQuery) -> Set[PointerItem]:
         result = self.table.query(KeyConditionExpression=query.expression())
         pointers: Set[PointerItem] = set()
-        for ddb_item in result["Items"]:
-            key = ddb_item[BaseItem.sort_key_name()]
-            pointer = PointerItem(key)
-            pointer_data = self.table.get_item(pointer).get("Item")
-            pointer.context = pointer.context_from_item(pointer_data)
+        for ddb_context_item in result["Items"]:
+            context_item = ContextItem.from_item(ddb_context_item)
+            pointer_query = PointerQuery.from_context_item(context_item)
+            pointer_items = self.table.query(
+                KeyConditionExpression=pointer_query.expression()
+            )["Items"]
+            if len(pointer_items) != 1:
+                raise ValueError(
+                    "Pointer ID not unique! Expected 1 result, got {}".format(
+                        len(pointer_items)
+                    )
+                )
+            pointer = PointerItem.from_item(pointer_items[0])
             pointers.add(pointer)
         return pointers
 
@@ -48,9 +55,7 @@ class DocumentBucketOperations:
         result = self.table.scan(PointerItem.filter_for())
         pointers = set()
         for ddb_item in result["Items"]:
-            partition_key = ddb_item[BaseItem.partition_key_name()]
-            # TODO Use the JSONDecoder
-            pointer = PointerItem(partition_key)
+            pointer = PointerItem.from_item(ddb_item)
             pointers.add(pointer)
         return pointers
 
