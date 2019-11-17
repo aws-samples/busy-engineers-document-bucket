@@ -16,6 +16,11 @@
  -->
 
 <module name = "Checker">
+    <module name="SuppressWithPlainTextCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE\:OFF ([\w\|]+)"/>
+        <property name="onCommentFormat" value="CHECKSTYLE\:ON ([\w\|]+)"/>
+        <property name="checkFormat" value="$1"/>
+    </module>
     <property name="charset" value="UTF-8"/>
 
     <property name="severity" value="warning"/>
