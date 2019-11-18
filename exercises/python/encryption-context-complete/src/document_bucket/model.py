@@ -102,7 +102,6 @@ class ContextItem(BaseItem):
 
     @classmethod
     def canonicalize(cls, context_key: str) -> str:
-        context_key = context_key.upper()
         if not context_key.startswith(ContextItem._prefix()):
             context_key = ContextItem._prefix() + context_key
         return context_key

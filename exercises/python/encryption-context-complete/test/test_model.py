@@ -70,12 +70,12 @@ def test_unset_partition_raises_context_item():
 def test_canonicalize(ctx_prefix):
     test_key = "toTalLy_pUbl1c_7ag"
     c = ContextItem.canonicalize(test_key)
-    assert test_key.upper() in c
-    assert ctx_prefix.upper() in c
+    assert test_key in c
+    assert ctx_prefix in c
 
 
 def test_prefix_added_once(ctx_prefix):
-    test_key = ctx_prefix.upper() + "C00L"
+    test_key = ctx_prefix + "c00L"
     assert test_key == ContextItem.canonicalize(test_key)
 
 
