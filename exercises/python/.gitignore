@@ -1,0 +1,20 @@
+# From https://github.com/pypa/sampleproject
+
+# general things to ignore
+build/
+dist/
+*.egg-info/
+*.egg
+*.py[cod]
+__pycache__/
+*.so
+*~
+*.mypy_cache
+*.swp
+
+# due to using tox and pytest
+.tox
+.cache
+
+# coverage
+.coverage
