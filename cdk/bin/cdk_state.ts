@@ -6,6 +6,7 @@
 import aws = require("aws-sdk");
 import fs = require("fs");
 import toml = require("@iarna/toml");
+import { config } from "../lib/config"
 
 const cf = new aws.CloudFormation()
 
@@ -19,7 +20,7 @@ const cf = new aws.CloudFormation()
       return memo
     }, {} as { [key: string]: string })
   
-  fs.writeFileSync("../exercises/busy_engineers_state.toml", toml.stringify({ state: cfnState }), {encoding: 'utf8'})
+  fs.writeFileSync(config.base.state_file, toml.stringify({ state: cfnState }), {encoding: 'utf8'})
 })()
 
 function validExport(value: aws.CloudFormation.Export) : value is Required<aws.CloudFormation.Export> {

@@ -8,13 +8,7 @@ import cdk = require("@aws-cdk/core");
 import { CMKStack } from "../lib/kms-cmk-stack";
 import { DocumentBucketStack } from "../lib/document-bucket-stack";
 import { WebappStack } from "../lib/webapp-stack";
-import fs = require("fs");
-import toml = require("@iarna/toml");
-
-// Load our configuration file to bootstrap CFN configuration.
-const config: Record<string, any> = toml.parse(
-  fs.readFileSync("../exercises/config.toml", "utf8")
-);
+import { config } from "../lib/config"
 
 // Map constants
 const STATE_FILE = config.base.state_file;
