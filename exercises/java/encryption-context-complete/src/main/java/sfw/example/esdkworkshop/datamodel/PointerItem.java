@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import sfw.example.esdkworkshop.Config;
 
 public class PointerItem extends BaseItem {
-  // FIXME TOML Plumbing https://github.com/aws-samples/busy-engineers-document-bucket/issues/19
-  private static final String TARGET = "S3Object";
+  private static final String TARGET = Config.contents.document_bucket.document_table.object_target;
   private final Map<String, AttributeValue> context;
 
   protected PointerItem(UuidKey pointerTarget, Map<String, AttributeValue> context) {

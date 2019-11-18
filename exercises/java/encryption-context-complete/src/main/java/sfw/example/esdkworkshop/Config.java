@@ -40,10 +40,21 @@ public class Config {
 
     public final String sort_key;
 
-    DocumentTable(String name, String partition_key, String sort_key) {
+    public final String object_target;
+
+    public final String ctx_prefix;
+
+    DocumentTable(
+        String name,
+        String partition_key,
+        String sort_key,
+        String object_target,
+        String ctx_prefix) {
       this.name = name;
       this.partition_key = partition_key;
       this.sort_key = sort_key;
+      this.object_target = object_target;
+      this.ctx_prefix = ctx_prefix;
     }
   }
   // CHECKSTYLE:ON MemberName
