@@ -134,11 +134,12 @@ public class Api {
     boolean allExpectedContextFound =
         actualContext.entrySet().containsAll(expectedContext.entrySet());
     if (!allExpectedContextFound) {
-      expectedContextKeys.removeAll(actualContext.keySet());
+      Set<Map.Entry<String, String>> expectedContextEntries = expectedContext.entrySet();
+      expectedContextEntries.removeAll(actualContext.entrySet());
       String error =
           String.format(
               "Expected context pairs were not found in the actual encryption context! Missing pairs were: %s",
-              expectedContextKeys.toString());
+              expectedContextEntries.toString());
       throw new NoSuchElementException(error);
     }
     return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
