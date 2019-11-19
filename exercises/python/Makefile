@@ -34,3 +34,6 @@ bootstrap:
 	@echo "Python install complete."
 	@echo "Please close this terminal window and open a new one to pick up changes"
 	@echo "==========================================================================="
+
+remove:
+	rm -rf /home/ec2-user/.pyenv

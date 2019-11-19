@@ -1,21 +1,21 @@
 # Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-pretty:
-	prettier --no-config --write lib/**/*.ts
-	prettier --no-config --write bin/*.ts
-	prettier --no-config --write tsconfig.json
+bootstrap: | install deploy state create_grants
 
-clean:
-	find bin/ lib/ -name '*.js' -exec rm -v {} \;
-	find bin/ lib/ -name '*.d.ts' -exec rm -v {} \;
-
-bootstrap:
-	@# Use latest Node
-	@echo "node" > ~/.nvmrc
-	@curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
-	@NVM_DIR=/home/ec2-user/.nvm . "$$NVM_DIR/nvm.sh"; nvm install node
-	npm install -g typescript aws-cdk
-	tsc --version
-	cdk --version
+install:
 	npm install
+
+deploy:
+	npx cdk deploy BusyEngineersDocumentBucketStack --require-approval never
+	npx cdk deploy BusyEngineersFaytheCMKStack --require-approval never
+	npx cdk deploy BusyEngineersWalterCMKStack --require-approval never
+
+state:
+	npx ts-node bin/cdk_state.ts
+
+create_grants:
+	npx ts-node bin/create_grants.ts
+	
+revoke_grants:
+	npx ts-node bin/revoke_grants.ts
