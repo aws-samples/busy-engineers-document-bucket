@@ -11,10 +11,10 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "^1.16.3",
+    "@aws-cdk/assert": "^1.17.0",
     "@types/iarna__toml": "^2.0.0",
     "@types/jest": "^24.0.23",
-    "aws-cdk": "^1.16.3",
+    "aws-cdk": "^1.17.0",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "ts-jest": "^24.0.2",
@@ -22,17 +22,17 @@
     "typescript": "~3.6.2"
   },
   "dependencies": {
-    "@aws-cdk/aws-cloud9": "^1.16.3",
-    "@aws-cdk/aws-cloudfront": "^1.16.3",
-    "@aws-cdk/aws-cognito": "^1.16.3",
-    "@aws-cdk/aws-dynamodb": "^1.16.3",
-    "@aws-cdk/aws-iam": "^1.16.3",
-    "@aws-cdk/aws-kms": "^1.16.3",
-    "@aws-cdk/aws-s3": "^1.16.3",
-    "@aws-cdk/core": "^1.16.3",
+    "@aws-cdk/aws-cloud9": "^1.17.0",
+    "@aws-cdk/aws-cloudfront": "^1.17.0",
+    "@aws-cdk/aws-cognito": "^1.17.0",
+    "@aws-cdk/aws-dynamodb": "^1.17.0",
+    "@aws-cdk/aws-iam": "^1.17.0",
+    "@aws-cdk/aws-kms": "^1.17.0",
+    "@aws-cdk/aws-s3": "^1.17.0",
+    "@aws-cdk/core": "^1.17.0",
     "@aws-crypto/kms-keyring": "^1.0.1",
     "@iarna/toml": "^2.2.3",
-    "@types/node": "^12.12.7",
+    "@types/node": "^12.12.11",
     "source-map-support": "^0.5.16",
     "untildify": "^4.0.0"
   }
