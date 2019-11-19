@@ -73,4 +73,12 @@ public class ContextItemTest {
     ContextItem roundTrip = ContextItem.fromItem(item.toItem());
     assertEquals(item, roundTrip);
   }
+
+  @Test
+  void testKeyConditionExpression() {
+    String contextKey = "sp-m00n-1";
+    String actual = ContextItem.queryFor(contextKey);
+    assertTrue(actual.contains(contextKey));
+    assertTrue(actual.contains(ContextItem.partitionKeyName()));
+  }
 }

@@ -4,6 +4,8 @@
 package sfw.example.esdkworkshop.datamodel;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +14,9 @@ import java.util.Set;
 import sfw.example.esdkworkshop.Config;
 
 public class PointerItem extends BaseItem {
-  private static final String TARGET = Config.contents.document_bucket.document_table.object_target;
+  protected static final String TARGET =
+      Config.contents.document_bucket.document_table.object_target;
+  protected static final AttributeValue ATTR_TARGET = new AttributeValue(TARGET);
   private final Map<String, AttributeValue> context;
 
   protected PointerItem(UuidKey pointerTarget, Map<String, AttributeValue> context) {
@@ -21,12 +25,21 @@ public class PointerItem extends BaseItem {
         || context.keySet().contains(PointerItem.sortKeyName())) {
       String err =
           String.format(
-              "Can't create an encryption context with reserved key {} or {}",
-              PointerItem.partitionKeyName(),
-              PointerItem.sortKeyName());
+              "Can't create an encryption context with reserved key %s or %s",
+              PointerItem.partitionKeyName(), PointerItem.sortKeyName());
       throw new IllegalArgumentException(err);
     }
     this.context = context;
+  }
+
+  public static Map<String, Condition> filterFor() {
+    Map<String, Condition> result = new HashMap<>(1);
+    result.put(
+        sortKeyName(),
+        new Condition()
+            .withAttributeValueList(ATTR_TARGET)
+            .withComparisonOperator(ComparisonOperator.EQ));
+    return result;
   }
 
   public static PointerItem generate() {
@@ -57,12 +70,24 @@ public class PointerItem extends BaseItem {
     return result;
   }
 
-  public static PointerItem fromItem(Map<String, AttributeValue> item) throws DataModelException {
+  public static Map<String, AttributeValue> atKey(String key) {
+    new UuidKey(key); // Check validity
+    return atKey(new AttributeValue(key));
+  }
+
+  public static Map<String, AttributeValue> atKey(AttributeValue key) {
+    Map<String, AttributeValue> result = new HashMap<>(2);
+    result.put(partitionKeyName(), key);
+    result.put(sortKeyName(), ATTR_TARGET);
+    return result;
+  }
+
+  public static PointerItem fromItem(Map<String, AttributeValue> item) {
     UuidKey partitionKey = new UuidKey(item.remove(partitionKeyName()).getS());
     String sortKey = item.remove(sortKeyName()).getS();
     if (!sortKey.equals(TARGET)) {
       throw new DataModelException(
-          String.format("Unexpected sortKey value ({}) for PointerItem!", sortKey));
+          String.format("Unexpected sortKey value (%s) for PointerItem!", sortKey));
     }
     return new PointerItem(partitionKey, item);
   }

@@ -45,4 +45,11 @@ public class BaseItemTest {
   void testEqualsWithNull() {
     assertFalse(PointerItem.generate().equals(null));
   }
+
+  @Test
+  void testKeyGetters() {
+    PointerItem test = PointerItem.generate();
+    assertEquals(test.partitionKey(), test.partitionKey);
+    assertEquals(test.sortKey(), test.sortKey);
+  }
 }

@@ -21,6 +21,13 @@ public class ContextItem extends BaseItem {
     return PREFIX + key;
   }
 
+  public static String queryFor(String contextKey) {
+    // https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html#withKeyConditionExpression-java.lang.String-
+    //  partitionKeyName = :partitionkeyval
+    String keyConditionExpression = "%s = :%s";
+    return String.format(keyConditionExpression, partitionKeyName(), canonicalize(contextKey));
+  }
+
   public static ContextItem fromContext(String key, String objectTarget) {
     UuidKey target = new UuidKey(objectTarget);
     return new ContextItem(canonicalize(key), target);
