@@ -51,7 +51,7 @@ async function store(fileStream, encryptionContext = {}) {
   * This Lambda can throttle the DDB writes,
   * but will effect the eventual consistency of the system.
   */
-  for (Item in [PointerItem, ...ContextItems] ) {
+  for (Item of [PointerItem, ...ContextItems] ) {
     await ddb.put({ Item, TableName }).promise()
   }
 

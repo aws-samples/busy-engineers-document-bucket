@@ -7,7 +7,7 @@ const Bucket = config.state.bucketName()
 const faytheCMK = config.state.getFaytheCMK()
 const walterCMK = config.state.getWalterCMK()
 
-module.exports.decryptKeyring = new KmsKeyringNode({ keyIds: [ faytheCMK, walterCMK ] })
+const decryptKeyring = new KmsKeyringNode({ keyIds: [ faytheCMK, walterCMK ] })
 
 module.exports = retrieve
 module.exports.verifyFn = verifyFn
