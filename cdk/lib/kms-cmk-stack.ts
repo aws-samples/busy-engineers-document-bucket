@@ -13,10 +13,15 @@ export class CMKStack extends cdk.Stack {
   ) {
     super(scope, id, props);
 
-    new kms.Key(this, config.cmk_id, {
+    const cmk = new kms.Key(this, config.cmk_id, {
       alias: config.alias
     });
 
-    // TODO: Grants
+    // Output
+    new cdk.CfnOutput(this, config.output, {
+      value: cmk.keyArn,
+      exportName: config.export
+    });
+
   }
 }

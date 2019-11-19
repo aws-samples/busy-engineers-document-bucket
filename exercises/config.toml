@@ -44,9 +44,13 @@ stack_id = "BusyEngineersFaytheCMKStack"
 cmk_id = "BusyEngineersFaytheCMK"
 region = "us-east-2"
 alias = "FaytheCMK"
+output = "FaytheCMKOutput"
+export = "FaytheCMK"
 
 [walter]
 stack_id = "BusyEngineersWalterCMKStack"
 cmk_id = "BusyEngineersWalterCMK"
 region = "us-west-2"
 alias = "WalterCMK"
+output = "WalterCMKOutput"
+export = "WalterCMK"
