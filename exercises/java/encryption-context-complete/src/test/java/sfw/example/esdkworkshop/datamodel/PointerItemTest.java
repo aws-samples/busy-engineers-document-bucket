@@ -3,6 +3,7 @@ package sfw.example.esdkworkshop.datamodel;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -106,5 +107,37 @@ public class PointerItemTest {
         () -> {
           PointerItem.generate(sortKeyContext);
         });
+  }
+
+  @Test
+  void testAtKeyWithBogusKeyThrows() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          PointerItem.atKey("blammo");
+        });
+  }
+
+  @Test
+  void testAtKeyWithStringHappyCase() {
+    PointerItem test = PointerItem.generate();
+    Map<String, AttributeValue> actual = PointerItem.atKey(test.partitionKey().getS());
+    assertEquals(test.toItem(), actual);
+  }
+
+  @Test
+  void testAtKeyHappyCase() {
+    // No encryption context
+    PointerItem test = PointerItem.generate();
+    Map<String, AttributeValue> actual = PointerItem.atKey(test.partitionKey());
+    assertEquals(test.toItem(), actual);
+  }
+
+  @Test
+  void testFilterFor() {
+    Map<String, Condition> filter = PointerItem.filterFor();
+    Condition filterCondition = filter.get(PointerItem.sortKeyName());
+    assertNotNull(filterCondition);
+    assertTrue(filterCondition.toString().contains(PointerItem.TARGET));
   }
 }

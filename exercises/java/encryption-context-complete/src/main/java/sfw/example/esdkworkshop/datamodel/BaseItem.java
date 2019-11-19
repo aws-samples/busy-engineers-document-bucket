@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import sfw.example.esdkworkshop.Config;
 
-abstract class BaseItem {
+public abstract class BaseItem {
   protected final AttributeValue partitionKey;
   protected final AttributeValue sortKey;
   private static final String PARTITION_KEY_NAME =
@@ -34,6 +34,14 @@ abstract class BaseItem {
 
   public static String sortKeyName() {
     return SORT_KEY_NAME;
+  }
+
+  public AttributeValue partitionKey() {
+    return this.partitionKey;
+  }
+
+  public AttributeValue sortKey() {
+    return this.sortKey;
   }
 
   @Override

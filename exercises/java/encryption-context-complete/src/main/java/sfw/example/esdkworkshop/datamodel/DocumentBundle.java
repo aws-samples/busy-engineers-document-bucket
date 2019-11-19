@@ -13,11 +13,15 @@ public class DocumentBundle {
 
   DocumentBundle(byte[] data, PointerItem pointer) {
     this.pointer = pointer;
-    this.data = data;
+    this.data = Arrays.copyOf(data, data.length);
   }
 
   public static DocumentBundle fromData(byte[] data) {
     return fromDataAndContext(data, Collections.emptyMap());
+  }
+
+  public static DocumentBundle fromDataAndPointer(byte[] data, PointerItem pointer) {
+    return new DocumentBundle(data, pointer);
   }
 
   public static DocumentBundle fromDataAndContext(byte[] data, Map<String, String> context) {

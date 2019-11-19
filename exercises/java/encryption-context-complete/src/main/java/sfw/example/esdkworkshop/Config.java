@@ -27,9 +27,11 @@ public class Config {
 
   public static class DocumentBucket {
     public final DocumentTable document_table;
+    public final Bucket bucket;
 
-    DocumentBucket(DocumentTable document_table) {
+    DocumentBucket(DocumentTable document_table, Bucket bucket) {
       this.document_table = document_table;
+      this.bucket = bucket;
     }
   }
 
@@ -40,10 +42,33 @@ public class Config {
 
     public final String sort_key;
 
-    DocumentTable(String name, String partition_key, String sort_key) {
+    public final String object_target;
+
+    public final String ctx_prefix;
+
+    DocumentTable(
+        String name,
+        String partition_key,
+        String sort_key,
+        String object_target,
+        String ctx_prefix) {
       this.name = name;
       this.partition_key = partition_key;
       this.sort_key = sort_key;
+      this.object_target = object_target;
+      this.ctx_prefix = ctx_prefix;
+    }
+  }
+
+  public static class Bucket {
+    public final String name;
+    public final String output;
+    public final String export;
+
+    Bucket(String name, String output, String export) {
+      this.name = name;
+      this.output = output;
+      this.export = export;
     }
   }
   // CHECKSTYLE:ON MemberName

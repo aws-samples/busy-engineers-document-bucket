@@ -3,7 +3,7 @@
 
 package sfw.example.esdkworkshop.datamodel;
 
-public class DataModelException extends Exception {
+public class DataModelException extends RuntimeException {
   static final long serialVersionUID = 1L;
 
   public DataModelException(String msg) {
