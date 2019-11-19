@@ -28,8 +28,9 @@ bootstrap:
 	@echo "==========================================================================="
 	PATH="/home/ec2-user/.pyenv/bin:$$PATH" pyenv install 3.8.0
 	PATH="/home/ec2-user/.pyenv/bin:$$PATH" pyenv global 3.8.0
-	PATH="/home/ec2-user/.pyenv/bin:$$PATH" pip install tox
+	@# No, really, don't use system pip :(
+	~/.pyenv/shims/python -m pip install tox
 	@echo "==========================================================================="
-	@echo "Python install complete. Starting new shell for environment changes."
+	@echo "Python install complete."
+	@echo "Please close this terminal window and open a new one to pick up changes"
 	@echo "==========================================================================="
-	exec $$SHELL
