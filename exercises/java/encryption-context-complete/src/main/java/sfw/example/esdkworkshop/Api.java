@@ -20,8 +20,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import sfw.example.esdkworkshop.datamodel.BaseItem;
@@ -101,25 +101,46 @@ public class Api {
   }
 
   public DocumentBundle retrieve(String key) throws java.io.IOException {
-    return retrieve(key, Collections.emptyList(), Collections.emptyMap());
+    return retrieve(key, Collections.emptySet(), Collections.emptyMap());
   }
 
-  public DocumentBundle retrieve(String key, List<String> expectedContextKeys)
+  public DocumentBundle retrieve(String key, Set<String> expectedContextKeys)
       throws java.io.IOException {
     return retrieve(key, expectedContextKeys, Collections.emptyMap());
   }
 
   public DocumentBundle retrieve(String key, Map<String, String> expectedContext)
       throws java.io.IOException {
-    return retrieve(key, Collections.emptyList(), expectedContext);
+    return retrieve(key, Collections.emptySet(), expectedContext);
   }
 
   public DocumentBundle retrieve(
-      String key, List<String> expectedContextKeys, Map<String, String> expectedContext)
+      String key, Set<String> expectedContextKeys, Map<String, String> expectedContext)
       throws java.io.IOException {
     PointerItem pointer = getPointerItem(key);
     byte[] data = getObjectData(key);
     CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSDK.decryptData(mkp, data);
+    Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
+    boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
+    if (!allExpectedContextKeysFound) {
+      // Remove all of the keys that were found
+      expectedContextKeys.removeAll(actualContext.keySet());
+      String error =
+          String.format(
+              "Expected context keys were not found in the actual encryption context! Missing keys were: %s",
+              expectedContextKeys.toString());
+      throw new NoSuchElementException(error);
+    }
+    boolean allExpectedContextFound =
+        actualContext.entrySet().containsAll(expectedContext.entrySet());
+    if (!allExpectedContextFound) {
+      expectedContextKeys.removeAll(actualContext.keySet());
+      String error =
+          String.format(
+              "Expected context pairs were not found in the actual encryption context! Missing pairs were: %s",
+              expectedContextKeys.toString());
+      throw new NoSuchElementException(error);
+    }
     return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
   }
 
