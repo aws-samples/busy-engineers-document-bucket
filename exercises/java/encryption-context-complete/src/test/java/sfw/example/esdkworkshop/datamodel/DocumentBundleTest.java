@@ -45,4 +45,18 @@ public class DocumentBundleTest {
     assertEquals(pointer, bundle.getPointer());
     assertArrayEquals(sampleData, bundle.getData());
   }
+
+  @Test
+  void testToStringSanity() {
+
+    byte[] sampleData = {
+      (byte) 0xC0, (byte) 0xFF, (byte) 0xEE, (byte) 0xCA, (byte) 0xB0, (byte) 0x05, (byte) 0xE5
+    };
+    PointerItem pointer = PointerItem.generate(standardContext());
+    DocumentBundle bundle = DocumentBundle.fromDataAndPointer(sampleData, pointer);
+    assertTrue(bundle.toString().contains(pointer.toString()));
+    for (int i = 0; i < sampleData.length; i++) {
+      assertTrue(bundle.toString().contains(String.format("%X", sampleData[i])));
+    }
+  }
 }

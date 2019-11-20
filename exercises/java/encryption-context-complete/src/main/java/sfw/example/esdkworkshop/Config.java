@@ -18,10 +18,20 @@ public class Config {
   // CHECKSTYLE:OFF MemberName
   // CHECKSTYLE:OFF ParameterName
   public static class ConfigContents {
+    public final Base base;
     public final DocumentBucket document_bucket;
 
-    ConfigContents(DocumentBucket document_bucket) {
+    ConfigContents(Base base, DocumentBucket document_bucket) {
+      this.base = base;
       this.document_bucket = document_bucket;
+    }
+  }
+
+  public static class Base {
+    public final String state_file;
+
+    Base(String state_file) {
+      this.state_file = state_file;
     }
   }
 

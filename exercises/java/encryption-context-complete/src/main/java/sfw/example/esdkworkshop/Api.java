@@ -5,15 +5,15 @@ package sfw.example.esdkworkshop;
 
 import com.amazonaws.encryptionsdk.AwsCrypto;
 import com.amazonaws.encryptionsdk.CryptoResult;
+import com.amazonaws.encryptionsdk.MasterKey;
 import com.amazonaws.encryptionsdk.MasterKeyProvider;
 import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.GetItemResult;
-import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -30,27 +30,45 @@ import sfw.example.esdkworkshop.datamodel.DocumentBundle;
 import sfw.example.esdkworkshop.datamodel.PointerItem;
 
 public class Api {
-  private final AmazonDynamoDBClient ddbClient;
-  private final AmazonS3Client s3Client;
-  private final AwsCrypto awsEncryptionSDK = new AwsCrypto();
+  private final AmazonDynamoDB ddbClient;
+  private final AmazonS3 s3Client;
+  private final AwsCrypto awsEncryptionSDK;
   private final MasterKeyProvider mkp;
-  private static final String TABLE_NAME = Config.contents.document_bucket.document_table.name;
-  private static final String BUCKET_NAME = Config.contents.document_bucket.bucket.name;
+  private final String tableName;
+  private final String bucketName;
 
-  public Api(AmazonDynamoDBClient ddbClient, AmazonS3Client s3Client, MasterKeyProvider mkp) {
+  public Api(
+      AmazonDynamoDB ddbClient,
+      String tableName,
+      AmazonS3 s3Client,
+      String bucketName,
+      MasterKeyProvider mkp) {
+    this(ddbClient, tableName, s3Client, bucketName, new AwsCrypto(), mkp);
+  }
+
+  protected Api(
+      AmazonDynamoDB ddbClient,
+      String tableName,
+      AmazonS3 s3Client,
+      String bucketName,
+      AwsCrypto awsEncryptionSDK,
+      MasterKeyProvider<? extends MasterKey> mkp) {
     this.ddbClient = ddbClient;
+    this.tableName = tableName;
     this.s3Client = s3Client;
+    this.bucketName = bucketName;
+    this.awsEncryptionSDK = awsEncryptionSDK;
     this.mkp = mkp;
   }
 
   protected <T extends BaseItem> Map<String, AttributeValue> writeItem(T modeledItem) {
     Map<String, AttributeValue> ddbItem = modeledItem.toItem();
-    ddbClient.putItem(TABLE_NAME, ddbItem);
+    ddbClient.putItem(tableName, ddbItem);
     return ddbItem;
   }
 
   protected PointerItem getPointerItem(String key) {
-    GetItemResult result = ddbClient.getItem(TABLE_NAME, PointerItem.atKey(key));
+    GetItemResult result = ddbClient.getItem(tableName, PointerItem.atKey(key));
     PointerItem pointer = PointerItem.fromItem(result.getItem());
     return pointer;
   }
@@ -60,11 +78,7 @@ public class Api {
   }
 
   protected Set<PointerItem> queryForContextKey(String contextKey) {
-    QueryResult result =
-        ddbClient.query(
-            new QueryRequest()
-                .withTableName(TABLE_NAME)
-                .withKeyConditionExpression(ContextItem.queryFor(contextKey)));
+    QueryResult result = ddbClient.query(ContextItem.queryFor(contextKey).withTableName(tableName));
     Set<ContextItem> contextItems =
         result.getItems().stream().map(ContextItem::fromItem).collect(Collectors.toSet());
     Set<PointerItem> pointerItems =
@@ -76,7 +90,7 @@ public class Api {
     ObjectMetadata metadata = new ObjectMetadata();
     metadata.setUserMetadata(bundle.getPointer().getContext());
     s3Client.putObject(
-        BUCKET_NAME,
+        bucketName,
         bundle.getPointer().partitionKey().getS(),
         new ByteArrayInputStream(bundle.getData()),
         metadata);
@@ -85,7 +99,7 @@ public class Api {
   // TODO Return some kind of bundle so that data has been pulled from the stream
   // but metadata is returned as well?
   protected byte[] getObjectData(String key) throws java.io.IOException {
-    S3Object object = s3Client.getObject(BUCKET_NAME, key);
+    S3Object object = s3Client.getObject(bucketName, key);
     byte[] result;
     try (S3ObjectInputStream stream = object.getObjectContent()) {
       result = IOUtils.toByteArray(stream);
@@ -94,7 +108,7 @@ public class Api {
   }
 
   public Set<PointerItem> list() {
-    ScanResult result = ddbClient.scan(TABLE_NAME, PointerItem.filterFor());
+    ScanResult result = ddbClient.scan(tableName, PointerItem.filterFor());
     Set<PointerItem> mappedItems =
         result.getItems().stream().map(PointerItem::fromItem).collect(Collectors.toSet());
     return mappedItems;

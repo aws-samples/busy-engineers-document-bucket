@@ -52,4 +52,14 @@ public class BaseItemTest {
     assertEquals(test.partitionKey(), test.partitionKey);
     assertEquals(test.sortKey(), test.sortKey);
   }
+
+  @Test
+  void testToStringSanity() {
+    String contextKey = "foobaz";
+    UuidKey objectKey = new UuidKey();
+    ContextItem test = ContextItem.fromContext(contextKey, objectKey);
+    ;
+    assertTrue(test.toString().contains(contextKey));
+    assertTrue(test.toString().contains(objectKey.toString()));
+  }
 }

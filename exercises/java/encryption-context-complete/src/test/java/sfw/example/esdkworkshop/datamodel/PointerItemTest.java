@@ -140,4 +140,13 @@ public class PointerItemTest {
     assertNotNull(filterCondition);
     assertTrue(filterCondition.toString().contains(PointerItem.TARGET));
   }
+
+  @Test
+  void testToStringSanity() {
+    PointerItem test = PointerItem.generate(sampleContext());
+    for (Map.Entry<String, String> entry : test.getContext().entrySet()) {
+      assertTrue(test.toString().contains(entry.getKey()));
+      assertTrue(test.toString().contains(entry.getValue()));
+    }
+  }
 }
