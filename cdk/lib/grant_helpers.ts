@@ -1,3 +1,6 @@
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import aws = require("aws-sdk");
 import { regionFromKmsKeyArn } from "@aws-crypto/kms-keyring"
 import { KMS } from "aws-sdk";
