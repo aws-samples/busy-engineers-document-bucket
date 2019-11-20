@@ -6,7 +6,7 @@ const config = toml.parse(
   fs.readFileSync("../../config.toml", "utf8")
 )
 
-const state = toml.parse(
+const { state } = toml.parse(
   fs.readFileSync(untildify(config.base.state_file), "utf8")
 )
 
