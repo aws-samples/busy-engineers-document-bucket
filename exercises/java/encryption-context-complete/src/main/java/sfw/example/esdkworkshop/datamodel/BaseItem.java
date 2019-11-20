@@ -60,4 +60,9 @@ public abstract class BaseItem {
   public int hashCode() {
     return Objects.hash(partitionKey, sortKey);
   }
+
+  @Override
+  public String toString() {
+    return this.toItem().toString();
+  }
 }

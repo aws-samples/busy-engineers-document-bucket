@@ -2,6 +2,7 @@ package sfw.example.esdkworkshop.datamodel;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import org.junit.jupiter.api.Test;
 
 public class ContextItemTest {
@@ -77,8 +78,8 @@ public class ContextItemTest {
   @Test
   void testKeyConditionExpression() {
     String contextKey = "sp-m00n-1";
-    String actual = ContextItem.queryFor(contextKey);
-    assertTrue(actual.contains(contextKey));
-    assertTrue(actual.contains(ContextItem.partitionKeyName()));
+    QueryRequest actual = ContextItem.queryFor(contextKey);
+    assertTrue(actual.toString().contains(contextKey));
+    assertTrue(actual.toString().contains(ContextItem.partitionKeyName()));
   }
 }

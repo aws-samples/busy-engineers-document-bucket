@@ -35,4 +35,16 @@ public class DocumentBundle {
   public PointerItem getPointer() {
     return pointer;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder b = new StringBuilder(pointer.toString());
+    b.append(System.getProperty("line.separator"));
+    b.append("Data: {");
+    for (int i = 0; i < data.length; i++) {
+      b.append(String.format("%X", data[i]));
+    }
+    b.append("}");
+    return b.toString();
+  }
 }
