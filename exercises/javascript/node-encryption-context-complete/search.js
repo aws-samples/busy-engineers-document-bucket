@@ -1,28 +1,27 @@
-const { DynamoDB } = require('aws-sdk')
-const ddb = new DynamoDB.DocumentClient()
-const { canonicalContextKey } = require('./store')
-const config = require('./config')
-const { partition_key } = config.document_bucket.document_table
-const TableName = config.state.tableName()
+const { DynamoDB } = require("aws-sdk");
+const ddb = new DynamoDB.DocumentClient();
+const { canonicalContextKey } = require("./store");
+const config = require("./config");
+const { partition_key } = config.document_bucket.document_table;
+const TableName = config.state.tableName();
 
-module.exports = search
+module.exports = search;
 
-async function search(contextKey, { ExclusiveStartKey, Limit } = {}) { 
-
+async function search(contextKey, { ExclusiveStartKey, Limit } = {}) {
   return ddb
     .query({
       TableName,
-      KeyConditionExpression: '#HashKey = :hkey',
+      KeyConditionExpression: "#HashKey = :hkey",
       ExpressionAttributeValues: {
-        ':hkey': canonicalContextKey(contextKey)
+        ":hkey": canonicalContextKey(contextKey)
       },
       ExpressionAttributeNames: {
-        '#HashKey': partition_key
+        "#HashKey": partition_key
       },
       ExclusiveStartKey,
       Limit
     })
-    .promise()
+    .promise();
 }
 
 /* TODO Explorations
