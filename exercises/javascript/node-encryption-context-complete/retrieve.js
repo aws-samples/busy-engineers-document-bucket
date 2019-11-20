@@ -19,7 +19,7 @@ function retrieve(Key, { expectedContext, expectedContextKeys } = {}) {
     .pipe(decryptStream(decryptKeyring))
     .once('MessageHeader', function(header) {
       if (!verify(header)) {
-        this.emit('error', new Error('Encryption context does not match'))
+        this.emit('error', new Error('Encryption context does not match expected shape'))
       }
     })
 }
@@ -30,6 +30,6 @@ function verifyFn(expectedContext = {}, expectedContextKeys = []) {
 
   return function verify({ encryptionContext }) {
     return pairs.every(([key, value]) => encryptionContext[key] === value) &&
-      keys.every(key => encryptionContext.hasOwnProperty(key))
+      keys.every(key => Object.hasOwnProperty.call(encryptionContext, key))
   }
 }
