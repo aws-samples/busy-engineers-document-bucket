@@ -10,9 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "@aws-crypto/client-node": "^1.0.1",
-    "aws-sdk": "^2.568.0",
-    "uuid": "^3.3.3",
     "@iarna/toml": "^2.2.3",
-    "untildify": "^4.0.0"
+    "aws-sdk": "^2.568.0",
+    "commander": "^4.0.1",
+    "untildify": "^4.0.0",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1"
   }
 }
