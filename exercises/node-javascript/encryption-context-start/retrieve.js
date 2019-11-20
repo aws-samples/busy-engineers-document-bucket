@@ -9,7 +9,6 @@ const walterCMK = config.state.getWalterCMK();
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
 module.exports = retrieve;
-module.exports.verifyFn = verifyFn;
 
 function retrieve(Key, { expectedContext, expectedContextKeys } = {}) {
   /* ENCRYPTION-CONTEXT-START:
@@ -19,29 +18,8 @@ function retrieve(Key, { expectedContext, expectedContextKeys } = {}) {
    * The header will have a property `encryptionContext`,
    * that contains the validated encryption context for this message.
    */
-  const verify = verifyFn(expectedContext, expectedContextKeys);
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
-    .pipe(decryptStream(decryptKeyring))
-    .once("MessageHeader", function(header) {
-      if (!verify(header)) {
-        this.emit(
-          "error",
-          new Error("Encryption context does not match expected shape")
-        );
-      }
-    });
-}
-
-function verifyFn(expectedContext = {}, expectedContextKeys = []) {
-  const pairs = Object.entries(expectedContext);
-  const keys = expectedContextKeys.slice();
-
-  return function verify({ encryptionContext }) {
-    return (
-      pairs.every(([key, value]) => encryptionContext[key] === value) &&
-      keys.every(key => Object.hasOwnProperty.call(encryptionContext, key))
-    );
-  };
+    .pipe(decryptStream(decryptKeyring));
 }

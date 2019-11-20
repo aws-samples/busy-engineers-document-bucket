@@ -52,9 +52,7 @@ async function store(fileStream, encryptionContext = {}) {
   /* ENCRYPTION-CONTEXT-START:
    * The included `encryptionContext` in the encrypt call option hash.
    */
-  const Body = fileStream.pipe(
-    encryptStream(encryptKeyring, { encryptionContext })
-  );
+  const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
   const file = await s3
     .upload({ Bucket, Key, Body, Metadata: encryptionContext })
