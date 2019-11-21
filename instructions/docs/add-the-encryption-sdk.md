@@ -130,7 +130,7 @@ TODO
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         # ADD-ESDK-START
         encrypted_data = self._get_object(item)
-        plaintest, header = aws_encryption_sdk.decrypt(
+        plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
         return DocumentBundle.from_data_and_context(
