@@ -68,7 +68,7 @@ class DocumentBucketOperations:
     ) -> DocumentBundle:
         item = PointerItem.from_key_and_context(pointer_key, expected_context)
         encrypted_data = self._get_object(item)
-        (plaintext, header) = aws_encryption_sdk.decrypt(
+        plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
         if not expected_context_keys <= header.encryption_context.keys():
@@ -90,7 +90,7 @@ class DocumentBucketOperations:
         )
 
     def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
-        (encrypted_data, header) = aws_encryption_sdk.encrypt(
+        encrypted_data, header = aws_encryption_sdk.encrypt(
             source=data,
             key_provider=self.master_key_provider,
             encryption_context=context,
