@@ -20,5 +20,5 @@ create_grants:
 revoke_grants:
 	npx ts-node bin/revoke_grants.ts
 
-purge_bucket_and_table:
-	npx ts-node bin/purge_bucket_and_table.ts
+data_purge:
+	npx ts-node bin/data_purge.ts
