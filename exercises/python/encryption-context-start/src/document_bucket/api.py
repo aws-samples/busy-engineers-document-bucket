@@ -32,21 +32,23 @@ class DocumentBucketOperations:
             self.table.put_item(Item=context_item.to_item())
         return context_items
 
+    def _get_pointer_item(self, pointer_query: PointerQuery) -> PointerItem:
+        pointer_items = self.table.query(
+            KeyConditionExpression=pointer_query.expression()
+        )["Items"]
+        if len(pointer_items) != 1:
+            raise ValueError(
+                f"Pointer ID not unique! Expected 1 ID, got {len(pointer_items)}"
+            )
+        return PointerItem.from_item(pointer_items[0])
+
     def _query_for_context_key(self, query: ContextQuery) -> Set[PointerItem]:
         result = self.table.query(KeyConditionExpression=query.expression())
         pointers: Set[PointerItem] = set()
         for ddb_context_item in result["Items"]:
             context_item = ContextItem.from_item(ddb_context_item)
             pointer_query = PointerQuery.from_context_item(context_item)
-            pointer_items = self.table.query(
-                KeyConditionExpression=pointer_query.expression()
-            )["Items"]
-            if len(pointer_items) != 1:
-                raise ValueError(
-                    f"Pointer ID not unique! Expected 1 ID, got {len(pointer_items)}"
-                )
-            pointer = PointerItem.from_item(pointer_items[0])
-            pointers.add(pointer)
+            pointers.add(self._get_pointer_item(pointer_query))
         return pointers
 
     def _scan_table(self) -> Set[PointerItem]:
@@ -66,7 +68,7 @@ class DocumentBucketOperations:
         expected_context_keys: Set[str] = set(),
         expected_context: Dict[str, str] = {},
     ) -> DocumentBundle:
-        item = PointerItem.from_key_and_context(pointer_key, expected_context)
+        item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         encrypted_data = self._get_object(item)
         plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider

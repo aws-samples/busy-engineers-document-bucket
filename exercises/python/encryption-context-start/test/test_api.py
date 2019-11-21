@@ -206,6 +206,7 @@ def test_ec_keys_happy_case(monkeypatch, mocked_dbo):
     key = get_pointer_key()
     expected_keys = standard_context().keys()
     mocked_dbo._get_object = mock.MagicMock()
+    mocked_dbo._get_pointer_item = mock.MagicMock()
     mocked_header = mock.MagicMock()
     mocked_header.encryption_context = standard_context()
 
@@ -221,6 +222,7 @@ def test_ec_keys_unhappy_case(monkeypatch, mocked_dbo):
     expected_keys = set(standard_context().keys())
     expected_keys.add("WONT_BE_PRESENT")
     mocked_dbo._get_object = mock.MagicMock()
+    mocked_dbo._get_pointer_item = mock.MagicMock()
     mocked_header = mock.MagicMock()
     mocked_header.encryption_context = standard_context()
 
@@ -236,6 +238,7 @@ def test_ec_happy_case(monkeypatch, mocked_dbo):
     key = get_pointer_key()
     expected_ec = standard_context()
     mocked_dbo._get_object = mock.MagicMock()
+    mocked_dbo._get_pointer_item = mock.MagicMock()
     mocked_header = mock.MagicMock()
     mocked_header.encryption_context = standard_context()
 
@@ -251,6 +254,7 @@ def test_ec_unhappy_case(monkeypatch, mocked_dbo):
     expected_ec = standard_context()
     expected_ec["UNOBTANIUM"] = "this value will not be present!"
     mocked_dbo._get_object = mock.MagicMock()
+    mocked_dbo._get_pointer_item = mock.MagicMock()
     mocked_header = mock.MagicMock()
     mocked_header.encryption_context = standard_context()
 

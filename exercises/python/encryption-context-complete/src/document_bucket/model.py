@@ -81,6 +81,10 @@ class PointerQuery:
     partition_key: UUIDKey
 
     @staticmethod
+    def from_key(pointer_key: str) -> PointerQuery:
+        return PointerQuery(UUIDKey(pointer_key))
+
+    @staticmethod
     def from_context_item(context_item) -> PointerQuery:
         return PointerQuery(context_item.sort_key)
 
