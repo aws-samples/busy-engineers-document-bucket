@@ -5,7 +5,7 @@ bootstrap_cdk:
 	$(MAKE) -C cdk bootstrap	
 
 bootstrap_languages: 
-	$(MAKE) bootstrap_javascript bootstrap_python bootstrap_java -j 3
+	$(MAKE) bootstrap_node_javascript bootstrap_python bootstrap_java -j 3
 
 bootstrap_node_javascript: 
 	$(MAKE) -C exercises/node-javascript bootstrap
