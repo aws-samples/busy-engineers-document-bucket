@@ -64,11 +64,11 @@ from aws_encryption_sdk import KMSMasterKeyProvider
 
 # Add a Master Key Provider to your __init__
 # ADD-ESDK-START
-def __init__(self, bucket, table, mkp):
+def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
     self.bucket = bucket
     self.table = table
     # ADD-ESDK-START
-    self.master_key_provider
+    self.master_key_provider = master_key_provider
 
 # Save and exit
 ```
