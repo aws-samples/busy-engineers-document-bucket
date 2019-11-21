@@ -1,5 +1,7 @@
 import os
 
+
+# ADD-ESDK-COMPLETE
 import aws_encryption_sdk  # type: ignore
 import boto3  # type: ignore
 import toml
@@ -17,15 +19,16 @@ def initialize() -> DocumentBucketOperations:
     bucket = boto3.resource("s3").Bucket(state["DocumentBucket"])
     # Set up your DynamoDB Table for the Document Bucket
     table = boto3.resource("dynamodb").Table(state["DocumentTable"])
-    # MULTI-CMK-START
+    # ADD-ESDK-COMPLETE
     # Pull configuration of KMS resources
     faythe_cmk = state["FaytheCMK"]
+    # ADD-ESDK-COMPLETE
     # And the Master Key Provider configuring how to use KMS
-    # MULTI-CMK-START
     cmk = [faythe_cmk]
     mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=[cmk])
 
     # Set up the API to interact with the Document Bucket using all these resources
+    # ADD-ESDK-COMPLETE
     operations = DocumentBucketOperations(bucket, table, mkp)
 
     return operations
