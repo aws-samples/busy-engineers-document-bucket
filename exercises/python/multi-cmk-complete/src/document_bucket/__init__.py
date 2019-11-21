@@ -18,9 +18,11 @@ def initialize() -> DocumentBucketOperations:
     # Set up your DynamoDB Table for the Document Bucket
     table = boto3.resource("dynamodb").Table(state["DocumentTable"])
     # Pull configuration of KMS resources
+    # MULTI-CMK-COMPLETE
     faythe_cmk = state["FaytheCMK"]
     walter_cmk = state["WalterCMK"]
     # And the Master Key Provider configuring how to use KMS
+    # MULTI-CMK-COMPLETE
     cmk = [faythe_cmk, walter_cmk]
     mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=[cmk])
 
