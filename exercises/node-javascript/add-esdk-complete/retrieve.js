@@ -17,7 +17,6 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 module.exports = retrieve;
 
 function retrieve(Key, { expectedContext, expectedContextKeys } = {}) {
-  const verify = verifyFn(expectedContext, expectedContextKeys);
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
