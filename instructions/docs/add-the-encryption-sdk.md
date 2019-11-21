@@ -2,7 +2,9 @@
 
 ## Background
 
-Right now, the Document Bucket supports storing files (or documents, or other blobs of data) in S3, and indexing them in DynamoDB. This allows Document Bucket users to share files with other users, or store them for retrieval later. The DynamoDB entries provide fast lookups to the content of the bucket, along with metadata context for each bucket item.
+The Busy Engineer's Document Bucket is an example application meant to show some high-level examples of real world AWS patterns. This includes how to integrate client-side encryption using AWS KMS and the AWS Encryption SDK in application code.
+
+Right now, the Document Bucket supports storing files (or documents, or other blobs of data) in a private S3 bucket, and indexing them in DynamoDB. This allows Document Bucket users to share files with other users, or store them for retrieval later. The DynamoDB entries provide fast lookups to the content of the bucket, along with metadata context for each bucket item.
 
 This context allows storing additional information about the S3 item. Perhaps the origin user, the destination fleet, the project, or any other tag that would be useful to know without downloading and examining the item.
 
@@ -18,7 +20,7 @@ Here's the API the Document Bucket supports:
 
 This is a start for sharing, storing, and searching documents of a variety of types. But what about sensitive documents? Or protecting, say, important configuration files from accidental corruption during storing or retrieving?
 
-Now you will add the AWS Encryption SDK to take an extra step of protection: client-side encrypting the Document Bucket document before it is transmitted off of the host machine. You will use KMS to provide a `data key` for each document, using a CMK that you set up in [Getting Started](./getting-started.md) when you deployed your stacks.
+Now you will add the AWS Encryption SDK to encrypt close to where the data originates: client-side encrypting the Document Bucket document before it is transmitted off of the host machine to the internet. You will use KMS to provide a `data key` for each document, using a CMK that you set up in [Getting Started](./getting-started.md) when you deployed your stacks.
 
 ## Make the Change
 
@@ -99,9 +101,9 @@ def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
 
 #### What Just Happened
 
-You just started encrypting data client-side with the AWS Encryption SDK and KMS!
+The application just started encrypting data client-side with the AWS Encryption SDK and KMS!
 
-Now, before storing your data in the Document Bucket, you use the AWS Encryption SDK to:
+Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK to:
 
 1. Request a new data key using your keyring or Master Key Provider
 1. Encrypt that data for you
@@ -137,7 +139,7 @@ TODO
 ```
 
 
-You just started decrypting data client-side as well!
+The application just started decrypting data client-side as well!
 
 The data returned from S3 for `retrieve` is now encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK:
 
@@ -149,7 +151,7 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 
 ### Step 4: Plumb In Your Config
 
-Now that you have your dependencies declared and your code updated to encrypt and decrypt data, all you need to do is pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
+Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
 ```NodeJS
 
@@ -177,7 +179,7 @@ operations = DocumentBucketOperations(bucket, table, mkp)
 
 #### What Just Happened
 
-In Getting Started, you launched CloudFormation stacks for CMKs. One of these CMKs was nicknamed Faythe. As part of launching these templates, the CMK's ARN was written to a configuration file on disk, the `state` variable that is loaded and parsed.
+In Getting Started, you launched CloudFormation stacks for CMKs. One of these CMKs was nicknamed Faythe. As part of launching these templates, the CMK's Amazon Resource Name (ARN) was written to a configuration file on disk, the `state` variable that is loaded and parsed.
 
 Now Faythe's ARN is pulled into a variable, and used to initialize a keyring or master key provider that will use the Faythe CMK. That new keyring/master key provider is passed in to your API, and you are set to start encrypting and decrypting with KMS and the Encryption SDK.
 
