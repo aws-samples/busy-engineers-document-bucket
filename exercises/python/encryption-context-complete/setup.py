@@ -5,6 +5,5 @@ setup(
     version="0.1.0",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    entry_points={"console_scripts": ["document_bucket=document_bucket:main"]},
     data_files=[("config", ["config/config.toml"])],
 )

@@ -50,7 +50,7 @@ class DocumentBucketOperations:
         return pointers
 
     def _scan_table(self) -> Set[PointerItem]:
-        result = self.table.scan(PointerItem.filter_for())
+        result = self.table.scan(FilterExpression=PointerItem.filter_for())
         pointers = set()
         for ddb_item in result["Items"]:
             pointer = PointerItem.from_item(ddb_item)
@@ -89,8 +89,8 @@ class DocumentBucketOperations:
             plaintext, header.encryption_context
         )
 
-    def store(self, data: bytes, context: Dict[str, str]) -> PointerItem:
-        encrypted_data = aws_encryption_sdk.encrypt(
+    def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
+        (encrypted_data, header) = aws_encryption_sdk.encrypt(
             source=data,
             key_provider=self.master_key_provider,
             encryption_context=context,
