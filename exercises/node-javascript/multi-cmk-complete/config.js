@@ -1,3 +1,6 @@
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 const toml = require("@iarna/toml");
 const fs = require("fs");
 const untildify = require("untildify");

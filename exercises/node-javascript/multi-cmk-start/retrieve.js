@@ -1,3 +1,6 @@
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
 const { S3 } = require("aws-sdk");
 const s3 = new S3();

@@ -1,3 +1,6 @@
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 /* ADD-ESDK-START:
  * Add the @aws-crypto/client-node dependency.
  * You will need the encrypt stream as well as the KMS keyring.
