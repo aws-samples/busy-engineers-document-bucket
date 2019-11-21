@@ -50,7 +50,7 @@ class DocumentBucketOperations:
         return pointers
 
     def _scan_table(self) -> Set[PointerItem]:
-        result = self.table.scan(PointerItem.filter_for())
+        result = self.table.scan(FilterExpression=PointerItem.filter_for())
         pointers = set()
         for ddb_item in result["Items"]:
             pointer = PointerItem.from_item(ddb_item)
@@ -68,7 +68,7 @@ class DocumentBucketOperations:
     ) -> DocumentBundle:
         item = PointerItem.from_key_and_context(pointer_key, expected_context)
         encrypted_data = self._get_object(item)
-        (plaintext, header) = aws_encryption_sdk.decrypt(
+        plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
         if not expected_context_keys <= header.encryption_context.keys():
@@ -89,8 +89,8 @@ class DocumentBucketOperations:
             plaintext, header.encryption_context
         )
 
-    def store(self, data: bytes, context: Dict[str, str]) -> PointerItem:
-        encrypted_data = aws_encryption_sdk.encrypt(
+    def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
+        encrypted_data, header = aws_encryption_sdk.encrypt(
             source=data,
             key_provider=self.master_key_provider,
             encryption_context=context,
