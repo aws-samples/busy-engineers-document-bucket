@@ -29,7 +29,7 @@ To prepare your environment, you will do the following:
 
 ## Try it Out
 
-* `make bootstrap` will take a while. Thank you for your patience while it sets up the environment for you.
+* `make bootstrap` will take approximately 5 minutes. Thank you for your patience while it sets up the environment for you.
     * If you are in a live workshop, this is good to run during the presentation.
     * If you are working on your own, grab a cup of your favorite beverage while you wait.
 * After `make bootstrap` completes, you will have:
