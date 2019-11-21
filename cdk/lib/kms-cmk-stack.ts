@@ -22,6 +22,5 @@ export class CMKStack extends cdk.Stack {
       value: cmk.keyArn,
       exportName: config.export
     });
-
   }
 }
