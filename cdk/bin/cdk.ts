@@ -8,7 +8,7 @@ import cdk = require("@aws-cdk/core");
 import { CMKStack } from "../lib/kms-cmk-stack";
 import { DocumentBucketStack } from "../lib/document-bucket-stack";
 import { WebappStack } from "../lib/webapp-stack";
-import { config } from "../lib/config"
+import { config } from "../lib/config";
 
 // Map constants
 const STATE_FILE = config.base.state_file;
