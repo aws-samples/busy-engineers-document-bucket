@@ -1,5 +1,5 @@
 
-bootstrap: | bootstrap_languages bootstrap_cdk
+bootstrap: | bootstrap_languages bootstrap_cdk bootstrap_done
 
 bootstrap_cdk:
 	$(MAKE) -C cdk bootstrap	
@@ -16,3 +16,6 @@ bootstrap_python:
 
 bootstrap_java: 
 	$(MAKE) -C exercises/java bootstrap
+
+bootstrap_done:
+	@echo "*** BOOTSTRAP COMPLETE ***"

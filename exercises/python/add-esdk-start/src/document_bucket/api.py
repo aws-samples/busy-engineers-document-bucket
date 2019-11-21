@@ -80,6 +80,7 @@ class DocumentBucketOperations:
         # ADD-ESDK-START
         item = PointerItem.generate(context)
         self._write_pointer(item)
+        # ADD-ESDK-START
         self._write_object(data, item)
         self._populate_key_records(item)
         return item
