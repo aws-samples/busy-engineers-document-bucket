@@ -19,3 +19,6 @@ create_grants:
 	
 revoke_grants:
 	npx ts-node bin/revoke_grants.ts
+
+data_purge:
+	npx ts-node bin/data_purge.ts
