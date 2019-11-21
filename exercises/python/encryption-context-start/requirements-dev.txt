@@ -1,0 +1,10 @@
+black
+flake8
+isort
+mypy
+mypy-boto3
+mypy-boto3-dynamodb
+mypy-boto3-s3
+pytest
+pytest-cov
+aws_encryption_sdk
