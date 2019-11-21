@@ -32,7 +32,7 @@ Make sure you are in the `exercises` directory for the language of your choice:
 ~/environment/workshop/exercises/java
 ```
 
-```NodeJS
+```Javascript Node.js
 ~/environment/workshop/exercises/node-javascript
 ```
 
@@ -48,8 +48,18 @@ Look for `ADD-ESDK-START` comments to help orient yourself in the code.
 
 Start by adding the Encryption SDK dependency to the code.
 
-```NodeJS
-TODO
+```Javascript Node.js
+// Edit ./store.js
+
+const { encryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
+
+// Save and exit
+
+// Edit ./retrieve.js
+
+const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
+
+// Save and exit
 ```
 
 ```Python
@@ -85,18 +95,26 @@ You also changed the API to expect that a Keyring or Master Key Provider will be
 
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
-```NodeJS
-TODO
+```Javascript Node.js
+// Edit ./store.js
+
+const Body = fileStream.pipe(encryptStream(encryptKeyring));
+
+// Save and exit
+
 ```
 
 ```Python
 # Edit src/document_bucket/api.py
+
 def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
     # ADD-ESDK-START
     encrypted_data, header = aws_encryption_sdk.encrypt(
         source=data,
         key_provider=self.master_key_provider,
     )
+
+# Save and exit
 ```
 
 #### What Just Happened
@@ -114,13 +132,21 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 
 Now that you are encrypting data before storing it, you need to decrypt it before returning it to your caller. At least for it to be useful, anyway.
 
-```NodeJS
-TODO
+```Javascript Node.js
+// Edit retrieve.js
+
+  return s3
+    .getObject({ Bucket, Key })
+    .createReadStream()
+    .pipe(decryptStream(decryptKeyring));
+
+// Save and Exit
 ```
 
 #### What Just Happened
 ```Python
 # Edit src/document_bucket/api.py
+
     def retrieve(
             self,
             pointer_key: str,
@@ -136,6 +162,8 @@ TODO
         return DocumentBundle.from_data_and_context(
             plaintext, item.context
         )
+
+# Save and exit
 ```
 
 
@@ -153,10 +181,23 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
-```NodeJS
+```Javascript Node.js
 
-TODO
+// Edit store.js
 
+const faytheCMK = config.state.getFaytheCMK();
+const encryptKeyring = new KmsKeyringNode({
+  generatorKeyId: faytheCMK
+});
+
+// Save and exit
+
+// Edit retrieve.js
+
+const faytheCMK = config.state.getFaytheCMK();
+const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
+
+// Save and exit
 ```
 
 ```Python
@@ -175,6 +216,8 @@ mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=[cmk])
 ...
 
 operations = DocumentBucketOperations(bucket, table, mkp)
+
+# Save and exit
 ```
 
 #### What Just Happened
@@ -193,8 +236,9 @@ Check out the code in one of the `-complete` folders to compare.
 ~/environment/workshop/exercises/java/add-esdk-complete
 ```
 
-```NodeJS
-~/environment/workshop/exercises/node-javascript/add-esdk-complete
+```Javascript Node.js
+~/environment/workshop/exercises/node-javascript/add-esdk-complete/store.js
+~/environment/workshop/exercises/node-javascript/add-esdk-complete/retrieve.js
 ```
 
 ```Python
@@ -207,8 +251,19 @@ Now that the code is written, let's load it up and try it out.
 
 If you'd like to try a finished example, use your language's `-complete` directory as described above.
 
-```NodeJS
-TODO
+```Javascript Node.js REPL
+node
+list = require("./list.js")
+store = require("./store.js")
+list().then(console.log)
+store(fs.createReadStream("./store.js")).then(console.log)
+list().then(console.log)
+```
+
+```Javascript Node.js CLI
+./cli.js list
+./cli.js store ./store.js
+./cli.js list
 ```
 
 ```Python
