@@ -75,10 +75,13 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 ...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
+// Save and exit
 // Edit store.js
 // MULTI-CMK-START: Add the WalterCMK
 ...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
+
+// Save and exit
 ```
 
 ```python tab="Python"
@@ -86,6 +89,8 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
 # MULTI-CMK-START: Add Walter to the CMKs to Use
 cmk = [faythe_cmk, walter_cmk]
+
+# Save and exit
 ```
 
 #### What Just Happened
@@ -143,8 +148,29 @@ Try out combinations of Grant permissions for your application and watch how the
 TODO
 ```
 
-```bash tab="JavaScript Node.JS"
-TODO
+```javascript tab="JavaScript Node.JS"
+node
+list = require("./list.js")
+store = require("./store.js")
+retrieve = require("./retrieve")
+list().then(console.log)
+store(fs.createReadStream("./store.js")).then(r => {
+  // Just storing the s3 key
+  key = r.Key
+  console.log(r)
+})
+list().then(console.log)
+retrieve(key).pipe(process.stdout)
+// Ctrl-D when finished to exit the REPL
+```
+
+```bash tab="JavaScript Node.JS CLI"
+./cli.js list
+./cli.js store ./store.js
+# Note the "Key" value
+./cli.js list
+# Note the "reference" value
+./cli.js retrieve $KeyOrReferenceValue
 ```
 
 ```bash tab="Python"
