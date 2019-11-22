@@ -1,0 +1,164 @@
+# Exercise 2: Adding Multi-CMK Support to the Document Bucket
+
+## Background
+
+Now your Document Bucket will encrypt files when you `store` them, and will decrypt the files for you when you `retrieve` them.
+
+You're using one of your CMKs, Faythe. But what if you want to use multiple CMKs?
+
+You might want to use a partner team's CMK, so that they can access documents relevant to them.
+
+Perhaps you want the Document Bucket to have two independent regions to access the contents, for high availability, or to put the contents closer to the recipients.
+
+Configuring multiple CMKs this way does not require re-encryption of the document data. That's because the data is still encrypted with a single data key, used exclusively for that document. Configuring multiple CMKs causes the AWS Encryption SDK to encrypt that data key again using the additional CMKs, and store that additional version of the data key on the encrypted message. As long as there is one available CMK to decrypt any encrypted version of the data key, the message will be accessible.
+
+(There are ways to configure the Encryption SDK to be more restrictive about which CMKs it will try -- but for now you'll start with the simple case.)
+
+There's many reasons why using more than one CMK can be useful. And in this exercise, you're going to see how to set that up with KMS and the Encryption SDK.
+
+You already have another CMK waiting to be used. When you deployed the Faythe CMK, you also deployed a second CMK, nicknamed Walter. In this exercise, we're going to configure Walter, and then use some scripts in the repository to add and remove permission to use each of Faythe and Walter. Doing so will change how your document is decrypted -- if you remove permission to both Faythe and Walter, you won't be able to decrypt anymore! -- and let you observe how the system behavior changes when keys are accessible or inaccessible.
+
+Each attempt to use a CMK is checked against that CMK's permissions. An audit trail entry is also written to CloudTrail. Decryption attempts will continue until the Encryption SDK either succeds at decrypting an encrypted data key with its associated CMK, or runs out of encrypted data keys to try.
+
+For encryption, the Encryption SDK will attempt to use every CMK it is configured to attempt to produce an encryption of the data key.
+
+You'll get to see all of this in action in just a minute, after a couple small code changes.
+
+## Make the Change
+
+### Starting Directory
+
+If you just finished [Adding the Encryption SDK](./add-the-encryption-sdk.md), you are all set.
+
+If you aren't sure, or want to catch up, jump into the `multi-cmk-start` directory for the language of your choice.
+
+```bash tab="Java"
+cd ~/environment/workshop/exercises/java/multi-cmk-start
+```
+
+```bash tab="JavaScript Node.JS"
+cd ~/environment/workshop/exercises/nodejs-javascript/multi-cmk-start
+```
+
+```bash tab="Python"
+cd ~/environment/workshop/exercises/python/multi-cmk-start
+```
+
+### Step 1: Configure Walter
+
+```javascript tab="JavaScript Node.JS"
+// Edit store.js
+// MULTI-CMK-START: Add the WalterCMK
+const walterCMK = config.state.getWalterCMK();
+
+// Edit retrieve.js
+// MULTI-CMK-START: Add the WalterCMK
+const walterCMK = config.state.getWalterCMK();
+```
+
+```python tab="Python"
+# Edit src/document_bucket/__init__.py
+
+# MULTI-CMK-START: Configure Walter
+walter_cmk = state["WalterCMK"]
+```
+
+#### What Just Happened
+
+When you launched your workshop stacks in [Getting Started](./getting-started.md), along with the Faythe CMK, you also launched a CMK called Walter. Walter's ARN was also plumbed through to the configuration state file that is set up for you by the workshop. Now that ARN is being pulled into a variable to use in the Encryption SDK configuration.
+
+### Step 2: Add Walter to the CMKs to Use
+
+```javascript tab="JavaScript Node.JS"
+// Edit store.js
+// MULTI-CMK-START: Add the WalterCMK
+...
+const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
+
+// Edit store.js
+// MULTI-CMK-START: Add the WalterCMK
+...
+const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
+```
+
+```python tab="Python"
+# Edit src/document_bucket/__init__.py
+
+# MULTI-CMK-START: Add Walter to the CMKs to Use
+cmk = [faythe_cmk, walter_cmk]
+```
+
+#### What Just Happened
+
+In the previous exercise, you configured the Encryption SDK to use a list of CMKs that contained only Faythe. Configuring the Encryption SDK to also use Walter for encrypt, and to also try Walter for decrypt, required adding the ARN for Walter to the configuration list.
+
+### Checking Your Work
+
+If you want to check your progress, or compare what you've done versus a finished example, check out the code in one of the `-complete` folders to compare.
+
+There is a `-complete` folder for each language.
+
+```bash tab="Java"
+cd ~/environment/workshop/exercises/java/multi-cmk-complete
+```
+
+```bash tab="JavaScript Node.JS"
+cd ~/environment/workshop/exercises/node-javascript/multi-cmk-complete
+```
+
+```bash tab="Python"
+cd ~/environment/workshop/exercises/python/multi-cmk-complete
+```
+
+## Try it Out
+
+Adding the Walter CMK the list of CMKs that the application will (attempt) to use was a couple of lines of code, but has powerful implications.
+
+To help you explore the behavior of the system, there are some additional `make` targets to change the permissions configuration of Faythe and Walter.
+
+Using these targets, you can add and remove permission for the application to use Faythe and Walter to generate data keys, encrypt, and decrypt, and observe how the application behavior changes -- as well as what is logged to CloudTrail.
+
+In `~/environment/workshop/exercises`, you'll find a `Makefile` with several targets for you to experiment with:
+
+* `make revoke_walter_grant` will remove the Grant providing permissions to use Walter in the application
+* `make revoke_faythe_grant` will remove the Grant providing permissions to use Faythe in the application
+* `make revoke_grants` will remove the Grants for both CMKs
+* `make create_grants` will add Grants to use either or both CMK, as needed
+
+You can observe the impact of changing Granted permissions by monitoring CloudTrail.
+
+* Faythe is in `us-east-2`, so [check CloudTrail in us-east-2](https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#)
+* Walter is in `us-west-2`, so [check CloudTrail in us-west-2](https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/dashboard)
+
+Try out combinations of Grant permissions for your application and watch how the behavior changes:
+
+* Revoke permission to use Faythe, and watch calls move to Walter
+* Revoke permissions to both Faythe and Walter -- now operations fail
+* Encrypt some data with both Faythe and Walter active, and revoke permission to either one -- notice that application operations continue to work
+* Change the configuration order of Faythe and Walter, and watch how call patterns change to use the two CMKs
+* Revoke permission to Walter, and encrypt some data with Faythe. Then, add permission back to Walter, revoke permission to use Faythe, and try to decrypt that data
+* What other interesting access patterns can you imagine?
+
+```bash tab="Java"
+TODO
+```
+
+```bash tab="JavaScript Node.JS"
+TODO
+```
+
+```bash tab="Python"
+tox -e repl
+```
+## Explore Further
+
+Want to dive into more content related to this exercise? Try out these links.
+
+* [AWS KMS: Key Grants](https://docs.aws.amazon.com/kms/latest/developerguide/grants.html)
+* [AWS KMS: Key Policies](https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)
+* [AWS KMS: Cross-account CMK Usage](https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html)
+* [Blog Post: How to decrypt ciphertexts in multiple regions with the AWS Encryption SDK in C](https://aws.amazon.com/blogs/security/how-to-decrypt-ciphertexts-multiple-regions-aws-encryption-sdk-in-c/)
+
+# Next exercise
+
+Ready for more? Next you will work with [Encryption Context](./encryption-context.md).
