@@ -112,7 +112,7 @@ cd ~/environment/workshop/exercises/python/multi-cmk-complete
 
 ## Try it Out
 
-Adding the Walter CMK the list of CMKs that the application will (attempt) to use was a couple of lines of code, but has powerful implications.
+Adding the Walter CMK to the list of CMKs that the application will (attempt) to use was a couple of lines of code, but has powerful implications.
 
 To help you explore the behavior of the system, there are some additional `make` targets to change the permissions configuration of Faythe and Walter.
 
