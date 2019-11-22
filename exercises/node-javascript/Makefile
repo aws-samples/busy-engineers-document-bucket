@@ -6,7 +6,8 @@ install_node:
 	@echo "node" > ~/.nvmrc
 	@curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
 	@NVM_DIR=/home/ec2-user/.nvm . "$$NVM_DIR/nvm.sh"; nvm install node
-	echo 'export AWS_SDK_LOAD_CONFIG=1' >> ~/.bashrc
+	availability_zone=$(curl http://169.254.169.254/latest/meta-data/placement/availability-zone) 
+	echo 'export AWS_REGION='${availability_zone%?} >> ~/.bashrc
 	. ~/.bashrc
 
 node_modules: 
