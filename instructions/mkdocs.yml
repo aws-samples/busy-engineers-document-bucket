@@ -44,3 +44,12 @@ markdown_extensions:
   - pymdownx.superfences
   - codehilite:
         linenums: true
+
+# Navigation
+nav:
+  - Home: 'index.md'
+  - Getting Started: 'getting-started.md'
+  - Exercises:
+     - 'Add the Encryption SDK': 'add-the-encryption-sdk.md'
+     - 'Using Multiple CMKs': 'multi-cmk.md'
+     - 'Working with Encryption Context': 'encryption-context.md'
