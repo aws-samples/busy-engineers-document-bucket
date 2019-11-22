@@ -1,4 +1,55 @@
-site_name: Busy Engineer's Document Bucket Workshop
+# Project information
 
+site_name: Busy Engineer's Document Bucket Workshop
+site_description: 'An introduction to using AWS KMS and the AWS Encryption SDK'
+site_author: 'aws-cryptools@amazon.com'
+site_url: 'https://awssecworkshops.com'
+
+# Repository
+repo_name: 'aws-samples/busy-engineers-document-bucket'
+repo_url: 'https://github.com/aws-samples/busy-engineers-document-bucket'
+
+# Copyright
+copyright: '&copy; 2019, Amazon Web Services, Inc. or its affiliates. All rights reserved.'
+
+# Configuration
+theme:
+  name: 'material'
+  logo: 'assets/images/aws_smile_logo.png'
+  favicon: 'assets/images/aws-favicon.ico'
+  feature:
+    tabs: true
+  custom_dir: 'docs/theme'
+
+# Customization
+extra_css:
+  - 'stylesheets/custom.css'
+extra_javascript:
+  - 'javascripts/extra.js'
+extra:
+  social:
+    - type: 'home'
+      link: 'https://awssecworkshops.com'
+    - type: 'shield'
+      link: 'https://aws.amazon.com/security/'
+    - type: 'twitter'
+      link: 'https://twitter.com/awssecurityinfo?lang=en'
+    - type: 'rss'
+      link: 'https://aws.amazon.com/blogs/security/'
+
+# Extensions
 markdown_extensions:
-  - markdown_fenced_code_tabs
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - codehilite:
+        linenums: true
+
+# Navigation
+nav:
+  - Home: 'index.md'
+  - Getting Started: 'getting-started.md'
+  - Exercises:
+     - 'Add the Encryption SDK': 'add-the-encryption-sdk.md'
+     - 'Using Multiple CMKs': 'multi-cmk.md'
+     - 'Working with Encryption Context': 'encryption-context.md'
