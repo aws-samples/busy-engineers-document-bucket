@@ -51,12 +51,14 @@ Start by adding the Encryption SDK dependency to the code.
 ```javascript tab="JavaScript Node.JS"
 // Edit ./store.js
 
+// ADD-ESDK-START: Add the @aws-crypto/client-node dependency
 const { encryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
 
 // Save and exit
 
 // Edit ./retrieve.js
 
+// ADD-ESDK-START: Add the @aws-crypto/client-node dependency
 const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
 
 // Save and exit
@@ -98,6 +100,7 @@ Now that you have the AWS Encryption SDK imported, start encrypting your data be
 ```javascript tab="JavaScript Node.JS"
 // Edit ./store.js
 
+// ADD-ESDK-START: Encrypt the stream with a keyring
 const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 // Save and exit
@@ -135,6 +138,7 @@ Now that the application will encrypt data before storing it, it will need to de
 ```javascript tab="JavaScript Node.JS"
 // Edit retrieve.js
 
+  // ADD-ESDK-START: Decrypt the stream with a keyring
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
@@ -172,7 +176,7 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 1. Returned the message plaintext and Encryption SDK headers to you
 
 
-### Step 4: Plumb In Your Config
+### Step 4: Set up a keyring to use Faythe's CMK for decrypting.
 
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
@@ -180,6 +184,7 @@ Now that you have your dependencies declared and your code updated to encrypt an
 
 // Edit store.js
 
+// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
 const faytheCMK = config.state.getFaytheCMK();
 const encryptKeyring = new KmsKeyringNode({
   generatorKeyId: faytheCMK
@@ -189,6 +194,7 @@ const encryptKeyring = new KmsKeyringNode({
 
 // Edit retrieve.js
 
+// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
 const faytheCMK = config.state.getFaytheCMK();
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 

@@ -7,11 +7,8 @@ const s3 = new S3();
 const config = require("./config");
 const Bucket = config.state.bucketName();
 
-/* MULTI-CMK-START:
- * Add the WalterCMK to the KmsKeyringNode as an additional CMK for decryption.
- * Use the `keyIds` property.
- * And look in the ./config.js file to see how to pull the Walter CMK.
- */
+// MULTI-CMK-START: Add the WalterCMK
+
 const faytheCMK = config.state.getFaytheCMK();
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 

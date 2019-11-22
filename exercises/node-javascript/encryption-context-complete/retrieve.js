@@ -15,13 +15,7 @@ module.exports = retrieve;
 module.exports.verifyFn = verifyFn;
 
 function retrieve(Key, { expectedContext, expectedContextKeys } = {}) {
-  /* ENCRYPTION-CONTEXT-START:
-   * The included `expectedContext` and `expectedContextKeys` must be validated.
-   * The AWS Encryption SDK decrypt stream will emit a `MessageHeader` event.
-   * This event will pass the parsed header.
-   * The header will have a property `encryptionContext`,
-   * that contains the validated encryption context for this message.
-   */
+  // ENCRYPTION-CONTEXT-START: verify the  `expectedContext` and `expectedContextKeys` exist on the encryption context
   const verify = verifyFn(expectedContext, expectedContextKeys);
   return s3
     .getObject({ Bucket, Key })
