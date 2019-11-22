@@ -17,8 +17,13 @@ state:
 create_grants:
 	npx ts-node bin/create_grants.ts
 	
-revoke_grants:
-	npx ts-node bin/revoke_grants.ts
+revoke_grants: revoke_walter_grant revoke_faythe_grant
+
+revoke_walter_grant:
+	npx ts-node bin/revoke_walter_grants.ts
+
+revoke_faythe_grant:
+	npx ts-node bin/revoke_faythe_grants.ts
 
 data_purge:
 	npx ts-node bin/data_purge.ts
