@@ -106,20 +106,20 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 ```Python
 # Edit src/document_bucket/api.py
-
-def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
+# Find the store function and edit it to add the Master Key Provider
+# and to write the encrypted data
     # ADD-ESDK-START
     encrypted_data, header = aws_encryption_sdk.encrypt(
         source=data,
         key_provider=self.master_key_provider,
     )
-
-# Save and exit
+    ...
+    self._write_object(encrypted_data, item)
 ```
 
 #### What Just Happened
 
-The application just started encrypting data client-side with the AWS Encryption SDK and KMS!
+The application will now encrypt data client-side with the AWS Encryption SDK and KMS before storing it.
 
 Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK to:
 
@@ -130,7 +130,7 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 
 ### Step 3: Add Decryption to `retrieve`
 
-Now that you are encrypting data before storing it, you need to decrypt it before returning it to your caller. At least for it to be useful, anyway.
+Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
 
 ```Javascript Node.js
 // Edit retrieve.js
@@ -143,16 +143,10 @@ Now that you are encrypting data before storing it, you need to decrypt it befor
 // Save and Exit
 ```
 
-#### What Just Happened
 ```Python
 # Edit src/document_bucket/api.py
-
-    def retrieve(
-            self,
-            pointer_key: str,
-            expected_context_keys: Set[str] = set(),
-            expected_context: Dict[str, str] = {},
-    ) -> DocumentBundle:
+# Find the retrieve function and edit it to add a call to decrypt the
+# encrypted data before returning it
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         # ADD-ESDK-START
         encrypted_data = self._get_object(item)
@@ -166,8 +160,9 @@ Now that you are encrypting data before storing it, you need to decrypt it befor
 # Save and exit
 ```
 
+#### What Just Happened
 
-The application just started decrypting data client-side as well!
+The application now decrypts data client-side as well.
 
 The data returned from S3 for `retrieve` is now encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK:
 
@@ -212,8 +207,6 @@ faythe_cmk = state["FaytheCMK"]
 # And the Master Key Provider configuring how to use KMS
 cmk = [faythe_cmk]
 mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=[cmk])
-
-...
 
 operations = DocumentBucketOperations(bucket, table, mkp)
 
