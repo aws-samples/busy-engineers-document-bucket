@@ -206,7 +206,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 faythe_cmk = state["FaytheCMK"]
 # And the Master Key Provider configuring how to use KMS
 cmk = [faythe_cmk]
-mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=[cmk])
+mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=cmk)
 
 operations = DocumentBucketOperations(bucket, table, mkp)
 
