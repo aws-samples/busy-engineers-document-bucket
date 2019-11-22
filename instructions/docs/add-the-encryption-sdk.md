@@ -106,7 +106,8 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 ```Python
 # Edit src/document_bucket/api.py
-# Find the store function and edit it...
+# Find the store function and edit it to add the Master Key Provider
+# and to write the encrypted data
     # ADD-ESDK-START
     encrypted_data, header = aws_encryption_sdk.encrypt(
         source=data,
@@ -118,7 +119,7 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 #### What Just Happened
 
-The application now encrypts data client-side with the AWS Encryption SDK and KMS before storing it.
+The application will now encrypt data client-side with the AWS Encryption SDK and KMS before storing it.
 
 Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK to:
 
@@ -129,7 +130,7 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 
 ### Step 3: Add Decryption to `retrieve`
 
-Now that the application is encrypting data before storing it, it needs to decrypt it before returning it to the caller. At least for it to be useful, anyway.
+Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
 
 ```Javascript Node.js
 // Edit retrieve.js
@@ -144,7 +145,8 @@ Now that the application is encrypting data before storing it, it needs to decry
 
 ```Python
 # Edit src/document_bucket/api.py
-# Find the retrieve function and edit it...
+# Find the retrieve function and edit it to add a call to decrypt the
+# encrypted data before returning it
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         # ADD-ESDK-START
         encrypted_data = self._get_object(item)

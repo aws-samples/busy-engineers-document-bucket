@@ -6,14 +6,14 @@ In this section, you will prepare your AWS Environment to work with the Busy Eng
 
 In this exercise, we will walk you through setting up your environment, step by step. At the end of this exercise you will have completed the following:
 
-1. Deploy a CloudFormation stack to launch a Cloud9 IDE
-1. Launch the Cloud9 IDE that you will use to work with the rest of the workshop
-1. Launch resource stacks using the AWS Cloud Development Kit (CDK), including
+*  Deploy a CloudFormation stack to launch a Cloud9 IDE
+* Launch the Cloud9 IDE that you will use to work with the rest of the workshop
+* Launch resource stacks using the AWS Cloud Development Kit (CDK), including
     * The `BusyEngineersDocumentBucket` stack, with your DynamoDB table and S3 bucket
     * One CMK in one region, called `Faythe`, that you will use in encryption and decryption operations
     * One CMK in another region, called `Walter`, that you will use in encryption and decryption operations
-1. Bootstrap the development environment in Cloud9
-1. Start the workshop!
+* Bootstrap the development environment in Cloud9
+* Start the workshop!
 
 ## Make the Change
 
