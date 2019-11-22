@@ -28,16 +28,16 @@ Now you will add the AWS Encryption SDK to encrypt close to where the data origi
 
 Make sure you are in the `exercises` directory for the language of your choice:
 
-```Java
-~/environment/workshop/exercises/java
+```bash tab="Java"
+cd ~/environment/workshop/exercises/java
 ```
 
-```Javascript Node.js
-~/environment/workshop/exercises/node-javascript
+```bash tab="JavaScript Node.JS"
+cd ~/environment/workshop/exercises/node-javascript
 ```
 
-```Python
-~/environment/workshop/exercises/python
+```bash tab="Python"
+cd ~/environment/workshop/exercises/python
 ```
 
 `cd` into the `add-esdk-start` directory.
@@ -48,7 +48,7 @@ Look for `ADD-ESDK-START` comments to help orient yourself in the code.
 
 Start by adding the Encryption SDK dependency to the code.
 
-```Javascript Node.js
+```javascript tab="JavaScript Node.JS"
 // Edit ./store.js
 
 const { encryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
@@ -62,7 +62,7 @@ const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
 // Save and exit
 ```
 
-```Python
+```python tab="Python"
 # Edit src/document_bucket/__init__.py
 
 import aws_encryption_sdk
@@ -95,7 +95,7 @@ You also changed the API to expect that a Keyring or Master Key Provider will be
 
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
-```Javascript Node.js
+```javascript tab="JavaScript Node.JS"
 // Edit ./store.js
 
 const Body = fileStream.pipe(encryptStream(encryptKeyring));
@@ -104,7 +104,7 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 ```
 
-```Python
+```python tab="Python"
 # Edit src/document_bucket/api.py
 # Find the store function and edit it to add the Master Key Provider
 # and to write the encrypted data
@@ -132,7 +132,7 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 
 Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
 
-```Javascript Node.js
+```javascript tab="JavaScript Node.JS"
 // Edit retrieve.js
 
   return s3
@@ -143,7 +143,7 @@ Now that the application will encrypt data before storing it, it will need to de
 // Save and Exit
 ```
 
-```Python
+```python tab="Python"
 # Edit src/document_bucket/api.py
 # Find the retrieve function and edit it to add a call to decrypt the
 # encrypted data before returning it
@@ -176,7 +176,7 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
-```Javascript Node.js
+```javascript tab="JavaScript Node.JS"
 
 // Edit store.js
 
@@ -195,7 +195,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 // Save and exit
 ```
 
-```Python
+```python tab="Python"
 
 # Edit src/document_bucket/__init__.py
 
@@ -229,12 +229,12 @@ Check out the code in one of the `-complete` folders to compare.
 ~/environment/workshop/exercises/java/add-esdk-complete
 ```
 
-```Javascript Node.js
+```javascript tab="JavaScript Node.JS"
 ~/environment/workshop/exercises/node-javascript/add-esdk-complete/store.js
 ~/environment/workshop/exercises/node-javascript/add-esdk-complete/retrieve.js
 ```
 
-```Python
+```python tab="Python"
 ~/environment/workshop/exercises/python/add-esdk-complete
 ```
 
@@ -244,7 +244,7 @@ Now that the code is written, let's load it up and try it out.
 
 If you'd like to try a finished example, use your language's `-complete` directory as described above.
 
-```Javascript Node.js REPL
+```javascript tab="JavaScript Node.JS"
 node
 list = require("./list.js")
 store = require("./store.js")
@@ -253,13 +253,13 @@ store(fs.createReadStream("./store.js")).then(console.log)
 list().then(console.log)
 ```
 
-```Javascript Node.js CLI
+```bash tab="JavaScript Node.JS CLI"
 ./cli.js list
 ./cli.js store ./store.js
 ./cli.js list
 ```
 
-```Python
+```python tab="Python"
 tox -e repl
 import document_bucket
 ops = document_bucket.initialize()
