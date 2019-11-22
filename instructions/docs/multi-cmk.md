@@ -127,8 +127,8 @@ In `~/environment/workshop/exercises`, you'll find a `Makefile` with several tar
 
 You can observe the impact of changing Granted permissions by monitoring CloudTrail.
 
-* Faythe is in `us-east-2`, so [check CloudTrail in us-east-2](https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#)
-* Walter is in `us-west-2`, so [check CloudTrail in us-west-2](https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/dashboard)
+* Faythe is in `us-east-2`, so <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#" target="_blank">check CloudTrail in us-east-2</a>
+* Walter is in `us-west-2`, so <a href="https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/dashboard" target="_blank">check CloudTrail in us-west-2</a>
 
 Try out combinations of Grant permissions for your application and watch how the behavior changes:
 
@@ -154,10 +154,10 @@ tox -e repl
 
 Want to dive into more content related to this exercise? Try out these links.
 
-* [AWS KMS: Key Grants](https://docs.aws.amazon.com/kms/latest/developerguide/grants.html)
-* [AWS KMS: Key Policies](https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)
-* [AWS KMS: Cross-account CMK Usage](https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html)
-* [Blog Post: How to decrypt ciphertexts in multiple regions with the AWS Encryption SDK in C](https://aws.amazon.com/blogs/security/how-to-decrypt-ciphertexts-multiple-regions-aws-encryption-sdk-in-c/)
+* <a href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html" target="_blank">AWS KMS: Key Grants</a>
+* <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html" target="_blank">AWS KMS: Key Policies</a>
+* <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html" target="_blank">AWS KMS: Cross-account CMK Usage</a>
+* <a href="https://aws.amazon.com/blogs/security/how-to-decrypt-ciphertexts-multiple-regions-aws-encryption-sdk-in-c/" target="_blank">Blog Post: How to decrypt ciphertexts in multiple regions with the AWS Encryption SDK in C</a>
 
 # Next exercise
 
