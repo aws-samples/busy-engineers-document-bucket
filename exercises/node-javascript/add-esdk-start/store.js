@@ -1,12 +1,7 @@
 // Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-/* ADD-ESDK-START:
- * Add the @aws-crypto/client-node dependency.
- * You will need the encrypt stream as well as the KMS keyring.
- * Look at the ./config.js file to see how to pull the Faythe CMK.
- * Then pipe the data stream to the encrypt stream: Profit.
- */
+// ADD-ESDK-START: Add the dependency
 
 const assert = require("assert");
 const { S3, DynamoDB } = require("aws-sdk");
@@ -23,6 +18,8 @@ const {
 } = config.document_bucket.document_table;
 const TableName = config.state.tableName();
 const Bucket = config.state.bucketName();
+
+// ADD-ESDK-START: Plumb In Your Config
 
 const contextPrefix = ctx_prefix.toUpperCase();
 
@@ -41,28 +38,15 @@ async function store(fileStream, encryptionContext = {}) {
   const PointerItem = ddbItem(Key, object_target, encryptionContext);
   const ContextItems = Object.keys(encryptionContext)
     .map(canonicalContextKey)
-    /* TODO: Explorations
-     * This can create hot keys when searching for a given ec key...
-     * Better to write shard this out `${hash(Key)}#${contextKey}`
-     * Where `hash(Key)` will return 0-n where n is the number of shards
-     */
     .map(canonicalKey => ddbItem(canonicalKey, Key));
 
+  // ADD-ESDK-START: Encrypt the stream
   const Body = fileStream;
 
   const file = await s3
     .upload({ Bucket, Key, Body, Metadata: encryptionContext })
     .promise();
 
-  /* TODO: Explorations
-   * Any amount of parallel writes will push the write limit of DDB.
-   * This will be specific to your application.
-   * How are failures handled?
-   * How many retries are required?
-   * This can be mitigated by offloading this process to a Lambda that fires on S3 puts.
-   * This Lambda can throttle the DDB writes,
-   * but will effect the eventual consistency of the system.
-   */
   for (Item of [PointerItem, ...ContextItems]) {
     await ddb.put({ Item, TableName }).promise();
   }

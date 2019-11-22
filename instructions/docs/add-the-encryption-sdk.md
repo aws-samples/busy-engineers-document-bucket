@@ -51,12 +51,14 @@ Start by adding the Encryption SDK dependency to the code.
 ```Javascript Node.js
 // Edit ./store.js
 
+// ADD-ESDK-START: Add the dependency
 const { encryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
 
 // Save and exit
 
 // Edit ./retrieve.js
 
+// ADD-ESDK-START: Add the dependency
 const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
 
 // Save and exit
@@ -98,6 +100,7 @@ Now that you have the AWS Encryption SDK imported, start encrypting your data be
 ```Javascript Node.js
 // Edit ./store.js
 
+// ADD-ESDK-START: Encrypt the stream
 const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 // Save and exit
@@ -135,6 +138,7 @@ Now that you are encrypting data before storing it, you need to decrypt it befor
 ```Javascript Node.js
 // Edit retrieve.js
 
+  // ADD-ESDK-START: Decrypt the stream
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
@@ -185,6 +189,7 @@ Now that you have your dependencies declared and your code updated to encrypt an
 
 // Edit store.js
 
+// ADD-ESDK-START: Plumb In Your Config
 const faytheCMK = config.state.getFaytheCMK();
 const encryptKeyring = new KmsKeyringNode({
   generatorKeyId: faytheCMK
@@ -194,6 +199,7 @@ const encryptKeyring = new KmsKeyringNode({
 
 // Edit retrieve.js
 
+// ADD-ESDK-START: Plumb In Your Config
 const faytheCMK = config.state.getFaytheCMK();
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 

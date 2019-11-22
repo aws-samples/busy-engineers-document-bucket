@@ -45,16 +45,9 @@ async function store(fileStream, encryptionContext = {}) {
   const PointerItem = ddbItem(Key, object_target, encryptionContext);
   const ContextItems = Object.keys(encryptionContext)
     .map(canonicalContextKey)
-    /* TODO: Explorations
-     * This can create hot keys when searching for a given ec key...
-     * Better to write shard this out `${hash(Key)}#${contextKey}`
-     * Where `hash(Key)` will return 0-n where n is the number of shards
-     */
     .map(canonicalKey => ddbItem(canonicalKey, Key));
 
-  /* ENCRYPTION-CONTEXT-START:
-   * The included `encryptionContext` in the encrypt call option hash.
-   */
+  // ENCRYPTION-CONTEXT-START: The included `encryptionContext` in the encrypt call option hash.
   const Body = fileStream.pipe(
     encryptStream(encryptKeyring, { encryptionContext })
   );
@@ -63,15 +56,6 @@ async function store(fileStream, encryptionContext = {}) {
     .upload({ Bucket, Key, Body, Metadata: encryptionContext })
     .promise();
 
-  /* TODO: Explorations
-   * Any amount of parallel writes will push the write limit of DDB.
-   * This will be specific to your application.
-   * How are failures handled?
-   * How many retries are required?
-   * This can be mitigated by offloading this process to a Lambda that fires on S3 puts.
-   * This Lambda can throttle the DDB writes,
-   * but will effect the eventual consistency of the system.
-   */
   for (Item of [PointerItem, ...ContextItems]) {
     await ddb.put({ Item, TableName }).promise();
   }
