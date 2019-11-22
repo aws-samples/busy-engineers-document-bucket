@@ -10,8 +10,8 @@ In this exercise, we will walk you through setting up your environment, step by 
 * Launch the Cloud9 IDE that you will use to work with the rest of the workshop
 * Launch resource stacks using the AWS Cloud Development Kit (CDK), including
     * The `BusyEngineersDocumentBucket` stack, with your DynamoDB table and S3 bucket
-    * One CMK in one region, called `Faythe`, that you will use in encryption and decryption operations
-    * One CMK in another region, called `Walter`, that you will use in encryption and decryption operations
+    * One CMK in one region, called Faythe, that you will use in encryption and decryption operations
+    * One CMK in another region, called Walter, that you will use in encryption and decryption operations
 * Bootstrap the development environment in Cloud9
 * Start the workshop!
 
@@ -19,10 +19,10 @@ In this exercise, we will walk you through setting up your environment, step by 
 
 1. Sign in to your AWS Account for the workshop
     * Make sure this is **not** a production account! This is a workshop for learning and experimentation. Don't put production at risk!
-1. [Click this link to load the CloudFormation template for your Cloud9 IDE](https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment)
+1. <a href=https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment" target="_blank">Click this link to load the CloudFormation template for your Cloud9 IDE</a>
 1. Click **Create Stack** to launch the stack.
 1. It will take 1-3 minutes to launch your Cloud9 IDE.
-1. [Open the Cloud9 Console](https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2#) to find your Cloud9 IDE. You may need to wait a minute and refresh while CloudFormation spins up the resources
+1. <a href="https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2#" target="_blank">Open the Cloud9 Console</a> to find your Cloud9 IDE. You may need to wait a minute and refresh while CloudFormation spins up the resources
 1. There will be a blue tile with your IDE when it's ready. At the bottom of the tile, click **Open IDE** to launch Cloud9
 1. Type `cd ~/environment/workshop` and hit `Enter`
 1. Execute `make bootstrap` and hit `Enter` to set up your workshop environment
@@ -46,7 +46,7 @@ In this exercise, we will walk you through setting up your environment, step by 
 ## Explore Further
 
 * Check out the `~/environment/workshop/cdk` directory to see how the workshop resources are described using CDK
-* [Who are Faythe and Walter, anyway?](https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters) And the other characters you may encounter as you explore.
+* <a href="https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters" target="_blank">Who are Faythe and Walter?</a>
 
 # Next exercise
 
