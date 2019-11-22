@@ -6,7 +6,7 @@ In this section, you will prepare your AWS Environment to work with the Busy Eng
 
 In this exercise, we will walk you through setting up your environment, step by step. At the end of this exercise you will have completed the following:
 
-*  Deploy a CloudFormation stack to launch a Cloud9 IDE
+* Deploy a CloudFormation stack to launch a Cloud9 IDE
 * Launch the Cloud9 IDE that you will use to work with the rest of the workshop
 * Launch resource stacks using the AWS Cloud Development Kit (CDK), including
     * The `BusyEngineersDocumentBucket` stack, with your DynamoDB table and S3 bucket
