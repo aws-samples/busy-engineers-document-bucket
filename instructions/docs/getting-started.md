@@ -46,7 +46,7 @@ In this exercise, we will walk you through setting up your environment, step by 
 ## Explore Further
 
 * Check out the `~/environment/workshop/cdk` directory to see how the workshop resources are described using CDK
-* <a href="https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters" target="_blank">Who are Faythe and Walter?</a> And the other characters you may encounter as you explore.
+* <a href="https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters" target="_blank">Who are Faythe and Walter?</a>
 
 # Next exercise
 
