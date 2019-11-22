@@ -20,6 +20,7 @@ const {
 const TableName = config.state.tableName();
 const Bucket = config.state.bucketName();
 
+// ADD-ESDK-START: Plumb In Your Config
 const faytheCMK = config.state.getFaytheCMK();
 const encryptKeyring = new KmsKeyringNode({
   generatorKeyId: faytheCMK

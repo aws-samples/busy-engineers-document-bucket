@@ -8,7 +8,7 @@ const s3 = new S3();
 const config = require("./config");
 const Bucket = config.state.bucketName();
 
-// ADD-ESDK-START: Add the dependency
+// ADD-ESDK-START: Plumb In Your Config
 const faytheCMK = config.state.getFaytheCMK();
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 
