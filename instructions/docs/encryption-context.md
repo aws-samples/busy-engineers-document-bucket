@@ -57,6 +57,8 @@ What this means is that with this change, you will be able to use encryption con
 * Accidentally loading the wrong data blob
 * Defending against objects being listed as having a certain context key / property when they actually do not
 
+Also, after this change, the contents of `context` will be available in audit log entries written by KMS, and you can now use that metadata in your Key Policies and Grants.
+
 ## Make the Change
 
 ### Starting Directory
