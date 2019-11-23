@@ -255,14 +255,23 @@ node
 list = require("./list.js")
 store = require("./store.js")
 list().then(console.log)
-store(fs.createReadStream("./store.js")).then(console.log)
+store(fs.createReadStream("./store.js")).then(r => {
+  // Just storing the s3 key
+  key = r.Key
+  console.log(r)
+})
 list().then(console.log)
+retrieve(key).pipe(process.stdout)
+// Ctrl-D when finished to exit the REPL
 ```
 
 ```bash tab="JavaScript Node.JS CLI"
 ./cli.js list
 ./cli.js store ./store.js
+# Note the "Key" value
 ./cli.js list
+# Note the "reference" value
+./cli.js retrieve $KeyOrReferenceValue
 ```
 
 ```python tab="Python"
