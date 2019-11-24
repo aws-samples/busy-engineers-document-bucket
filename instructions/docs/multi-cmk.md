@@ -173,6 +173,31 @@ retrieve(key).pipe(process.stdout)
 ./cli.js retrieve $KeyOrReferenceValue
 ```
 
+```typescript tab="Typescript Node.JS"
+node -r ts-node/register
+;({list} = require("./src/list.ts"))
+;({store} = require("./src/store.ts"))
+retrieve = require("./retrieve")
+list().then(console.log)
+store(fs.createReadStream("./store.js")).then(r => {
+  // Just storing the s3 key
+  key = r.Key
+  console.log(r)
+})
+list().then(console.log)
+retrieve(key).pipe(process.stdout)
+// Ctrl-D when finished to exit the REPL
+```
+
+```bash tab="Typescript Node.JS CLI"
+./cli.ts list
+./cli.ts store ./store.js
+# Note the "Key" value
+./cli.ts list
+# Note the "reference" value
+./cli.ts retrieve $KeyOrReferenceValue
+```
+
 ```bash tab="Python"
 tox -e repl
 ```

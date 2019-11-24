@@ -11,4 +11,4 @@ install_node:
 	. ~/.bashrc
 
 node_modules: 
-	find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "cd '{}' && npm ci" \;
+	find . -maxdepth 1 -type d \( ! -name . \) | xargs -I{} -P 4 bash -c "cd '{}' && npm ci"
