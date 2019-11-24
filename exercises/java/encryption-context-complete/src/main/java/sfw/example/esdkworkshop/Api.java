@@ -129,6 +129,7 @@ public class Api {
   }
 
   public PointerItem store(byte[] data, Map<String, String> context) {
+    // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
     CryptoResult<byte[], KmsMasterKey> encryptedMessage =
         awsEncryptionSdk.encryptData(mkp, data, context);
     DocumentBundle bundle =
@@ -140,10 +141,12 @@ public class Api {
 
   public DocumentBundle retrieve(
       String key, Set<String> expectedContextKeys, Map<String, String> expectedContext) {
-    PointerItem pointer = getPointerItem(key);
     byte[] data = getObjectData(key);
     CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
+    // ENCRYPTION-CONTEXT-COMPLETE: Use Encryption Context on Decrypt
     Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
+    PointerItem pointer = PointerItem.fromKeyAndContext(key, actualContext);
+    // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
     boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
     if (!allExpectedContextKeysFound) {
       // Remove all of the keys that were found

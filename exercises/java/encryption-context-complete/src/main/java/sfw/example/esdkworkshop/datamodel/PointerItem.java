@@ -46,13 +46,18 @@ public class PointerItem extends BaseItem {
     return generate(Collections.emptyMap());
   }
 
-  public static PointerItem generate(Map<String, String> context) {
+  public static PointerItem fromKeyAndContext(String key, Map<String, String> context) {
     Map<String, AttributeValue> attributeContext = new HashMap<>(context.size());
 
     for (Map.Entry<String, String> entry : context.entrySet()) {
       attributeContext.put(entry.getKey(), new AttributeValue(entry.getValue()));
     }
-    return new PointerItem(new UuidKey(), attributeContext);
+
+    return new PointerItem(new UuidKey(key), attributeContext);
+  }
+
+  public static PointerItem generate(Map<String, String> context) {
+    return fromKeyAndContext(new UuidKey().toString(), context);
   }
 
   public Map<String, String> getContext() {
