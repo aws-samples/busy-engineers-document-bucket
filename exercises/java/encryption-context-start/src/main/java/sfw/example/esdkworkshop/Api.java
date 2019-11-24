@@ -21,7 +21,6 @@ import com.amazonaws.util.IOUtils;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import sfw.example.esdkworkshop.datamodel.BaseItem;
@@ -129,9 +128,8 @@ public class Api {
   }
 
   public PointerItem store(byte[] data, Map<String, String> context) {
-    // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
-    CryptoResult<byte[], KmsMasterKey> encryptedMessage =
-        awsEncryptionSdk.encryptData(mkp, data, context);
+    // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
+    CryptoResult<byte[], KmsMasterKey> encryptedMessage = awsEncryptionSdk.encryptData(mkp, data);
     DocumentBundle bundle =
         DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
     writeItem(bundle.getPointer());
@@ -143,33 +141,9 @@ public class Api {
       String key, Set<String> expectedContextKeys, Map<String, String> expectedContext) {
     byte[] data = getObjectData(key);
     CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
-    // ENCRYPTION-CONTEXT-COMPLETE: Use Encryption Context on Decrypt
-    Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
-    PointerItem pointer = PointerItem.fromKeyAndContext(key, actualContext);
-    // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
-    boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
-    if (!allExpectedContextKeysFound) {
-      // Remove all of the keys that were found
-      expectedContextKeys.removeAll(actualContext.keySet());
-      String error =
-          String.format(
-              "Expected context keys were not found in the actual encryption context! "
-                  + "Missing keys were: %s",
-              expectedContextKeys.toString());
-      throw new DocumentBucketException(error, new NoSuchElementException());
-    }
-    boolean allExpectedContextFound =
-        actualContext.entrySet().containsAll(expectedContext.entrySet());
-    if (!allExpectedContextFound) {
-      Set<Map.Entry<String, String>> expectedContextEntries = expectedContext.entrySet();
-      expectedContextEntries.removeAll(actualContext.entrySet());
-      String error =
-          String.format(
-              "Expected context pairs were not found in the actual encryption context! "
-                  + "Missing pairs were: %s",
-              expectedContextEntries.toString());
-      throw new DocumentBucketException(error, new NoSuchElementException());
-    }
+    // ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
+    PointerItem pointer = getPointerItem(key);
+    // ENCRYPTION-CONTEXT-START: Making Assertions
     return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
   }
 
