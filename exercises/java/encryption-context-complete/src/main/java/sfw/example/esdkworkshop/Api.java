@@ -128,6 +128,16 @@ public class Api {
     return retrieve(key, Collections.emptySet(), expectedContext);
   }
 
+  public PointerItem store(byte[] data, Map<String, String> context) {
+    CryptoResult<byte[], KmsMasterKey> encryptedMessage =
+        awsEncryptionSdk.encryptData(mkp, data, context);
+    DocumentBundle bundle =
+        DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
+    writeItem(bundle.getPointer());
+    writeObject(bundle);
+    return bundle.getPointer();
+  }
+
   public DocumentBundle retrieve(
       String key, Set<String> expectedContextKeys, Map<String, String> expectedContext) {
     PointerItem pointer = getPointerItem(key);
@@ -162,16 +172,6 @@ public class Api {
 
   public PointerItem store(byte[] data) {
     return store(data, Collections.emptyMap());
-  }
-
-  public PointerItem store(byte[] data, Map<String, String> context) {
-    CryptoResult<byte[], KmsMasterKey> encryptedMessage =
-        awsEncryptionSdk.encryptData(mkp, data, context);
-    DocumentBundle bundle =
-        DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
-    writeItem(bundle.getPointer());
-    writeObject(bundle);
-    return bundle.getPointer();
   }
 
   public Set<PointerItem> searchByContextKey(String contextKey) {
