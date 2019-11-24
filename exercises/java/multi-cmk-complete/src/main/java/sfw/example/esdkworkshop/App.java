@@ -28,9 +28,11 @@ public class App {
 
     // Load configuration of KMS resources
     String faytheCMK = state.contents.FaytheCMK;
+    // MULTI-CMK-COMPLETE: Configure Walter
     String walterCMK = state.contents.WalterCMK;
 
     // Set up the Master Key Provider to use KMS
+    // MULTI-CMK-COMPLETE: Add Walter to the CMKs to Use
     KmsMasterKeyProvider mkp =
         KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
 
