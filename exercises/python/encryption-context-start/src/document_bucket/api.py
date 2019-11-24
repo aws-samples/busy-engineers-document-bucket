@@ -76,13 +76,14 @@ class DocumentBucketOperations:
         plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
-        # ENCRYPTION-CONTEXT-START
+        # ENCRYPTION-CONTEXT-START: Making Assertions
+        # ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
         return DocumentBundle.from_data_and_context(
             plaintext, item.context
         )
 
     def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
-        # ENCRYPTION-CONTEXT-START
+        # ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
         encrypted_data, header = aws_encryption_sdk.encrypt(
             source=data,
             key_provider=self.master_key_provider,
