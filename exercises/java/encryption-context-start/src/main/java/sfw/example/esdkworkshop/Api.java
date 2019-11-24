@@ -115,16 +115,8 @@ public class Api {
     return mappedItems;
   }
 
-  public DocumentBundle retrieve(String key) {
-    return retrieve(key, Collections.emptySet(), Collections.emptyMap());
-  }
-
-  public DocumentBundle retrieve(String key, Set<String> expectedContextKeys) {
-    return retrieve(key, expectedContextKeys, Collections.emptyMap());
-  }
-
-  public DocumentBundle retrieve(String key, Map<String, String> expectedContext) {
-    return retrieve(key, Collections.emptySet(), expectedContext);
+  public PointerItem store(byte[] data) {
+    return store(data, Collections.emptyMap());
   }
 
   public PointerItem store(byte[] data, Map<String, String> context) {
@@ -137,6 +129,18 @@ public class Api {
     return bundle.getPointer();
   }
 
+  public DocumentBundle retrieve(String key) {
+    return retrieve(key, Collections.emptySet(), Collections.emptyMap());
+  }
+
+  public DocumentBundle retrieve(String key, Set<String> expectedContextKeys) {
+    return retrieve(key, expectedContextKeys, Collections.emptyMap());
+  }
+
+  public DocumentBundle retrieve(String key, Map<String, String> expectedContext) {
+    return retrieve(key, Collections.emptySet(), expectedContext);
+  }
+
   public DocumentBundle retrieve(
       String key, Set<String> expectedContextKeys, Map<String, String> expectedContext) {
     byte[] data = getObjectData(key);
@@ -145,10 +149,6 @@ public class Api {
     PointerItem pointer = getPointerItem(key);
     // ENCRYPTION-CONTEXT-START: Making Assertions
     return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
-  }
-
-  public PointerItem store(byte[] data) {
-    return store(data, Collections.emptyMap());
   }
 
   public Set<PointerItem> searchByContextKey(String contextKey) {
