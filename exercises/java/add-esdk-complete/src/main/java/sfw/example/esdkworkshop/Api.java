@@ -32,6 +32,7 @@ import sfw.example.esdkworkshop.datamodel.PointerItem;
 public class Api {
   private final AmazonDynamoDB ddbClient;
   private final AmazonS3 s3Client;
+  // ADD-ESDK-COMPLETE: Add the ESDK Dependency
   private final AwsCrypto awsEncryptionSdk;
   private final MasterKeyProvider mkp;
   private final String tableName;
