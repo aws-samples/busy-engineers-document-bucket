@@ -28,13 +28,12 @@ public class App {
 
     // Load configuration of KMS resources
     String faytheCMK = state.contents.FaytheCMK;
-    // MULTI-CMK-COMPLETE: Configure Walter
-    String walterCMK = state.contents.WalterCMK;
+    // MULTI-CMK-START: Configure Walter
 
     // Set up the Master Key Provider to use KMS
-    // MULTI-CMK-COMPLETE: Add Walter to the CMKs to Use
+    // MULTI-CMK-START: Add Walter to the CMKs to Use
     KmsMasterKeyProvider mkp =
-        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
+        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
 
     // Construct the API
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
