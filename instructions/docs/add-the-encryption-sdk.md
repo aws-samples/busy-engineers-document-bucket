@@ -214,7 +214,7 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 1. Returned the message plaintext and Encryption SDK headers to you
 
 
-### Step 4: Set up a keyring to use Faythe's CMK for decrypting.
+### Step 4: Configure the Faythe CMK in the Encryption SDK
 
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
