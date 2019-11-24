@@ -3,6 +3,7 @@
 
 package sfw.example.esdkworkshop;
 
+// ADD-ESDK-COMPLETE: Add the ESDK Dependency
 import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
@@ -26,6 +27,7 @@ public class App {
     String bucketName = state.contents.DocumentBucket;
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
+    // ADD-ESDK-COMPLETE: Set up a keyring to use Faythe's CMK for decrypting.
     // Load configuration of KMS resources
     String faytheCMK = state.contents.FaytheCMK;
 
