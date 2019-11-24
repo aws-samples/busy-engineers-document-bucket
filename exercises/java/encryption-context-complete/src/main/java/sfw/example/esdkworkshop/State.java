@@ -6,6 +6,7 @@ import java.io.File;
 // For automatic mpaping, these classes all have names dictated by the TOML file.
 // CHECKSTYLE:OFF MemberName
 // CHECKSTYLE:OFF ParameterName
+// CHECKSTYLE:OFF AbbreviationAsWordInName
 public class State {
   public final Contents contents;
 

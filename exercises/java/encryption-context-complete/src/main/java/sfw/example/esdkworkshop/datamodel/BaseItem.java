@@ -1,5 +1,6 @@
 // CHECKSTYLE:OFF MissingJavadocMethod
 // TODO https://github.com/aws-samples/busy-engineers-document-bucket/issues/24
+
 package sfw.example.esdkworkshop.datamodel;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;

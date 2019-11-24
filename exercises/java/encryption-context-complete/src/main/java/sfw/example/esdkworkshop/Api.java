@@ -32,7 +32,7 @@ import sfw.example.esdkworkshop.datamodel.PointerItem;
 public class Api {
   private final AmazonDynamoDB ddbClient;
   private final AmazonS3 s3Client;
-  private final AwsCrypto awsEncryptionSDK;
+  private final AwsCrypto awsEncryptionSdk;
   private final MasterKeyProvider mkp;
   private final String tableName;
   private final String bucketName;
@@ -51,13 +51,13 @@ public class Api {
       String tableName,
       AmazonS3 s3Client,
       String bucketName,
-      AwsCrypto awsEncryptionSDK,
+      AwsCrypto awsEncryptionSdk,
       MasterKeyProvider<? extends MasterKey> mkp) {
     this.ddbClient = ddbClient;
     this.tableName = tableName;
     this.s3Client = s3Client;
     this.bucketName = bucketName;
-    this.awsEncryptionSDK = awsEncryptionSDK;
+    this.awsEncryptionSdk = awsEncryptionSdk;
     this.mkp = mkp;
   }
 
@@ -98,11 +98,13 @@ public class Api {
 
   // TODO Return some kind of bundle so that data has been pulled from the stream
   // but metadata is returned as well?
-  protected byte[] getObjectData(String key) throws java.io.IOException {
+  protected byte[] getObjectData(String key) {
     S3Object object = s3Client.getObject(bucketName, key);
     byte[] result;
     try (S3ObjectInputStream stream = object.getObjectContent()) {
       result = IOUtils.toByteArray(stream);
+    } catch (java.io.IOException e) {
+      throw new DocumentBucketException("Unable to retrieve object from S3!", e);
     }
     return result;
   }
@@ -114,26 +116,23 @@ public class Api {
     return mappedItems;
   }
 
-  public DocumentBundle retrieve(String key) throws java.io.IOException {
+  public DocumentBundle retrieve(String key) {
     return retrieve(key, Collections.emptySet(), Collections.emptyMap());
   }
 
-  public DocumentBundle retrieve(String key, Set<String> expectedContextKeys)
-      throws java.io.IOException {
+  public DocumentBundle retrieve(String key, Set<String> expectedContextKeys) {
     return retrieve(key, expectedContextKeys, Collections.emptyMap());
   }
 
-  public DocumentBundle retrieve(String key, Map<String, String> expectedContext)
-      throws java.io.IOException {
+  public DocumentBundle retrieve(String key, Map<String, String> expectedContext) {
     return retrieve(key, Collections.emptySet(), expectedContext);
   }
 
   public DocumentBundle retrieve(
-      String key, Set<String> expectedContextKeys, Map<String, String> expectedContext)
-      throws java.io.IOException {
+      String key, Set<String> expectedContextKeys, Map<String, String> expectedContext) {
     PointerItem pointer = getPointerItem(key);
     byte[] data = getObjectData(key);
-    CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSDK.decryptData(mkp, data);
+    CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
     Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
     boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
     if (!allExpectedContextKeysFound) {
@@ -141,9 +140,10 @@ public class Api {
       expectedContextKeys.removeAll(actualContext.keySet());
       String error =
           String.format(
-              "Expected context keys were not found in the actual encryption context! Missing keys were: %s",
+              "Expected context keys were not found in the actual encryption context! "
+                  + "Missing keys were: %s",
               expectedContextKeys.toString());
-      throw new NoSuchElementException(error);
+      throw new DocumentBucketException(error, new NoSuchElementException());
     }
     boolean allExpectedContextFound =
         actualContext.entrySet().containsAll(expectedContext.entrySet());
@@ -152,9 +152,10 @@ public class Api {
       expectedContextEntries.removeAll(actualContext.entrySet());
       String error =
           String.format(
-              "Expected context pairs were not found in the actual encryption context! Missing pairs were: %s",
+              "Expected context pairs were not found in the actual encryption context! "
+                  + "Missing pairs were: %s",
               expectedContextEntries.toString());
-      throw new NoSuchElementException(error);
+      throw new DocumentBucketException(error, new NoSuchElementException());
     }
     return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
   }
@@ -165,7 +166,7 @@ public class Api {
 
   public PointerItem store(byte[] data, Map<String, String> context) {
     CryptoResult<byte[], KmsMasterKey> encryptedMessage =
-        awsEncryptionSDK.encryptData(mkp, data, context);
+        awsEncryptionSdk.encryptData(mkp, data, context);
     DocumentBundle bundle =
         DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
     writeItem(bundle.getPointer());
