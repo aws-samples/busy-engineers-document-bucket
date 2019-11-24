@@ -3,12 +3,7 @@
 
 package sfw.example.esdkworkshop;
 
-// ADD-ESDK-COMPLETE: Add the ESDK Dependency
-import com.amazonaws.encryptionsdk.AwsCrypto;
-import com.amazonaws.encryptionsdk.CryptoResult;
-import com.amazonaws.encryptionsdk.MasterKey;
-import com.amazonaws.encryptionsdk.MasterKeyProvider;
-import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
+// ADD-ESDK-START: Add the ESDK Dependency
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.GetItemResult;
@@ -32,37 +27,17 @@ import sfw.example.esdkworkshop.datamodel.PointerItem;
 public class Api {
   private final AmazonDynamoDB ddbClient;
   private final AmazonS3 s3Client;
-  private final AwsCrypto awsEncryptionSdk;
-  private final MasterKeyProvider mkp;
   private final String tableName;
   private final String bucketName;
 
   public Api(
-      AmazonDynamoDB ddbClient,
-      String tableName,
-      AmazonS3 s3Client,
-      String bucketName,
-      // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-      MasterKeyProvider mkp) {
-      // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-    this(ddbClient, tableName, s3Client, bucketName, new AwsCrypto(), mkp);
-  }
-
-  protected Api(
-      AmazonDynamoDB ddbClient,
-      String tableName,
-      AmazonS3 s3Client,
-      String bucketName,
-      // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-      AwsCrypto awsEncryptionSdk,
-      MasterKeyProvider<? extends MasterKey> mkp) {
+      // ADD-ESDK-START: Add the ESDK Dependency
+      AmazonDynamoDB ddbClient, String tableName, AmazonS3 s3Client, String bucketName) {
     this.ddbClient = ddbClient;
     this.tableName = tableName;
     this.s3Client = s3Client;
     this.bucketName = bucketName;
-    // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-    this.awsEncryptionSdk = awsEncryptionSdk;
-    this.mkp = mkp;
+    // ADD-ESDK-START: Add the ESDK Dependency
   }
 
   protected <T extends BaseItem> Map<String, AttributeValue> writeItem(T modeledItem) {
@@ -125,10 +100,8 @@ public class Api {
   }
 
   public PointerItem store(byte[] data, Map<String, String> context) {
-   // ADD-ESDK-COMPLETE: Add Encryption to store
-    CryptoResult<byte[], KmsMasterKey> encryptedMessage = awsEncryptionSdk.encryptData(mkp, data);
-    DocumentBundle bundle =
-        DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
+    // ADD-ESDK-START: Add Encryption to store
+    DocumentBundle bundle = DocumentBundle.fromDataAndContext(data, context);
     writeItem(bundle.getPointer());
     writeObject(bundle);
     return bundle.getPointer();
@@ -149,11 +122,10 @@ public class Api {
   public DocumentBundle retrieve(
       String key, Set<String> expectedContextKeys, Map<String, String> expectedContext) {
     byte[] data = getObjectData(key);
-    // ADD-ESDK-COMPLETE: Add Decryption to retrieve
-    CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
+    // ADD-ESDK-START: Add Decryption to retrieve
     PointerItem pointer = getPointerItem(key);
-    // ADD-ESDK-COMPLETE: Add Decryption to retrieve
-    return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
+    // ADD-ESDK-START: Add Decryption to retrieve
+    return DocumentBundle.fromDataAndPointer(data, pointer);
   }
 
   public Set<PointerItem> searchByContextKey(String contextKey) {
