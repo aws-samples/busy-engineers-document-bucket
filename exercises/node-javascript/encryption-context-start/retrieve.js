@@ -14,9 +14,9 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 module.exports = retrieve;
 
 function retrieve(Key, { expectedContext, expectedContextKeys } = {}) {
-  // ENCRYPTION-CONTEXT-START: Making Assertions
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
     .pipe(decryptStream(decryptKeyring));
+  // ENCRYPTION-CONTEXT-START: Making Assertions
 }

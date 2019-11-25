@@ -86,7 +86,14 @@ TODO
 ```
 
 ```javascript tab="JavaScript Node.JS"
-TODO
+  // Edit store.js
+  // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
+  const Body = fileStream.pipe(
+    encryptStream(encryptKeyring, { encryptionContext })
+  );
+
+// Save your changes
+```
 ```
 
 ```python tab="Python" hl_lines="8"
@@ -121,7 +128,22 @@ TODO
 ```
 
 ```javascript tab="JavaScript Node.JS"
-TODO
+// Edit retrieve.js
+
+  return (
+    s3
+      .getObject({ Bucket, Key })
+      .createReadStream()
+      .pipe(decryptStream(decryptKeyring))
+      // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
+      .once("MessageHeader", function(header) {
+
+      })
+  );
+
+// Save your changes
+
+```
 ```
 
 ```python tab="Python" hl_lines="7"
@@ -149,7 +171,35 @@ TODO
 ```
 
 ```javascript tab="JavaScript Node.JS"
-TODO
+// Edit retrieve.js
+  return (
+    s3
+      .getObject({ Bucket, Key })
+      .createReadStream()
+      .pipe(decryptStream(decryptKeyring))
+      // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
+      .once("MessageHeader", function(header) {
+        const { encryptionContext } = header;
+        const pairs = Object.entries(expectedContext || {});
+        const keys = (expectedContextKeys || []).slice();
+        if (
+          !(
+            pairs.every(([key, value]) => encryptionContext[key] === value) &&
+            keys.every(key =>
+              Object.hasOwnProperty.call(encryptionContext, key)
+            )
+          )
+        ) {
+          this.emit(
+            "error",
+            new Error("Encryption context does not match expected shape")
+          );
+        }
+      })
+  );
+
+// Save your changes
+```
 ```
 
 ```python tab="Python" hl_lines="6 13"
@@ -204,8 +254,39 @@ cd ~/environment/workshop/exercises/python/encryption-context-complete
 TODO
 ```
 
-```bash tab="JavaScript Node.JS"
-TODO
+```javascript tab="JavaScript Node.JS"
+node
+list = require("./list.js")
+store = require("./store.js")
+list().then(console.log)
+encryptionContext = {
+  stage: "demo",
+  purpose: "simple demonstration",
+  origin: "us-east-2"
+}
+store(fs.createReadStream("./store.js"), encryptionContext).then(r => {
+  // Just storing the s3 key
+  key = r.Key
+  console.log(r)
+})
+list().then(console.log)
+retrieve(key, { expectedContext: { stage: "demo"}, expectedContextKeys: [ "purpose" ] }).pipe(process.stdout)
+// Ctrl-D when finished to exit the REPL
+```
+
+```bash tab="JavaScript Node.JS CLI"
+./cli.js list
+./cli.js store ./store.js \
+  -c "stage:demo" \
+  -c "purpose:simple demonstration" \
+  -c "origin:us-east-2"
+# Note the "Key" value
+./cli.js list
+# Note the "reference" value
+./cli.js retrieve $KeyOrReferenceValue \
+  -c "stage:demo" \
+  -k purpose
+```
 ```
 
 ```bash tab="Python"
