@@ -50,6 +50,7 @@ nav:
   - Home: 'index.md'
   - Getting Started: 'getting-started.md'
   - Exercises:
-     - 'Add the Encryption SDK': 'add-the-encryption-sdk.md'
-     - 'Using Multiple CMKs': 'multi-cmk.md'
-     - 'Working with Encryption Context': 'encryption-context.md'
+      - 'Add the Encryption SDK': 'add-the-encryption-sdk.md'
+      - 'Using Multiple CMKs': 'multi-cmk.md'
+      - 'Working With Encryption Context': 'encryption-context.md'
+  - 'Thank You and Closing': 'thank-you-and-closing.md'
