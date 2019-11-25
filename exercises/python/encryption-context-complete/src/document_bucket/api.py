@@ -76,7 +76,7 @@ class DocumentBucketOperations:
         plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
-        # ENCRYPTION-CONTEXT-COMPLETE
+        # ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
         if not expected_context_keys <= header.encryption_context.keys():
             error_msg = (
                 "Encryption context assertion failed! "
@@ -91,13 +91,14 @@ class DocumentBucketOperations:
                 f"but got {header.encryption_context}!"
             )
             raise AssertionError(error_msg)
-        # ENCRYPTION-CONTEXT-COMPLETE
-        return DocumentBundle.from_data_and_context(
-            plaintext, header.encryption_context
+        # ENCRYPTION-CONTEXT-COMPLETE: Use Encryption Context on Decrypt
+        validatedItem = PointerItem.from_key_and_context(
+            pointer_key, header.encryption_context
         )
+        return DocumentBundle.from_pointer_and_data(validatedItem, plaintext)
 
     def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
-        # ENCRYPTION-CONTEXT-COMPLETE
+        # ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
         encrypted_data, header = aws_encryption_sdk.encrypt(
             source=data,
             key_provider=self.master_key_provider,
