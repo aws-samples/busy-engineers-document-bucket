@@ -4,7 +4,7 @@
 bootstrap: | install deploy state create_grants
 
 install:
-	npm install
+	npm ci
 
 deploy:
 	npx cdk deploy BusyEngineersDocumentBucketStack --require-approval never
