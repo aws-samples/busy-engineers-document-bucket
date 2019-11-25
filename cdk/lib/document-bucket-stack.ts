@@ -17,7 +17,8 @@ export class DocumentBucketStack extends cdk.Stack {
     const s3Bucket = new s3.Bucket(this, config.bucket.name, {
       accessControl: s3.BucketAccessControl.PRIVATE,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: cdk.RemovalPolicy.DESTROY
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      encryption: s3.BucketEncryption.KMS_MANAGED
     });
 
     const ddbTable = new ddb.Table(this, config.document_table.name, {
