@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-crypto/client-node": "^1.0.1",
+    "@aws-crypto/client-node": "^1.0.2",
     "@iarna/toml": "^2.2.3",
     "@types/commander": "^2.12.2",
     "aws-sdk": "^2.568.0",
