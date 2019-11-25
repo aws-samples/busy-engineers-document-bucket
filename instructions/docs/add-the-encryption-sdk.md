@@ -48,6 +48,22 @@ Look for `ADD-ESDK-START` comments to help orient yourself in the code.
 
 Start by adding the Encryption SDK dependency to the code.
 
+```typescript tab="Typescript Node.JS"
+// Edit ./store.js
+
+// ADD-ESDK-START: Add the @aws-crypto/client-node dependency
+import { encryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
+
+// Save and exit
+
+// Edit ./retrieve.js
+
+// ADD-ESDK-START: Add the @aws-crypto/client-node dependency
+import { decryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
+
+// Save and exit
+```
+
 ```javascript tab="JavaScript Node.JS"
 // Edit ./store.js
 
@@ -97,6 +113,16 @@ You also changed the API to expect that a Keyring or Master Key Provider will be
 
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
+```typescript tab="Typescript Node.JS"
+// Edit ./store.js
+
+// ADD-ESDK-START: Encrypt the stream with a keyring
+const Body = fileStream.pipe(encryptStream(encryptKeyring));
+
+// Save and exit
+
+```
+
 ```javascript tab="JavaScript Node.JS"
 // Edit ./store.js
 
@@ -134,6 +160,18 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 ### Step 3: Add Decryption to `retrieve`
 
 Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
+
+```typescript tab="Typescript Node.JS"
+// Edit retrieve.js
+
+  // ADD-ESDK-START: Decrypt the stream with a keyring
+  return s3
+    .getObject({ Bucket, Key })
+    .createReadStream()
+    .pipe(decryptStream(decryptKeyring));
+
+// Save and Exit
+```
 
 ```javascript tab="JavaScript Node.JS"
 // Edit retrieve.js
@@ -176,9 +214,30 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 1. Returned the message plaintext and Encryption SDK headers to you
 
 
-### Step 4: Set up a keyring to use Faythe's CMK for decrypting.
+### Step 4: Configure the Faythe CMK in the Encryption SDK
 
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
+
+```typescript tab="Typescript Node.JS"
+
+// Edit store.js
+
+// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
+const faytheCMK = config.state.getFaytheCMK();
+const encryptKeyring = new KmsKeyringNode({
+  generatorKeyId: faytheCMK
+});
+
+// Save and exit
+
+// Edit retrieve.js
+
+// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
+const faytheCMK = config.state.getFaytheCMK();
+const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
+
+// Save and exit
+```
 
 ```javascript tab="JavaScript Node.JS"
 
@@ -255,14 +314,47 @@ node
 list = require("./list.js")
 store = require("./store.js")
 list().then(console.log)
-store(fs.createReadStream("./store.js")).then(console.log)
+store(fs.createReadStream("./store.js")).then(r => {
+  // Just storing the s3 key
+  key = r.Key
+  console.log(r)
+})
 list().then(console.log)
+retrieve(key).pipe(process.stdout)
+// Ctrl-D when finished to exit the REPL
 ```
 
 ```bash tab="JavaScript Node.JS CLI"
 ./cli.js list
 ./cli.js store ./store.js
+# Note the "Key" value
 ./cli.js list
+# Note the "reference" value
+./cli.js retrieve $KeyOrReferenceValue
+```
+
+```typescript tab="Typescript Node.JS"
+node -r ts-node/register
+;({list} = require("./src/list.ts"))
+;({store} = require("./src/store.ts"))
+list().then(console.log)
+store(fs.createReadStream("./src/store.ts")).then(r => {
+  // Just storing the s3 key
+  key = r.Key
+  console.log(r)
+})
+list().then(console.log)
+retrieve(key).pipe(process.stdout)
+// Ctrl-D when finished to exit the REPL
+```
+
+```bash tab="Typescript Node.JS CLI"
+./cli.ts list
+./cli.ts store ./store.js
+# Note the "Key" value
+./cli.ts list
+# Note the "reference" value
+./cli.ts retrieve $KeyOrReferenceValue
 ```
 
 ```python tab="Python"

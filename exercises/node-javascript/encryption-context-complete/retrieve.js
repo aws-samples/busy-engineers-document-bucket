@@ -15,7 +15,7 @@ module.exports = retrieve;
 module.exports.verifyFn = verifyFn;
 
 function retrieve(Key, { expectedContext, expectedContextKeys } = {}) {
-  // ENCRYPTION-CONTEXT-START: verify the  `expectedContext` and `expectedContextKeys` exist on the encryption context
+  // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
   const verify = verifyFn(expectedContext, expectedContextKeys);
   return s3
     .getObject({ Bucket, Key })

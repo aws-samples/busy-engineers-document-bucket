@@ -205,6 +205,10 @@ class DocumentBundle:
     data: bytes
 
     @staticmethod
+    def from_pointer_and_data(key: PointerItem, data: bytes):
+        return DocumentBundle(key, data)
+
+    @staticmethod
     def from_data_and_context(data: bytes, context: Dict[str, str]):
         key = PointerItem.generate(context)
         return DocumentBundle(key, data)

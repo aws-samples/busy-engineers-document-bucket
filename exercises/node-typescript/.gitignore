@@ -1,0 +1,8 @@
+node_modules
+
+# vim swap files
+*.swp
+
+*.js
+*.d.ts
+build

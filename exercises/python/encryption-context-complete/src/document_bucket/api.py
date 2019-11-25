@@ -92,12 +92,13 @@ class DocumentBucketOperations:
             )
             raise AssertionError(error_msg)
         # ENCRYPTION-CONTEXT-COMPLETE: Use Encryption Context on Decrypt
-        return DocumentBundle.from_data_and_context(
-            plaintext, header.encryption_context
+        validatedItem = PointerItem.from_key_and_context(
+            pointer_key, header.encryption_context
         )
+        return DocumentBundle.from_pointer_and_data(validatedItem, plaintext)
 
     def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
-        # ENCRYPTION-CONTEXT-COMPLETE: Use Encryption Context on Encrypt
+        # ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
         encrypted_data, header = aws_encryption_sdk.encrypt(
             source=data,
             key_provider=self.master_key_provider,
