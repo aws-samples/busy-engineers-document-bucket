@@ -21,9 +21,9 @@ export function retrieve(
   Key: string,
   { expectedContext, expectedContextKeys }: retrieveOp = {}
 ) {
-  // ENCRYPTION-CONTEXT-START: Making Assertions
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
     .pipe(decryptStream(decryptKeyring));
+  // ENCRYPTION-CONTEXT-START: Making Assertions
 }

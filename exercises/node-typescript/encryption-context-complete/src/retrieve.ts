@@ -26,33 +26,29 @@ export function retrieve(
   Key: string,
   { expectedContext, expectedContextKeys }: retrieveOp = {}
 ) {
-  // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
-  const verify = verifyFn(expectedContext, expectedContextKeys);
-  return s3
-    .getObject({ Bucket, Key })
-    .createReadStream()
-    .pipe(decryptStream(decryptKeyring))
-    .once("MessageHeader", function(this: Writable, header) {
-      if (!verify(header)) {
-        this.emit(
-          "error",
-          new Error("Encryption context does not match expected shape")
-        );
-      }
-    });
-}
-
-export function verifyFn(
-  expectedContext: EC = {},
-  expectedContextKeys: string[] = []
-) {
-  const pairs = Object.entries(expectedContext);
-  const keys = expectedContextKeys.slice();
-
-  return function verify({ encryptionContext }: MessageHeader) {
-    return (
-      pairs.every(([key, value]) => encryptionContext[key] === value) &&
-      keys.every(key => Object.hasOwnProperty.call(encryptionContext, key))
-    );
-  };
+  return (
+    s3
+      .getObject({ Bucket, Key })
+      .createReadStream()
+      .pipe(decryptStream(decryptKeyring))
+      // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
+      .once("MessageHeader", function(this: Writable, header: MessageHeader) {
+        const { encryptionContext } = header;
+        const pairs = Object.entries(expectedContext || {});
+        const keys = (expectedContextKeys || []).slice();
+        if (
+          !(
+            pairs.every(([key, value]) => encryptionContext[key] === value) &&
+            keys.every(key =>
+              Object.hasOwnProperty.call(encryptionContext, key)
+            )
+          )
+        ) {
+          this.emit(
+            "error",
+            new Error("Encryption context does not match expected shape")
+          );
+        }
+      })
+  );
 }
