@@ -60,7 +60,8 @@ export class WebappStack extends cdk.Stack {
     // not a S3 static website bucket.
     const webappBucket = new s3.Bucket(this, config.bucket_name, {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: cdk.RemovalPolicy.DESTROY
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      encryption: s3.BucketEncryption.KMS_MANAGED
     });
 
     // Build a policy to allow the OAID access to the bucket.
