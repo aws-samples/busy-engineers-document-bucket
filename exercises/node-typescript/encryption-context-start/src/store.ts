@@ -46,7 +46,7 @@ export async function store(fileStream: Readable, encryptionContext: EC = {}) {
     .map(canonicalContextKey)
     .map(canonicalKey => ddbItem(canonicalKey, Key));
 
-  // ENCRYPTION-CONTEXT-START: The included `encryptionContext` in the encrypt call option hash.
+  // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
   const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
   const file = await s3

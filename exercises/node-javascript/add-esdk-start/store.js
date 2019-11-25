@@ -1,7 +1,7 @@
 // Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// ADD-ESDK-START: Add the @aws-crypto/client-node dependency
+// ADD-ESDK-START: Add the ESDK Dependency
 
 const assert = require("assert");
 const { S3, DynamoDB } = require("aws-sdk");
@@ -19,7 +19,7 @@ const {
 const TableName = config.state.tableName();
 const Bucket = config.state.bucketName();
 
-// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
+// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
 
 const contextPrefix = ctx_prefix.toUpperCase();
 
@@ -40,7 +40,7 @@ async function store(fileStream, encryptionContext = {}) {
     .map(canonicalContextKey)
     .map(canonicalKey => ddbItem(canonicalKey, Key));
 
-  // ADD-ESDK-START: Encrypt the stream with a keyring
+  // ADD-ESDK-START: Add Encryption to store
   const Body = fileStream;
 
   const file = await s3

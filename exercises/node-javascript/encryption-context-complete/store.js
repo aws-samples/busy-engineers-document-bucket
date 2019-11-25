@@ -47,7 +47,7 @@ async function store(fileStream, encryptionContext = {}) {
     .map(canonicalContextKey)
     .map(canonicalKey => ddbItem(canonicalKey, Key));
 
-  // ENCRYPTION-CONTEXT-START: The included `encryptionContext` in the encrypt call option hash.
+  // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
   const Body = fileStream.pipe(
     encryptStream(encryptKeyring, { encryptionContext })
   );

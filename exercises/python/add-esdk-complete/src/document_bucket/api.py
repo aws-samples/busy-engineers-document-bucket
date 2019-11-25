@@ -3,7 +3,7 @@
 
 from typing import Dict, Set
 
-# ADD-ESDK-COMPLETE
+# ADD-ESDK-COMPLETE: Add the ESDK Dependency
 import aws_encryption_sdk  # type: ignore
 from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
 
@@ -13,11 +13,10 @@ from .model import (ContextItem, ContextQuery, DocumentBundle, PointerItem,
 
 class DocumentBucketOperations:
 
-    # ADD-ESDK-COMPLETE
+    # ADD-ESDK-COMPLETE: Add the ESDK Dependency
     def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
         self.bucket = bucket
         self.table = table
-        # ADD-ESDK-COMPLETE
         self.master_key_provider: KMSMasterKeyProvider = master_key_provider
 
     def _write_pointer(self, item: PointerItem):
@@ -77,7 +76,7 @@ class DocumentBucketOperations:
     ) -> DocumentBundle:
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         encrypted_data = self._get_object(item)
-        # ADD-ESDK-COMPLETE
+        # ADD-ESDK-COMPLETE: Add Decryption to retrieve
         plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
@@ -86,7 +85,7 @@ class DocumentBucketOperations:
         )
 
     def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
-        # ADD-ESDK-COMPLETE
+        # ADD-ESDK-COMPLETE: Add Encryption to store
         encrypted_data, header = aws_encryption_sdk.encrypt(
             source=data,
             key_provider=self.master_key_provider,
