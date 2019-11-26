@@ -1,11 +1,12 @@
-## My Project
+## Busy Engineer's Document Bucket
 
-TODO: Fill this README out!
+This is the GitHub repo for the Busy Engineer's Document Bucket.
+In this workshop,
+you will be guided through adding client-side encryption with KMS
+and the AWS Encryption SDK.
 
-Be sure to:
-
-* Change the title in this README
-* Edit your repository description on GitHub
+The workshop instructions can be found
+https://document-bucket.awssecworkshops.com/.
 
 ## License
 
