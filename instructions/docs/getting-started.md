@@ -1,6 +1,6 @@
 # Getting Started
 
-These instructions will help you get started with the workshop and to bootstrap to your environment.
+These instructions will help you get started with the workshop and to bootstrap your environment.
 
 ## Background
 
