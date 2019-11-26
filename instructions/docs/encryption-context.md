@@ -85,7 +85,7 @@ cd ~/environment/workshop/python/encryption-context-start
 TODO
 ```
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines=" 3 4 5"
   // Edit store.js
   // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
   const Body = fileStream.pipe(
@@ -136,7 +136,7 @@ Next you will update `retrieve` to use the encryption context on decrypt.
 TODO
 ```
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines="9 10 11"
 // Edit retrieve.js
 
   return (
@@ -195,7 +195,7 @@ Next you will add a mechanism for the application to test assertions made in enc
 TODO
 ```
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
 // Edit retrieve.js
   return (
     s3
