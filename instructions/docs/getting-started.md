@@ -19,7 +19,7 @@ In this exercise, we will walk you through setting up your environment, step by 
 
 1. Sign in to your AWS Account for the workshop
     * Make sure this is **not** a production account! This is a workshop for learning and experimentation. Don't put production at risk!
-1. <a href=https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment" target="_blank">Click this link to load the CloudFormation template for your Cloud9 IDE</a>
+1. <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment" target="_blank">Click this link to load the CloudFormation template for your Cloud9 IDE</a>
 1. Click **Create Stack** to launch the stack.
 1. It will take 1-3 minutes to launch your Cloud9 IDE.
 1. <a href="https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2#" target="_blank">Open the Cloud9 Console</a> to find your Cloud9 IDE. You may need to wait a minute and refresh while CloudFormation spins up the resources

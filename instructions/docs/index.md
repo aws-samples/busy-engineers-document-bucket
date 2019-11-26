@@ -4,9 +4,13 @@ Welcome to the Busy Engineer's Document Bucket workshop. In this workshop, you w
 
 ## Background: The Document Bucket System
 
-The example system you will will work on is the Document Bucket. This system uses DynamoDB and S3 to store, search, list, and retrieve documents with associated metadata. The bodies of each document are written as S3 objects. DynamoDB maintains a pointer to that object, along with associated metadata for that object. Additionally, DynamoDB is set up to maintain records of tags used to identify the document, so that you can search for documents that match a particular tag.
+![currentarch](img/document_bucket_start.png)
 
-TODO: System diagram image
+The example system you will will work on is the Document Bucket. As you begin this workshop, this system uses DynamoDB and S3 to `store`, `search`, `list`, and `retrieve` documents with associated metadata. The bodies of each document are written as S3 objects. DynamoDB maintains a pointer to that object, along with associated metadata for that object. Additionally, DynamoDB is set up to maintain records of tags used to identify the document, so that you can search for documents that match a particular tag.
+
+![finalarch](img/document_bucket_final.png)
+
+After your work in the workshop is complete, you will have added client-side encryption with the AWS Encryption SDK and AWS KMS to the Document Bucket. Before data leaves the origin instance in `store`, it will be encrypted client-side. After the data is `retrieve`d, it will be decrypted client side with a permissions check and audit entry from AWS KMS. You will also explore options for binding and validating the metadata to the object.
 
 ## Exercises
 
