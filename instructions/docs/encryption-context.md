@@ -1,10 +1,12 @@
 # Exercise 3: Working With Encryption Context
 
+In this section, you will work with encryption context and explore its use in the Document Bucket and other applications.
+
 ## Background
 
 The Busy Engineer's Document Bucket has metadata, called `context`, associated with each document. This meatadata is a set of key-value string pairs, associated with the item in DynamoDB, searchable there, and attached to the S3 object as well.
 
-One of the features AWS KMS and the AWS Encryption SDK both provide is called Encryption Context. At its core, Encryption Context is this metadata mapping: keys that are associated with context about the object, and values indicating information about what that context is. All the information in the map is non-secret, and is the basis for several feature integrations.
+One of the features AWS KMS and the AWS Encryption SDK both provide is called encryption context. At its core, encryption context is this metadata mapping: keys that are associated with context about the object, and values indicating information about what that context is. All the information in the map is non-secret, and is the basis for several feature integrations.
 
 One useful model for thinking about encryption context is as Assertions about the <a href="https://en.wikipedia.org/wiki/Five_Ws" target="_blank">Five Ws</a>: Who, What, Where, When, Why. For example:
 
@@ -14,11 +16,11 @@ One useful model for thinking about encryption context is as Assertions about th
 * *When* is this data being used?
 * *Why* is this data being decrypted?
 
-### AWS KMS: Cryptography and Encryption Context
+### AWS KMS: KMS Operations and Encryption Context
 
 AWS KMS allows you to specify an encryption context on `kms:Encrypt`. If you do so, you must provide the exact same encryption context on `kms:Decrypt`, or the operation will fail. (The match is case-sensitive, and key-value pairs are compared in an order independent way.)
 
-Behind the scenes, KMS is cryptographically binding the Encryption Context to the key material you are `kms:Encrypt` or `kms:Decrypt`ing as _Additional Authenticated Data (AAD)_. In short, this is non-secret data that must be identical (not tampered-with or incomplete), or decryption fails.
+Behind the scenes, KMS is cryptographically binding the encryption context to the key material you are `kms:Encrypt` or `kms:Decrypt`ing as _Additional Authenticated Data (AAD)_. In short, this is non-secret data that must be identical (not tampered-with or incomplete), or decryption fails.
 
 This feature defends against risks from ciphertexts being tampered with, modified, or replaced -- intentionally or unintentionally. It both defends against an attacker replacing one ciphertext with another as well as problems like operational events.
 
@@ -26,19 +28,19 @@ For example, if a bad deployment swaps `us-west-2.cfg` with `eu-central-1.cfg` o
 
 ### AWS KMS: Policy and Audit Hooks
 
-KMS also makes the Encryption Context available to use in Key Policies and Grants. This means that you can use assertions you make about your data to control usage of your CMKs. Perhaps your `eu-central-1` fleet should only ever be permitted to access encrypted data for `{ shard: europe }`. You can write CMK policies that require `{ shard: europe }` to be asserted about all cryptographic operations, so that KMS refuses to authorize an attempt to decrypt, say, `{ shard: north-america }`. These options can help you secure your application and defend against both operational and security-related risks.
+KMS also makes the encryption context available to use in Key Policies and Grants. This means that you can use assertions you make about your data to control usage of your CMKs. Perhaps your `eu-central-1` fleet should only ever be permitted to access encrypted data for `{ shard: europe }`. You can write CMK policies that require `{ shard: europe }` to be asserted about all cryptographic operations, so that KMS refuses to authorize an attempt to decrypt, say, `{ shard: north-america }`. These options can help you secure your application and defend against both operational and security-related risks.
 
 Additionally, as part of the audit features that KMS provides, it logs the encryption context that was supplied with every operation. You can use this information to audit who was accessing what data and when, to detect anomalous call patterns, or to identify unexpected system states.
 
-What questions would you like to answer with CloudTrail Logs for your KMS operations? Encryption Context can help.
+What questions would you like to answer with CloudTrail Logs for your KMS operations? encryption context can help.
 
 ### The AWS Encryption SDK
 
 The AWS Encryption SDK includes the encryption context as a core component. Encryption context *may* be supplied on encrypt -- it is optional, both for the Encryption SDK and for KMS, but strongly recommended.
 
-The Encryption SDK writes the encryption context in the encrypted message format. And on decrypt, the Encryption SDK validates the Encryption Context with KMS and returns the contents to you for you to make assertions about the contents.
+The Encryption SDK writes the encryption context in the encrypted message format. And on decrypt, the Encryption SDK validates the encryption context with KMS and returns the contents to you for you to make assertions about the contents.
 
-Using the Encryption SDK with KMS, you can use all of KMS' policy and audit features from Encryption Context, and use the Encryption SDK to make assertions to safeguard your application.
+Using the Encryption SDK with KMS, you can use all of KMS' policy and audit features from encryption context, and use the Encryption SDK to make assertions to safeguard your application.
 
 ### Use in the Document Bucket
 
@@ -59,6 +61,8 @@ What this means is that with this change, you will be able to use encryption con
 
 Also, after this change, the contents of `context` will be available in audit log entries written by KMS, and you can now use that metadata in your Key Policies and Grants.
 
+Remember, encryption context is not secret!
+
 ## Make the Change
 
 ### Starting Directory
@@ -71,6 +75,10 @@ If you aren't sure, or want to catch up, jump into the `encryption-context-start
 cd ~/environment/workshop/java/encryption-context-start
 ```
 
+```bash tab="Typescript Node.JS"
+cd ~/environment/workshop/node-typescript/encryption-context-start
+```
+
 ```bash tab="JavaScript Node.JS"
 cd ~/environment/workshop/node-javascript/encryption-context-start
 ```
@@ -81,13 +89,19 @@ cd ~/environment/workshop/python/encryption-context-start
 
 ### Step 1: Set Encryption Context on Encrypt
 
-```java tab="Java"
-TODO
+```java tab="Java" hl_lines="4 6"
+// Edit Api.java and find store(...)
+    // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
+    CryptoResult<byte[], KmsMasterKey> encryptedMessage =
+        awsEncryptionSdk.encryptData(mkp, data, context);
+    DocumentBundle bundle =
+        DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
+// Save your changes
 ```
 
-```javascript tab="JavaScript Node.JS" hl_lines=" 3 4 5"
+```javascript tab="JavaScript Node.JS" hl_lines="3 4 5"
   // Edit store.js
-  // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
+  // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
   const Body = fileStream.pipe(
     encryptStream(encryptKeyring, { encryptionContext })
   );
@@ -95,9 +109,9 @@ TODO
 // Save your changes
 ```
 
-```typescript tab="Typescript Node.JS" hl_lines=" 3 4 5"
+```typescript tab="Typescript Node.JS" hl_lines="3 4 5"
   // Edit src/store.ts
-  // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
+  // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
   const Body = fileStream.pipe(
     encryptStream(encryptKeyring, { encryptionContext })
   );
@@ -109,7 +123,7 @@ TODO
 # Edit src/document_bucket/api.py
 # Find the store(...) function, and add context to the encrypt call
 
-# ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
+# ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
 encrypted_data, header = aws_encryption_sdk.encrypt(
     source=data,
     key_provider=self.master_key_provider,
@@ -132,8 +146,12 @@ Next you will update `retrieve` to use the encryption context on decrypt.
 
 ### Step 2: Use Encryption Context on Decrypt
 
-```java tab="Java"
-TODO
+```java tab="Java" hl_lines="3 4"
+// Edit Api.java and find retrieve(...)
+    // ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
+    Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
+    PointerItem pointer = PointerItem.fromKeyAndContext(key, actualContext);
+// Save your changes
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="9 10 11"
@@ -144,7 +162,7 @@ TODO
       .getObject({ Bucket, Key })
       .createReadStream()
       .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
+      // ENCRYPTION-CONTEXT-START: Making Assertions
       .once("MessageHeader", function(header) {
 
       })
@@ -162,11 +180,12 @@ TODO
       .getObject({ Bucket, Key })
       .createReadStream()
       .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
+      // ENCRYPTION-CONTEXT-START: Making Assertions
       .once("MessageHeader", function(this: Writable, header: MessageHeader) {
 
       })
   );
+
 // Save your changes
 
 ```
@@ -176,7 +195,7 @@ TODO
 # Find the retrieve(...) function, and use the Encryption SDK header's encryption
 # context to construct the DocumentBundle to return
 
-# ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
+# ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt
 return DocumentBundle.from_data_and_context(
     plaintext, header.encryption_context
 )
@@ -191,8 +210,33 @@ Next you will add a mechanism for the application to test assertions made in enc
 
 ### Step 3: Making Assertions
 
-```java tab="Java"
-TODO
+```java tab="Java" hl_lines="3 4 14 15 16"
+// Edit Api.java and find retrieve(...)
+    // ENCRYPTION-CONTEXT-START: Making Assertions
+    boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
+    if (!allExpectedContextKeysFound) {
+        // Remove all of the keys that were found
+        expectedContextKeys.removeAll(actualContext.keySet());
+        String error =
+        String.format(
+            "Expected context keys were not found in the actual encryption context! "
+            + "Missing keys were: %s",
+            expectedContextKeys.toString());
+       throw new DocumentBucketException(error, new NoSuchElementException());
+    }
+    boolean allExpectedContextFound =
+        actualContext.entrySet().containsAll(expectedContext.entrySet());
+    if (!allExpectedContextFound) {
+        Set<Map.Entry<String, String>> expectedContextEntries = expectedContext.entrySet();
+        expectedContextEntries.removeAll(actualContext.entrySet());
+        String error =
+            String.format(
+                "Expected context pairs were not found in the actual encryption context! "
+                + "Missing pairs were: %s",
+                expectedContextEntries.toString());
+        throw new DocumentBucketException(error, new NoSuchElementException());
+   }
+// Save your work
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
@@ -202,7 +246,7 @@ TODO
       .getObject({ Bucket, Key })
       .createReadStream()
       .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
+      // ENCRYPTION-CONTEXT-START: Making Assertions
       .once("MessageHeader", function(header) {
         const { encryptionContext } = header;
         const pairs = Object.entries(expectedContext || {});
@@ -233,7 +277,7 @@ TODO
       .getObject({ Bucket, Key })
       .createReadStream()
       .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
+      // ENCRYPTION-CONTEXT-START: Making Assertions
       .once("MessageHeader", function(this: Writable, header: MessageHeader) {
         const { encryptionContext } = header;
         const pairs = Object.entries(expectedContext || {});
@@ -295,6 +339,10 @@ There is a `-complete` folder for each language.
 cd ~/environment/workshop/exercises/java/encryption-context-complete
 ```
 
+```bash tab="Typescript Node.JS"
+cd ~/environment/workshop/exercises/node-typescript/encryption-context-complete
+```
+
 ```bash tab="JavaScript Node.JS"
 cd ~/environment/workshop/exercises/node-javascript/encryption-context-complete
 ```
@@ -305,8 +353,41 @@ cd ~/environment/workshop/exercises/python/encryption-context-complete
 
 ## Try it Out
 
+Now that you pass encryption context all the way through to KMS and validate it on return, what assertions do you want to make about your data?
+
+Here's some ideas for things to test:
+
+* Expecting exact match of key-value pairs for keys like `stage`, `shard`, and `source-fleet`
+* Expecting a set of keys to be present like `submit-date` and `category`
+* Expecting an exact match of a subset of the supplied key-value pairs (e.g. only `stage` and `shard`, not `source-fleet`)
+* Doing the same for expected keys with any value
+* Adding a constraint of a new key that you didn't supply at encryption time
+* Adding a constraint with a different value, like `stage=production`
+* Changing capitalization
+* Using sorted versus unsorted mappings, such as `java.util.SortedMap<K, V>` in Java or `collections.OrderedDict` in Python
+
+There's a few simple suggestions to get you started in the snippets below.
+
 ```bash tab="Java"
-TODO
+// To use the API programmatically, use this target to launch jshell
+mvn jshell:run
+/open startup.jsh
+import java.util.HashMap;
+Api documentBucket = App.initializeDocumentBucket();
+HashMap<String, String> context = new HashMap<String, String>();
+context.put("shard", "test");
+context.put("app", "document-bucket");
+context.put("origin", "development");
+documentBucket.list();
+documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
+for (PointerItem item : documentBucket.list()) {
+    DocumentBundle document = documentBucket.retrieve(item.partitionKey(), context);
+    System.out.println(document.toString());
+}
+// Ctrl+D to exit jshell
+
+// Or, to run logic that you write in App.java, use this target
+mvn compile
 ```
 
 ```javascript tab="JavaScript Node.JS"
@@ -378,7 +459,15 @@ retrieve(key, { expectedContext: { stage: "demo"}, expectedContextKeys: [ "purpo
 ```
 
 ```bash tab="Python"
-TODO
+tox -e repl
+import document_bucket
+ops = document_bucket.initialize()
+context = {"host": "cloud9", "shard": "development", "purpose": "experimental"}
+ops.list()
+ops.store(b'some data', context)
+for item in ops.list():
+    ops.retrieve(item.partition_key, expected_context=context)
+# Ctrl-D when finished to exit the REPL
 ```
 
 ## Explore Further
