@@ -26,7 +26,7 @@ public class App {
     String bucketName = state.contents.DocumentBucket;
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
-    // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
+    // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
     // Construct the API
     return new Api(ddbClient, tableName, s3Client, bucketName);
   }
