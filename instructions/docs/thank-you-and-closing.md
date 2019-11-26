@@ -38,7 +38,7 @@ That's it! Your workshop resources have been torn down.
 
 # Feedback
 
-We welcome comments, questions, concerns, and feature requests in our GitHub page: https://github.com/aws-samples/busy-engineers-document-bucket/
+We welcome comments, questions, concerns, contributions, and feature requests [on our GitHub page for the Busy Engineer's Document Bucket](https://github.com/aws-samples/busy-engineers-document-bucket/).
 
 If there is content that can be improved or anything that you would like to see, we would like to cover it for you.
 
