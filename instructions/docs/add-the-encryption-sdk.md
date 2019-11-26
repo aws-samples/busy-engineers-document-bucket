@@ -1,5 +1,7 @@
 # Exercise 1: Add the AWS Encryption SDK
 
+In this section, you will add client-side encryption using the AWS Encryption SDK and KMS to the Busy Engineer's Document Bucket.
+
 ## Background
 
 The Busy Engineer's Document Bucket is an example application meant to show some high-level examples of real world AWS patterns. This includes how to integrate client-side encryption using AWS KMS and the AWS Encryption SDK in application code.
@@ -32,6 +34,10 @@ Make sure you are in the `exercises` directory for the language of your choice:
 cd ~/environment/workshop/exercises/java
 ```
 
+```bash tab="Typescript Node.JS"
+cd ~/environment/workshop/exercises/node-typescript
+```
+
 ```bash tab="JavaScript Node.JS"
 cd ~/environment/workshop/exercises/node-javascript
 ```
@@ -47,6 +53,49 @@ cd ~/environment/workshop/exercises/python
 Look for `ADD-ESDK-START` comments to help orient yourself in the code.
 
 Start by adding the Encryption SDK dependency to the code.
+
+```java tab="Java" hl_lines="5 6 7 8 9 14 15 25 30 31 36 39"
+// Edit Api.java
+package sfw.example.esdkworkshop;
+
+// ADD-ESDK-START: Add the ESDK Dependency
+import com.amazonaws.encryptionsdk.AwsCrypto;
+import com.amazonaws.encryptionsdk.CryptoResult;
+import com.amazonaws.encryptionsdk.MasterKey;
+import com.amazonaws.encryptionsdk.MasterKeyProvider;
+import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
+
+...
+
+// ADD-ESDK-START: Add the ESDK Dependency
+private final AwsCrypto awsEncryptionSdk;
+private final MasterKeyProvider mkp;
+
+...
+
+public Api(
+    AmazonDynamoDB ddbClient,
+    String tableName,
+    AmazonS3 s3Client,
+    String bucketName,
+    // ADD-ESDK-START: Add the ESDK Dependency
+    MasterKeyProvider<? extends MasterKey> mkp) {
+  this.ddbClient = ddbClient;
+  this.tableName = tableName;
+  this.s3Client = s3Client
+  // ADD-ESDK-START: Add the ESDK Dependency
+  this.awsEncryptionSdk = new AwsCrypto();
+  this.mkp = mkp;
+}
+
+// Save and close.
+// Edit App.java
+package sfw.example.esdkworkshop;
+
+// ADD-ESDK-START: Add the ESDK Dependency
+import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
+// Save and close.
+```
 
 ```typescript tab="Typescript Node.JS" hl_lines="4 11"
 // Edit ./store.js
@@ -80,24 +129,25 @@ const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
 // Save and exit
 ```
 
-```python tab="Python"
+```python tab="Python" hl_lines="4 10 11 15 19"
 # Edit src/document_bucket/__init__.py
 
+# ADD-ESDK-START: Add the ESDK Dependency
 import aws_encryption_sdk
 
 # Save and exit
 # Edit src/document_bucket/api.py
 
-# ADD-ESDK-START
+# ADD-ESDK-START: Add the ESDK Dependency
 import aws_encryption_sdk
 from aws_encryption_sdk import KMSMasterKeyProvider
 
 # Add a Master Key Provider to your __init__
-# ADD-ESDK-START
+# ADD-ESDK-START: Add the ESDK Dependency
 def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
     self.bucket = bucket
     self.table = table
-    # ADD-ESDK-START
+    # ADD-ESDK-START: Add the ESDK Dependency
     self.master_key_provider = master_key_provider
 
 # Save and exit
@@ -113,10 +163,21 @@ You also changed the API to expect that a Keyring or Master Key Provider will be
 
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
+```java tab="Java" hl_lines="3 4 5"
+// Edit Api.java
+public PointerItem store(byte[] data, Map<String, String> context) {
+    // ADD-ESDK-START: Add Encryption to store
+    CryptoResult<byte[], KmsMasterKey> encryptedMessage = awsEncryptionSdk.encryptData(mkp, data);
+    DocumentBundle bundle =
+        DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
+    writeItem(bundle.getPointer());
+    ...
+```
+
 ```typescript tab="Typescript Node.JS" hl_lines="4"
 // Edit ./store.js
 
-// ADD-ESDK-START: Encrypt the stream with a keyring
+// ADD-ESDK-START: Add Encryption to store
 const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 // Save and exit
@@ -126,18 +187,18 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
 ```javascript tab="JavaScript Node.JS" hl_lines="4"
 // Edit ./store.js
 
-// ADD-ESDK-START: Encrypt the stream with a keyring
+// ADD-ESDK-START: Add Encryption to store
 const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 // Save and exit
 
 ```
 
-```python tab="Python"
+```python tab="Python" hl_lines="5 6 7 8 10"
 # Edit src/document_bucket/api.py
 # Find the store function and edit it to add the Master Key Provider
 # and to write the encrypted data
-    # ADD-ESDK-START
+    # ADD-ESDK-START: Add Encryption to store
     encrypted_data, header = aws_encryption_sdk.encrypt(
         source=data,
         key_provider=self.master_key_provider,
@@ -161,10 +222,21 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 
 Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
 
+```java tab="Java" hl_lines="5 7"
+// Edit Api.java
+// Find retrieve(...)
+    byte[] data = getObjectData(key);
+    // ADD-ESDK-START: Add Decryption to retrieve
+    CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
+    ...
+    return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
+```
+
+
 ```typescript tab="Typescript Node.JS" hl_lines="7"
 // Edit retrieve.js
 
-  // ADD-ESDK-START: Decrypt the stream with a keyring
+  // ADD-ESDK-START: Add Decryption to retrieve
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
@@ -176,7 +248,7 @@ Now that the application will encrypt data before storing it, it will need to de
 ```javascript tab="JavaScript Node.JS" hl_lines="7"
 // Edit retrieve.js
 
-  // ADD-ESDK-START: Decrypt the stream with a keyring
+  // ADD-ESDK-START: Add Decryption to retrieve
   return s3
     .getObject({ Bucket, Key })
     .createReadStream()
@@ -185,12 +257,12 @@ Now that the application will encrypt data before storing it, it will need to de
 // Save and Exit
 ```
 
-```python tab="Python"
+```python tab="Python" hl_lines="6 7 8 9 11"
 # Edit src/document_bucket/api.py
 # Find the retrieve function and edit it to add a call to decrypt the
 # encrypted data before returning it
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
-        # ADD-ESDK-START
+        # ADD-ESDK-START: Add Decryption to retrieve
         encrypted_data = self._get_object(item)
         plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
@@ -218,7 +290,23 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
-```typescript tab="Typescript Node.JS"  hl_lines="5 6 7 8 15 16"
+```java tab="Java" hl_lines="6 9 10 13"
+// Edit App.java
+    AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+
+    // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+    // Load configuration of KMS resources
+    String faytheCMK = state.contents.FaytheCMK;
+
+    // Set up the Master Key Provider to use KMS
+    KmsMasterKeyProvider mkp =
+        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
+
+    // Construct the API
+    return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
+```
+
+```typescript tab="Typescript Node.JS"  hl_lines="4 5 6 7 14 15"
 
 // Edit store.js
 
@@ -239,7 +327,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 // Save and exit
 ```
 
-```javascript tab="JavaScript Node.JS"  hl_lines="5 6 7 8 15 16"
+```javascript tab="JavaScript Node.JS"  hl_lines="4 5 6 7 14 15"
 
 // Edit store.js
 
@@ -260,13 +348,13 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 // Save and exit
 ```
 
-```python tab="Python"
+```python tab="Python" hl_lines="7 9 10 12"
 
 # Edit src/document_bucket/__init__.py
 
 ...
 
-# ADD-ESDK-START
+# ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
 # Pull configuration of KMS resources
 faythe_cmk = state["FaytheCMK"]
 # And the Master Key Provider configuring how to use KMS
@@ -290,17 +378,20 @@ Want to check your progress, or compare what you've done versus a finished examp
 
 Check out the code in one of the `-complete` folders to compare.
 
-```Java
-~/environment/workshop/exercises/java/add-esdk-complete
+```bash tab="Java"
+cd ~/environment/workshop/exercises/java/add-esdk-complete
 ```
 
-```javascript tab="JavaScript Node.JS"
-~/environment/workshop/exercises/node-javascript/add-esdk-complete/store.js
-~/environment/workshop/exercises/node-javascript/add-esdk-complete/retrieve.js
+```bash tab="Typescript Node.JS"
+cd ~/environment/workshop/exercises/node-typescript/add-esdk-complete
 ```
 
-```python tab="Python"
-~/environment/workshop/exercises/python/add-esdk-complete
+```bash tab="JavaScript Node.JS"
+cd ~/environment/workshop/exercises/node-javascript/add-esdk-complete
+```
+
+```bash tab="Python"
+cd ~/environment/workshop/exercises/python/add-esdk-complete
 ```
 
 ## Try it Out
@@ -308,6 +399,31 @@ Check out the code in one of the `-complete` folders to compare.
 Now that the code is written, let's load it up and try it out.
 
 If you'd like to try a finished example, use your language's `-complete` directory as described above.
+
+Experiment using the API as much as you like. To get you started, here are some suggested things to try.
+
+* Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large).
+* Take a look at the <a href="https://s3.console.aws.amazon.com/s3/home" target="_blank">contents of your S3 Document Bucket</a> to inspect the raw object.
+
+
+If you want more ideas to extend, check out [Explore Further](#explore-further) below.
+
+```java tab="Java"
+// To use the API programmatically, use this target to launch jshell
+mvn jshell:run
+/open startup.jsh
+Api documentBucket = App.initializeDocumentBucket();
+documentBucket.list();
+documentBucket.store("Store me in the Document Bucket!".getBytes());
+for (PointerItem item : documentBucket.list()) {
+    DocumentBundle document = documentBucket.retrieve(item.partitionKey());
+    System.out.println(document.toString());
+}
+// Ctrl+D to exit jshell
+
+// Or, to run logic that you write in App.java, use this target
+mvn compile
+```
 
 ```javascript tab="JavaScript Node.JS"
 node
@@ -369,9 +485,9 @@ ops.list()
 
 ## Explore Further
 
-* TODO Retrieve
-* TODO Examine TOML files
-* TODO Generate and load files to store/retrieve
+* **Leveraging the Message Format** - The <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/message-format.html" target="_blank">AWS Encryption SDK Message Format</a> is an open standard. Can you write something to detect whether an entry in the Document Bucket has been encrypted in this format or not, and retrieve or decrypt appropriately?
+* **More Test Content** - Small test strings are enough to get started, but you might be curious to see what the behavior and performance looks like with larger documents. What if you add support for loading files to and from disk to the Document Bucket?
+* **Configuration Glue** - If you are curious how the Document Bucket is configured, take a peek at `~/environment/workshop/cdk/Makefile` and the `make state` target, as well as `config.toml` in the exercises root `~/environment/workshop/exercises/config.toml`. The Busy Engineer's Document Bucket uses a base <a href="https://github.com/toml-lang/toml" target="_blank">TOML</a> file to set standard names for all CloudFormation resources and a common place to discover the real deployed set. Then it uses the AWS Cloud Development Kit (CDK) to deploy the resources and write out their identifiers to the state file. Applications use the base TOML file `config.toml` to locate the state file and pull the expected resource names. And that's how the system bootstraps all the resources it needs!
 
 # Next exercise
 
