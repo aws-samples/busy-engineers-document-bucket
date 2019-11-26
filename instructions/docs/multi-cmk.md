@@ -55,7 +55,7 @@ cd ~/environment/workshop/exercises/python/multi-cmk-start
 ### Step 1: Configure Walter
 
 ```java tab="Java" hl_lines="4"
-// Edit App.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/App.java
     String faytheCMK = state.contents.FaytheCMK;
     // MULTI-CMK-START: Configure Walter
     String walterCMK = state.contents.WalterCMK;
@@ -95,7 +95,7 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 ### Step 2: Add Walter to the CMKs to Use
 
 ```java tab="Java" hl_lines="4"
-// Edit App.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/App.java
     // MULTI-CMK-START: Add Walter to the CMKs to Use
     KmsMasterKeyProvider mkp =
         KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
