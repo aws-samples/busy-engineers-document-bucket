@@ -26,10 +26,3 @@ async function search(contextKey, { ExclusiveStartKey, Limit } = {}) {
     })
     .promise();
 }
-
-/* TODO Explorations
- * Pagination must be implemented by the caller here.
- * But for a CLI like this,
- * a stream is a nice interface
- * that can be used to drain all the pages.
- */
