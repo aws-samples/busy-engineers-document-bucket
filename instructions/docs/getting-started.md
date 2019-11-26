@@ -1,5 +1,7 @@
 # Getting Started
 
+These instructions will help you get started with the workshop and to bootstrap to your environment.
+
 ## Background
 
 In this section, you will prepare your AWS Environment to work with the Busy Engineer's Document Bucket. As you work through the workshop, you will gain familiarity with the core concepts required to use AWS KMS, the AWS Encryption SDK, and how to leverage features like multiple CMK support and Encryption Context to secure your application.
@@ -33,7 +35,7 @@ In this exercise, we will walk you through setting up your environment, step by 
 * `make bootstrap` will take approximately 5 minutes. Thank you for your patience while it sets up the environment for you.
     * If you are in a live workshop, this is good to run during the presentation.
     * If you are working on your own, grab a cup of your favorite beverage while you wait.
-* After `make bootstrap` completes, you will have:
+* After `make bootstrap` completes and you see `*** BOOTSTRAP COMPLETE ***`, you will be ready to continue. At that point you will have:
     1. Deployed your workshop stacks using CDK
     1. Language environments for all of the workshop languages
 * Close your Terminal window and open a new one (`Window -> New Terminal`) to pick up the changes `make bootstrap` installed
