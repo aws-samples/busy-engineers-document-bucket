@@ -39,7 +39,8 @@ In this exercise, we will walk you through setting up your environment, step by 
 * Close your Terminal window and open a new one (`Window -> New Terminal`) to pick up the changes `make bootstrap` installed
 * Choose your language of choice for the workshop, and `cd` to its folder under `exercises`
     * `cd ~/environment/workshop/exercises/java` for Java
-    * `cd ~/environment/workshop/exercises/node-javascript` for NodeJS
+    * `cd ~/environment/workshop/exercises/node-javascript` for NodeJS in JavaScript
+    * `cd ~/environment/workshop/exercises/node-typescript` for NodeJS in TypeScript
     * `cd ~/environment/workshop/exercises/python` for Python
 * Time to start coding!
 
