@@ -29,6 +29,7 @@ public class Api {
   private final AmazonS3 s3Client;
   private final String tableName;
   private final String bucketName;
+  // ADD-ESDK-START: Add the ESDK Dependency
 
   public Api(
       // ADD-ESDK-START: Add the ESDK Dependency
