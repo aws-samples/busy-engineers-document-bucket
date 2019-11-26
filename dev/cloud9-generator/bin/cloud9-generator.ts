@@ -9,7 +9,7 @@ import { Cloud9Stack } from "../lib/cloud9-stack";
 import toml = require("@iarna/toml");
 import fs = require("fs");
 
-const config: any = toml.parse(fs.readFileSync("../../config.toml", "utf8"));
+const config: any = toml.parse(fs.readFileSync("../../exercises/config.toml", "utf8"));
 const CLOUD9_REGION = config.cloud9.region;
 const LAUNCH_URL = config.cloud9.launch_url;
 
