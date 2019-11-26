@@ -23,3 +23,10 @@ bootstrap_java:
 
 bootstrap_done:
 	@echo "*** BOOTSTRAP COMPLETE ***"
+
+# Smoke tests for the CLIs
+basic_cli_smoke_tests:
+	$(MAKE) -C exercises/node-javascript basic_cli_smoke_tests
+	$(MAKE) -C cdk data_purge
+	$(MAKE) -C exercises/node-typescript basic_cli_smoke_tests
+	$(MAKE) -C cdk data_purge
