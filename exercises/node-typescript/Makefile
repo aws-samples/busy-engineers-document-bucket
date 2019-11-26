@@ -1,5 +1,5 @@
 
-bootstrap: install_ts node_modules
+bootstrap: install_ts-node node_modules
 
 install_ts-node:
 	npm install ts-node -g
