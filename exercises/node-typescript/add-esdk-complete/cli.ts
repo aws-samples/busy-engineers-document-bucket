@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node -r ts-node/register
+#!/usr/bin/env ts-node
 
 // Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
