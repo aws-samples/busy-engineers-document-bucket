@@ -64,7 +64,7 @@ import { decryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
 // Save and exit
 ```
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines="4 11"
 // Edit ./store.js
 
 // ADD-ESDK-START: Add the @aws-crypto/client-node dependency
@@ -123,7 +123,7 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
 ```
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines="4"
 // Edit ./store.js
 
 // ADD-ESDK-START: Encrypt the stream with a keyring
@@ -173,7 +173,7 @@ Now that the application will encrypt data before storing it, it will need to de
 // Save and Exit
 ```
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines="7"
 // Edit retrieve.js
 
   // ADD-ESDK-START: Decrypt the stream with a keyring
@@ -239,7 +239,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 // Save and exit
 ```
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS"  hl_lines="5 6 7 8 15 16"
 
 // Edit store.js
 

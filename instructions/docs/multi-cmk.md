@@ -46,7 +46,7 @@ cd ~/environment/workshop/exercises/python/multi-cmk-start
 
 ### Step 1: Configure Walter
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines="3 7"
 // Edit store.js
 // MULTI-CMK-START: Add the WalterCMK
 const walterCMK = config.state.getWalterCMK();
@@ -69,7 +69,7 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 
 ### Step 2: Add Walter to the CMKs to Use
 
-```javascript tab="JavaScript Node.JS"
+```javascript tab="JavaScript Node.JS" hl_lines="4 5 6 7 13"
 // Edit store.js
 // MULTI-CMK-START: Add the WalterCMK
 ...
