@@ -6,3 +6,9 @@ install_ts-node:
 
 node_modules: 
 	find . -maxdepth 1 -type d \( ! -name . \) | xargs -I{} -P 4 bash -c "cd '{}' && npm ci"
+
+basic_cli_smoke_tests:
+	find . -maxdepth 1 -type d \( ! -name . \) | xargs -I{} bash -c "cd '{}' && ./cli.ts list"
+	find . -maxdepth 1 -type d \( ! -name . \) | xargs -I{} bash -c "cd '{}' && ./cli.ts store ./src/store.ts -c context:value -c key:value"
+	find . -maxdepth 1 -type d \( ! -name . \) | xargs -I{} bash -c "cd '{}' && ./cli.ts list"
+	find . -maxdepth 1 -type d \( ! -name . \) | xargs -I{} bash -c "cd '{}' && ./cli.ts search context"
