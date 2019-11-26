@@ -56,6 +56,16 @@ const walterCMK = config.state.getWalterCMK();
 const walterCMK = config.state.getWalterCMK();
 ```
 
+```typescript tab="Typescript Node.JS" hl_lines="3 7"
+// Edit src/store.js
+// MULTI-CMK-START: Add the WalterCMK
+const walterCMK = config.state.getWalterCMK();
+
+// Edit retrieve.js
+// MULTI-CMK-START: Add the WalterCMK
+const walterCMK = config.state.getWalterCMK();
+```
+
 ```python tab="Python"
 # Edit src/document_bucket/__init__.py
 
@@ -73,7 +83,28 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 // Edit store.js
 // MULTI-CMK-START: Add the WalterCMK
 ...
+const encryptKeyring = new KmsKeyringNode({
+  generatorKeyId: faytheCMK,
+  keyIds: [walterCMK]
+});
+
+// Save and exit
+// Edit store.js
+// MULTI-CMK-START: Add the WalterCMK
+...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
+
+// Save and exit
+```
+
+```typescript tab="Typescript Node.JS" hl_lines="4 5 6 7 13"
+// Edit src/store.js
+// MULTI-CMK-START: Add the WalterCMK
+...
+const encryptKeyring = new KmsKeyringNode({
+  generatorKeyId: faytheCMK,
+  keyIds: [walterCMK]
+});
 
 // Save and exit
 // Edit store.js
