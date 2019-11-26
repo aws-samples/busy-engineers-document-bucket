@@ -95,7 +95,7 @@ TODO
 // Save your changes
 ```
 
-```typescript tab="Typescript Node.JS"
+```typescript tab="Typescript Node.JS" hl_lines=" 3 4 5"
   // Edit src/store.ts
   // ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
   const Body = fileStream.pipe(
@@ -154,7 +154,7 @@ TODO
 
 ```
 
-```typescript tab="Typescript Node.JS"
+```typescript tab="Typescript Node.JS" hl_lines="9 10 11"
 // Edit src/retrieve.js
 
   return (
@@ -226,7 +226,7 @@ TODO
 // Save your changes
 ```
 
-```typescript tab="Typescript Node.JS"
+```typescript tab="Typescript Node.JS" hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
 // Edit src/retrieve.js
   return (
     s3

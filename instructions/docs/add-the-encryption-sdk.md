@@ -48,7 +48,7 @@ Look for `ADD-ESDK-START` comments to help orient yourself in the code.
 
 Start by adding the Encryption SDK dependency to the code.
 
-```typescript tab="Typescript Node.JS"
+```typescript tab="Typescript Node.JS" hl_lines="4 11"
 // Edit ./store.js
 
 // ADD-ESDK-START: Add the @aws-crypto/client-node dependency
@@ -113,7 +113,7 @@ You also changed the API to expect that a Keyring or Master Key Provider will be
 
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
-```typescript tab="Typescript Node.JS"
+```typescript tab="Typescript Node.JS" hl_lines="4"
 // Edit ./store.js
 
 // ADD-ESDK-START: Encrypt the stream with a keyring
@@ -161,7 +161,7 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 
 Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
 
-```typescript tab="Typescript Node.JS"
+```typescript tab="Typescript Node.JS" hl_lines="7"
 // Edit retrieve.js
 
   // ADD-ESDK-START: Decrypt the stream with a keyring
@@ -218,7 +218,7 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
-```typescript tab="Typescript Node.JS"
+```typescript tab="Typescript Node.JS"  hl_lines="5 6 7 8 15 16"
 
 // Edit store.js
 
