@@ -17,7 +17,7 @@ Here's the API the Document Bucket supports:
 * `list`: This operation queries DynamoDB for all entries for all items in the bucket, and their metadata. It returns the `set` of items that have been stored.
 * `store`: This operation accepts a blob of bytes and a `map` of metadata context. It generates a unique identifier for the document. The identifier and associated metadata are written to DynamoDB. The bytes of the data are written to S3 under a key of that unique identifier. Any context metadata keys in DynamoDB are updated to include that new object identifier.
 * `retrieve`: This operation accepts a unique identifier as an argument. First it looks that identifier up in DynamoDB and pulls the identifier and its context out. Then it retrieves that object from S3. It bundles these items together and returns them to the caller.
-* `search`: This operation accepts a metadata key to search for. It then queries DynamoDB for the `set` of documents in the Document Bucket that have context matching that key. This operation then returns that set of document identifiers and their metadata.
+* `search`: This operation accepts a metadata key to search. It then queries DynamoDB for the `set` of documents in the Document Bucket that have context matching that key. This operation then returns that set of document identifiers and their metadata.
     * Once the desired document or documents have been identified with the returned metadata, the document identifiers can be passed to `retrieve` to actually fetch the documents.
 
 This is a start for sharing, storing, and searching documents of a variety of types. But what about sensitive documents? Or protecting, say, important configuration files from accidental corruption during storing or retrieving?
