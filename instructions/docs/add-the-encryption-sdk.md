@@ -55,7 +55,7 @@ Look for `ADD-ESDK-START` comments to help orient yourself in the code.
 Start by adding the Encryption SDK dependency to the code.
 
 ```java tab="Java" hl_lines="5 6 7 8 9 14 15 25 30 31 36 39"
-// Edit Api.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
 package sfw.example.esdkworkshop;
 
 // ADD-ESDK-START: Add the ESDK Dependency
@@ -89,7 +89,7 @@ public Api(
 }
 
 // Save and close.
-// Edit App.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
 package sfw.example.esdkworkshop;
 
 // ADD-ESDK-START: Add the ESDK Dependency
@@ -164,7 +164,7 @@ You also changed the API to expect that a Keyring or Master Key Provider will be
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
 ```java tab="Java" hl_lines="3 4 5"
-// Edit Api.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
 public PointerItem store(byte[] data, Map<String, String> context) {
     // ADD-ESDK-START: Add Encryption to store
     CryptoResult<byte[], KmsMasterKey> encryptedMessage = awsEncryptionSdk.encryptData(mkp, data);
@@ -223,7 +223,7 @@ Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK 
 Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
 
 ```java tab="Java" hl_lines="5 7"
-// Edit Api.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
 // Find retrieve(...)
     byte[] data = getObjectData(key);
     // ADD-ESDK-START: Add Decryption to retrieve
@@ -291,7 +291,7 @@ The data returned from S3 for `retrieve` is now encrypted. Before returning that
 Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
 ```java tab="Java" hl_lines="6 9 10 13"
-// Edit App.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
     // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK

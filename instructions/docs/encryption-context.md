@@ -90,7 +90,7 @@ cd ~/environment/workshop/python/encryption-context-start
 ### Step 1: Set Encryption Context on Encrypt
 
 ```java tab="Java" hl_lines="4 6"
-// Edit Api.java and find store(...)
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)
     // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
     CryptoResult<byte[], KmsMasterKey> encryptedMessage =
         awsEncryptionSdk.encryptData(mkp, data, context);
@@ -147,7 +147,7 @@ Next you will update `retrieve` to use the encryption context on decrypt.
 ### Step 2: Use Encryption Context on Decrypt
 
 ```java tab="Java" hl_lines="3 4"
-// Edit Api.java and find retrieve(...)
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)
     // ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
     Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
     PointerItem pointer = PointerItem.fromKeyAndContext(key, actualContext);
@@ -211,7 +211,7 @@ Next you will add a mechanism for the application to test assertions made in enc
 ### Step 3: Making Assertions
 
 ```java tab="Java" hl_lines="3 4 14 15 16"
-// Edit Api.java and find retrieve(...)
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)
     // ENCRYPTION-CONTEXT-START: Making Assertions
     boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
     if (!allExpectedContextKeysFound) {
