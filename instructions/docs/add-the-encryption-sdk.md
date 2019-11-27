@@ -409,6 +409,8 @@ Experiment using the API as much as you like. To get you started, here are some 
 If you want more ideas to extend, check out [Explore Further](#explore-further) below.
 
 ```java tab="Java"
+// Compile your code
+mvn compile
 // To use the API programmatically, use this target to launch jshell
 mvn jshell:run
 /open startup.jsh

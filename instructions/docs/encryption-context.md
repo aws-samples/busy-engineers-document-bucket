@@ -369,6 +369,8 @@ Here's some ideas for things to test:
 There's a few simple suggestions to get you started in the snippets below.
 
 ```bash tab="Java"
+// Compile your code
+mvn compile
 // To use the API programmatically, use this target to launch jshell
 mvn jshell:run
 /open startup.jsh
