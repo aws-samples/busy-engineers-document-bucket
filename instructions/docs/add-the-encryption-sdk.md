@@ -302,7 +302,6 @@ Now that you have your dependencies declared and your code updated to encrypt an
     KmsMasterKeyProvider mkp =
         KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
 
-    // Construct the API
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
 ```
 

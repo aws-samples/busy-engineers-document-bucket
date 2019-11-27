@@ -36,7 +36,6 @@ public class App {
     KmsMasterKeyProvider mkp =
         KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
 
-    // Construct the API
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
   }
   // CHECKSTYLE:ON AbbreviationAsWordInName
