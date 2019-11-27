@@ -31,22 +31,20 @@ Now you will add the AWS Encryption SDK to encrypt close to where the data origi
 Make sure you are in the `exercises` directory for the language of your choice:
 
 ```bash tab="Java"
-cd ~/environment/workshop/exercises/java
+cd ~/environment/workshop/exercises/java/add-esdk-start
 ```
 
 ```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript
+cd ~/environment/workshop/exercises/node-typescript/add-esdk-start
 ```
 
 ```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript
+cd ~/environment/workshop/exercises/node-javascript/add-esdk-start
 ```
 
 ```bash tab="Python"
-cd ~/environment/workshop/exercises/python
+cd ~/environment/workshop/exercises/python/add-esdk-start
 ```
-
-`cd` into the `add-esdk-start` directory.
 
 ### Step 1: Add the ESDK Dependency
 
@@ -98,14 +96,14 @@ import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
 ```
 
 ```typescript tab="Typescript Node.JS" hl_lines="4 11"
-// Edit ./store.js
+// Edit ./src/store.ts
 
 // ADD-ESDK-START: Add the @aws-crypto/client-node dependency
 import { encryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
 
 // Save and exit
 
-// Edit ./retrieve.js
+// Edit ./src/retrieve.ts
 
 // ADD-ESDK-START: Add the @aws-crypto/client-node dependency
 import { decryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
@@ -175,7 +173,7 @@ public PointerItem store(byte[] data, Map<String, String> context) {
 ```
 
 ```typescript tab="Typescript Node.JS" hl_lines="4"
-// Edit ./store.js
+// Edit ./src/store.ts
 
 // ADD-ESDK-START: Add Encryption to store
 const Body = fileStream.pipe(encryptStream(encryptKeyring));
@@ -234,7 +232,7 @@ Now that the application will encrypt data before storing it, it will need to de
 
 
 ```typescript tab="Typescript Node.JS" hl_lines="7"
-// Edit retrieve.js
+// Edit ./src/retrieve.ts
 
   // ADD-ESDK-START: Add Decryption to retrieve
   return s3
@@ -246,7 +244,7 @@ Now that the application will encrypt data before storing it, it will need to de
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="7"
-// Edit retrieve.js
+// Edit ./retrieve.js
 
   // ADD-ESDK-START: Add Decryption to retrieve
   return s3
@@ -307,7 +305,7 @@ Now that you have your dependencies declared and your code updated to encrypt an
 
 ```typescript tab="Typescript Node.JS"  hl_lines="4 5 6 7 14 15"
 
-// Edit store.js
+// Edit ./src/store.ts
 
 // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
 const faytheCMK = config.state.getFaytheCMK();
@@ -317,7 +315,7 @@ const encryptKeyring = new KmsKeyringNode({
 
 // Save and exit
 
-// Edit retrieve.js
+// Edit ./src/retrieve.ts
 
 // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
 const faytheCMK = config.state.getFaytheCMK();
@@ -328,7 +326,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 
 ```javascript tab="JavaScript Node.JS"  hl_lines="4 5 6 7 14 15"
 
-// Edit store.js
+// Edit ./store.js
 
 // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
 const faytheCMK = config.state.getFaytheCMK();
@@ -338,7 +336,7 @@ const encryptKeyring = new KmsKeyringNode({
 
 // Save and exit
 
-// Edit retrieve.js
+// Edit ./retrieve.js
 
 // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
 const faytheCMK = config.state.getFaytheCMK();
@@ -430,6 +428,7 @@ mvn compile
 node
 list = require("./list.js")
 store = require("./store.js")
+retrieve = require("./retrieve")
 list().then(console.log)
 store(fs.createReadStream("./store.js")).then(r => {
   // Just storing the s3 key
@@ -454,6 +453,7 @@ retrieve(key).pipe(process.stdout)
 node -r ts-node/register
 ;({list} = require("./src/list.ts"))
 ;({store} = require("./src/store.ts"))
+;({retrieve} = require("./src/retrieve.ts"))
 list().then(console.log)
 store(fs.createReadStream("./src/store.ts")).then(r => {
   // Just storing the s3 key

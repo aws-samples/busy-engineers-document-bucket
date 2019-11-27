@@ -62,21 +62,21 @@ cd ~/environment/workshop/exercises/python/multi-cmk-start
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="3 7"
-// Edit store.js
+// Edit ./store.js
 // MULTI-CMK-START: Add the WalterCMK
 const walterCMK = config.state.getWalterCMK();
 
-// Edit retrieve.js
+// Edit ./retrieve.js
 // MULTI-CMK-START: Add the WalterCMK
 const walterCMK = config.state.getWalterCMK();
 ```
 
 ```typescript tab="Typescript Node.JS" hl_lines="3 7"
-// Edit src/store.js
+// Edit ./src/store.ts
 // MULTI-CMK-START: Add the WalterCMK
 const walterCMK = config.state.getWalterCMK();
 
-// Edit retrieve.js
+// Edit ./src/retrieve.ts
 // MULTI-CMK-START: Add the WalterCMK
 const walterCMK = config.state.getWalterCMK();
 ```
@@ -102,7 +102,7 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="4 5 6 7 13"
-// Edit store.js
+// Edit ./store.js
 // MULTI-CMK-START: Add the WalterCMK
 ...
 const encryptKeyring = new KmsKeyringNode({
@@ -111,7 +111,7 @@ const encryptKeyring = new KmsKeyringNode({
 });
 
 // Save and exit
-// Edit retrieve.js
+// Edit ./retrieve.js
 // MULTI-CMK-START: Add the WalterCMK
 ...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
@@ -120,7 +120,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 ```
 
 ```typescript tab="Typescript Node.JS" hl_lines="4 5 6 7 13"
-// Edit src/store.js
+// Edit ./src/store.ts
 // MULTI-CMK-START: Add the WalterCMK
 ...
 const encryptKeyring = new KmsKeyringNode({
@@ -129,7 +129,7 @@ const encryptKeyring = new KmsKeyringNode({
 });
 
 // Save and exit
-// Edit store.js
+// Edit ./src/retrieve.ts
 // MULTI-CMK-START: Add the WalterCMK
 ...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
@@ -253,9 +253,9 @@ retrieve(key).pipe(process.stdout)
 node -r ts-node/register
 ;({list} = require("./src/list.ts"))
 ;({store} = require("./src/store.ts"))
-retrieve = require("./retrieve")
+;({retrieve} = require("./src/retrieve.ts"))
 list().then(console.log)
-store(fs.createReadStream("./store.js")).then(r => {
+store(fs.createReadStream("./src/store.js")).then(r => {
   // Just storing the s3 key
   key = r.Key
   console.log(r)
