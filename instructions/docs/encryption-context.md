@@ -100,7 +100,7 @@ cd ~/environment/workshop/exercises/python/encryption-context-start
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="3 4 5"
-  // Edit store.js
+  // Edit ./store.js
   // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
   const Body = fileStream.pipe(
     encryptStream(encryptKeyring, { encryptionContext })
@@ -110,7 +110,7 @@ cd ~/environment/workshop/exercises/python/encryption-context-start
 ```
 
 ```typescript tab="Typescript Node.JS" hl_lines="3 4 5"
-  // Edit src/store.ts
+  // Edit ./src/store.ts
   // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
   const Body = fileStream.pipe(
     encryptStream(encryptKeyring, { encryptionContext })
@@ -155,7 +155,7 @@ Next you will update `retrieve` to use the encryption context on decrypt.
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="9 10 11"
-// Edit retrieve.js
+// Edit ./retrieve.js
 
   return (
     s3
@@ -240,7 +240,7 @@ Next you will add a mechanism for the application to test assertions made in enc
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
-// Edit retrieve.js
+// Edit ./retrieve.js
   return (
     s3
       .getObject({ Bucket, Key })
@@ -396,6 +396,7 @@ mvn compile
 node
 list = require("./list.js")
 store = require("./store.js")
+retrieve = require("./retrieve")
 list().then(console.log)
 encryptionContext = {
   stage: "demo",
@@ -430,13 +431,14 @@ retrieve(key, { expectedContext: { stage: "demo"}, expectedContextKeys: [ "purpo
 node -r ts-node/register
 ;({list} = require("./src/list.ts"))
 ;({store} = require("./src/store.ts"))
+;({retrieve} = require("./src/retrieve.ts"))
 list().then(console.log)
 encryptionContext = {
   stage: "demo",
   purpose: "simple demonstration",
   origin: "us-east-2"
 }
-store(fs.createReadStream("./store.js"), encryptionContext).then(r => {
+store(fs.createReadStream("./src/store.js"), encryptionContext).then(r => {
   // Just storing the s3 key
   key = r.Key
   console.log(r)
