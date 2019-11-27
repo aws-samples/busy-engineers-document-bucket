@@ -203,6 +203,8 @@ Try out combinations of Grant permissions for your application and watch how the
 * What other interesting access patterns can you imagine?
 
 ```java tab="Java"
+// Compile your code
+mvn compile
 // To use the API programmatically, use this target to launch jshell
 mvn jshell:run
 /open startup.jsh
