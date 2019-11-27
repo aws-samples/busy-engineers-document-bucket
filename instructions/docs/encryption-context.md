@@ -72,19 +72,19 @@ If you just finished [Using Multiple CMKs](./multi-cmk.md), you are all set.
 If you aren't sure, or want to catch up, jump into the `encryption-context-start` directory for the language of your choice.
 
 ```bash tab="Java"
-cd ~/environment/workshop/java/encryption-context-start
+cd ~/environment/workshop/exercises/java/encryption-context-start
 ```
 
 ```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/node-typescript/encryption-context-start
+cd ~/environment/workshop/exercises/node-typescript/encryption-context-start
 ```
 
 ```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/node-javascript/encryption-context-start
+cd ~/environment/workshop/exercises/node-javascript/encryption-context-start
 ```
 
 ```bash tab="Python"
-cd ~/environment/workshop/python/encryption-context-start
+cd ~/environment/workshop/exercises/python/encryption-context-start
 ```
 
 ### Step 1: Set Encryption Context on Encrypt
@@ -173,7 +173,7 @@ Next you will update `retrieve` to use the encryption context on decrypt.
 ```
 
 ```typescript tab="Typescript Node.JS" hl_lines="9 10 11"
-// Edit src/retrieve.js
+// Edit ./src/retrieve.ts
 
   return (
     s3
@@ -271,7 +271,7 @@ Next you will add a mechanism for the application to test assertions made in enc
 ```
 
 ```typescript tab="Typescript Node.JS" hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
-// Edit src/retrieve.js
+// Edit ./src/retrieve.ts
   return (
     s3
       .getObject({ Bucket, Key })
