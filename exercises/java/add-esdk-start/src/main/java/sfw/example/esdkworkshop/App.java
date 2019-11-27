@@ -27,7 +27,6 @@ public class App {
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
     // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
-    // Construct the API
     return new Api(ddbClient, tableName, s3Client, bucketName);
   }
   // CHECKSTYLE:ON AbbreviationAsWordInName
