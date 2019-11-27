@@ -41,11 +41,11 @@ cd ~/environment/workshop/exercises/java/multi-cmk-start
 ```
 
 ```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/nodejs-typescript/multi-cmk-start
+cd ~/environment/workshop/exercises/node-typescript/multi-cmk-start
 ```
 
 ```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/nodejs-javascript/multi-cmk-start
+cd ~/environment/workshop/exercises/node-javascript/multi-cmk-start
 ```
 
 ```bash tab="Python"
@@ -111,7 +111,7 @@ const encryptKeyring = new KmsKeyringNode({
 });
 
 // Save and exit
-// Edit store.js
+// Edit retrieve.js
 // MULTI-CMK-START: Add the WalterCMK
 ...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
