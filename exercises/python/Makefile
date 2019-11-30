@@ -1,3 +1,6 @@
+# Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 bootstrap:
 	@echo "Bootstrapping Python environment..."
 	@# Cloud9 sets an alias in bashrc
