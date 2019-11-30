@@ -12,6 +12,10 @@ from .config import config
 
 
 def initialize() -> DocumentBucketOperations:
+    """
+    Configure a Document Bucket API automatically with resources bootstrapped
+    by CloudFormation.
+    """
     # Load the pointers to CloudFormation resources that you just deployed
     state = toml.load(os.path.expanduser(config["base"]["state_file"]))["state"]
 

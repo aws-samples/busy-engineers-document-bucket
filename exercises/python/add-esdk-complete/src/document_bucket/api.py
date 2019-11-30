@@ -7,7 +7,8 @@ from typing import Dict, Set
 import aws_encryption_sdk  # type: ignore
 from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
 
-from .model import ContextItem, ContextQuery, DocumentBundle, PointerItem, PointerQuery
+from .model import (ContextItem, ContextQuery, DocumentBundle, PointerItem,
+                    PointerQuery)
 
 
 class DocumentBucketOperations:
@@ -99,6 +100,7 @@ class DocumentBucketOperations:
         :returns: the document, its key, and associated context
         """
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
+        # ADD-ESDK-COMPLETE: Add Decryption to retrieve
         encrypted_data = self._get_object(item)
         plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider

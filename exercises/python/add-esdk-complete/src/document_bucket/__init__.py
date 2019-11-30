@@ -3,7 +3,6 @@
 
 import os
 
-
 # ADD-ESDK-COMPLETE: Add the ESDK Dependency
 import aws_encryption_sdk  # type: ignore
 import boto3  # type: ignore
