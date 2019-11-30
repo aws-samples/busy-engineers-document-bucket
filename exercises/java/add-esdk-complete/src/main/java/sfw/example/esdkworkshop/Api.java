@@ -103,7 +103,7 @@ public class Api {
   /**
    * Retrieves a {@link PointerItem} for the supplied key.
    *
-   * @param key the key for which to fetch the {@link PointerItem}.
+   * @param key the key to fetch the {@link PointerItem}.
    * @return the {@link PointerItem} found.
    */
   protected PointerItem getPointerItem(String key) {
@@ -125,7 +125,7 @@ public class Api {
   /**
    * Query DynamoDB for the records associated with the supplied context key.
    *
-   * @param contextKey the key for which to retrieve the list of matching records.
+   * @param contextKey the key to retrieve the list of matching records.
    * @return the {@link Set} of {@link PointerItem}s that have that context key.
    */
   protected Set<PointerItem> queryForContextKey(String contextKey) {
@@ -265,7 +265,7 @@ public class Api {
   /**
    * Search the Document Bucket for any documents that have context with the supplied key.
    *
-   * @param contextKey the key for which to search for matching documents.
+   * @param contextKey the key to search for matching documents.
    * @return the {@link Set} of {@link PointerItem}s for matching documents.
    */
   public Set<PointerItem> searchByContextKey(String contextKey) {
