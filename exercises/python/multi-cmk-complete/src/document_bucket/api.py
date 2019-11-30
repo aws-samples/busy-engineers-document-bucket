@@ -92,9 +92,8 @@ class DocumentBucketOperations:
         Retrieves a document from the Document Bucket system.
 
         :param pointer_key: the key for the document to retrieve
-        :param expected_context_keys: the set of context keys that document should have
-        :param expected_context: the set of context key-value pairs that document
-                                 should have
+        :param expected_context_keys: TODO do something with this parameter :)
+        :param expected_context: TODO do something with this parameter :)
         :returns: the document, its key, and associated context
         """
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
@@ -109,7 +108,7 @@ class DocumentBucketOperations:
         Stores a document in the Document Bucket system.
 
         :param data: the bytes of the document to store
-        :param context: the context for this document
+        :param context: TODO do something with this parameter :)
         :returns: the pointer reference for this document in the Document Bucket system
         """
         encrypted_data, header = aws_encryption_sdk.encrypt(
