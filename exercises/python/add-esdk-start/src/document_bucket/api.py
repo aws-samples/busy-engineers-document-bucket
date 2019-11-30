@@ -3,18 +3,28 @@
 
 from typing import Dict, Set
 
-from .model import (ContextItem, ContextQuery, DocumentBundle, PointerItem,
-                    PointerQuery)
+from .model import ContextItem, ContextQuery, DocumentBundle, PointerItem, PointerQuery
 
-# ADD-ESDK-START
+# ADD-ESDK-START: Add the ESDK Dependency
 
 
 class DocumentBucketOperations:
-    # ADD-ESDK-START
+    """
+    Operations available for interaction with the Document Bucket.
+    """
+
+    # ADD-ESDK-START: Add the ESDK Dependency
     def __init__(self, bucket, table):
+        """
+        Initialize a new operations object with the provided arguments.
+
+        Args:
+            bucket: S3 bucket for storing document objects
+            table: DynamoDB table for storing document pointers and context keys
+        """
         self.bucket = bucket
         self.table = table
-        # ADD-ESDK-START
+        # ADD-ESDK-START: Add the ESDK Dependency
 
     def _write_pointer(self, item: PointerItem):
         self.table.put_item(Item=item.to_item())
@@ -63,6 +73,11 @@ class DocumentBucketOperations:
         return pointers
 
     def list(self) -> Set[PointerItem]:
+        """
+        List all of the inventoried items in the Document Bucket system.
+
+        :returns: the set of pointers to Document Bucket documents
+        """
         return self._scan_table()
 
     def retrieve(
@@ -71,20 +86,41 @@ class DocumentBucketOperations:
         expected_context_keys: Set[str] = set(),
         expected_context: Dict[str, str] = {},
     ) -> DocumentBundle:
+        """
+        Retrieves a document from the Document Bucket system.
+
+        :param pointer_key: the key for the document to retrieve
+        :param expected_context_keys: TODO do something with this parameter :)
+        :param expected_context: TODO do something with this parameter :)
+        :returns: the document, its key, and associated context
+        """
+        # ADD-ESDK-START: Add Decryption to retrieve
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
-        # ADD-ESDK-START
         data = self._get_object(item)
         return DocumentBundle.from_data_and_context(data, item.context)
 
     def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
-        # ADD-ESDK-START
+        """
+        Stores a document in the Document Bucket system.
+
+        :param data: the bytes of the document to store
+        :param context: TODO do something with this parameter :)
+        :returns: the pointer reference for this document in the Document Bucket system
+        """
+        # ADD-ESDK-START: Add Encryption to store
         item = PointerItem.generate(context)
         self._write_pointer(item)
-        # ADD-ESDK-START
         self._write_object(data, item)
         self._populate_key_records(item)
         return item
 
     def search_by_context_key(self, context_key: str) -> Set[PointerItem]:
+        """
+        Search for the documents in the Document Bucket system that have the provided
+        key in their context.
+
+        :param context_key: the context key for which to find matching documents
+        :returns: the pointers for the matching documents, if any
+        """
         key = ContextQuery(context_key)
         return self._query_for_context_key(key)

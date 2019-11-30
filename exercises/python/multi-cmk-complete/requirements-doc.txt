@@ -1,0 +1,5 @@
+sphinx_rtd_theme
+sphinx
+aws_encryption_sdk
+boto3
+toml

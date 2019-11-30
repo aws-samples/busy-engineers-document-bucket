@@ -6,6 +6,10 @@ import sys
 
 import toml
 
+"""
+Loads and maps configuration from the Document Bucket configuration system.
+"""
+
 _CONFIG_FILE = os.path.join(sys.prefix, "config", "config.toml")
 
 config = toml.load(_CONFIG_FILE)

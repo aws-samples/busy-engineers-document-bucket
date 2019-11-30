@@ -15,11 +15,21 @@ from .config import config
 
 
 class DataModelException(Exception):
+    """
+    Wrapper exception for errors with data model operations.
+    """
+
     pass
 
 
 @dataclass
 class UUIDKey:
+    """
+    Models a unique identifier for document identification in the Document Bucket.
+    Used for the storage of the document and for the identification of document records
+    in the table.
+    """
+
     key: Union[UUID, str]
 
     def __post_init__(self):
@@ -33,7 +43,13 @@ class UUIDKey:
 
 @dataclass
 class BaseItem:
+    """
+    Models a DynamoDB record in the Document Bucket system.
+    """
+
+    #: This item's value for the partition key attribute.
     partition_key: Union[UUIDKey, str]
+    #: This item's value for the sort key attribute.
     sort_key: Optional[Union[str, UUIDKey]]
 
     def __hash__(self):
@@ -48,10 +64,16 @@ class BaseItem:
 
     @classmethod
     def partition_key_name(cls) -> str:
+        """
+        :returns: the name of the item attribute used as the partition key.
+        """
         return config["document_bucket"]["document_table"]["partition_key"]
 
     @classmethod
     def sort_key_name(cls) -> str:
+        """
+        :returns: the name of the item attribute used as the sort key.
+        """
         return config["document_bucket"]["document_table"]["sort_key"]
 
     def _assert_set(self):
@@ -61,6 +83,11 @@ class BaseItem:
             raise DataModelException("sort_key not set correctly after init!")
 
     def to_item(self):
+        """
+        Convert this item to a record format ready to write to DynamoDB.
+
+        :returns: a dict ready to write to DynamoDB
+        """
         key = {
             BaseItem.partition_key_name(): self.partition_key,
             BaseItem.sort_key_name(): self.sort_key,
@@ -70,28 +97,56 @@ class BaseItem:
 
 @dataclass
 class ContextQuery:
+    """
+    Models queries for context keys.
+    """
+
     partition_key: str
 
     def __post_init__(self):
         self.partition_key = ContextItem.canonicalize(self.partition_key)
 
     def expression(self) -> Dict[str, str]:
+        """
+        Generate a query expression for this context query.
+
+        :returns: DynamoDB key expression ready for querying
+        """
         return Key(BaseItem.partition_key_name()).eq(self.partition_key)
 
 
 @dataclass
 class PointerQuery:
+    """
+    Models queries for pointer keys.
+    """
+
     partition_key: UUIDKey
 
     @staticmethod
     def from_key(pointer_key: str) -> PointerQuery:
+        """
+        :param pointer_key: the pointer key to query for
+        :returns: a PointerQuery for the provided key
+        """
         return PointerQuery(UUIDKey(pointer_key))
 
     @staticmethod
     def from_context_item(context_item) -> PointerQuery:
+        """
+        :param context_item: the context item to use to look up the associated document
+                             pointer
+        :returns: a PointerQuery ready to pass to DynamoDB to look up the associated
+                  pointer item
+        """
         return PointerQuery(context_item.sort_key)
 
     def expression(self) -> Dict[str, str]:
+        """
+        Generate a query expression for this PointerQuery.
+
+        :returns: DynamoDB key expression ready for querying
+        """
         return Key(BaseItem.partition_key_name()).eq(self.partition_key)
 
 
@@ -109,6 +164,13 @@ class ContextItem(BaseItem):
 
     @classmethod
     def canonicalize(cls, context_key: str) -> str:
+        """
+        Ensure that the provided key is in canonical form as a ContextItem partition
+        key.
+
+        :param context_key: the key to canonicalize
+        :returns: the context_key updated to canonical form, if required
+        """
         if not context_key.startswith(ContextItem._prefix()):
             context_key = ContextItem._prefix() + context_key
         return context_key
@@ -120,6 +182,12 @@ class ContextItem(BaseItem):
 
     @classmethod
     def from_item(cls, item: Dict[str, str]) -> ContextItem:
+        """
+        Map a raw DynamoDB item into a ContextItem.
+
+        :param item: the item to map
+        :returns: the modeled ContextItem
+        """
         partition_key = item.pop(BaseItem.partition_key_name())
         sort_key = item.pop(BaseItem.sort_key_name())
         return cls(partition_key, sort_key)
@@ -127,7 +195,9 @@ class ContextItem(BaseItem):
 
 @dataclass
 class PointerItem(BaseItem):
+    #: PointerItems have a fixed sort key
     sort_key: str = config["document_bucket"]["document_table"]["object_target"]
+    #: The context for the document that this PointerItem refers to
     context: Dict[str, str] = field(default_factory=dict)
 
     def __hash__(self):
@@ -147,12 +217,25 @@ class PointerItem(BaseItem):
 
     @classmethod
     def generate(cls, context: Dict[str, str]):
+        """
+        Generate a new PointerItem for a new document, and its context.
+
+        :param context: the context for the new document
+        :returns: a new PointerItem for the new document
+        """
         return PointerItem(partition_key=cls._generate_key(), context=context)
 
     @classmethod
     def from_key_and_context(
         cls, key: Union[UUIDKey, UUID, str], context: Dict[str, str]
     ) -> PointerItem:
+        """
+        Map the provided key and context into a modeled PointerItem.
+
+        :param key: the key for the document that this PointerItem references
+        :param context: the context for this document
+        :returns: a modeled PointerItem
+        """
         if not isinstance(key, UUIDKey):
             key = UUIDKey(key)
         return cls(partition_key=key, context=context)
@@ -178,6 +261,11 @@ class PointerItem(BaseItem):
         self.partition_key = str(self.partition_key)
 
     def context_items(self) -> Set[ContextItem]:
+        """
+        Get the set of ContextItems for this PointerItem record.
+
+        :returns: a ContextItem for each key of context for this PointerItem
+        """
         result: Set[ContextItem] = set()
         for context_key in self.context.keys():
             result.add(ContextItem(context_key, self.partition_key))
@@ -185,6 +273,11 @@ class PointerItem(BaseItem):
 
     @classmethod
     def filter_for(cls):
+        """
+        Helper to provide a DynamoDB filter to select PointerItem records
+
+        :returns: a key expression filter ready to use with DynamoDB operations
+        """
         return Key(BaseItem.sort_key_name()).eq(cls.sort_key)
 
     def to_item(self):
@@ -194,6 +287,12 @@ class PointerItem(BaseItem):
 
     @staticmethod
     def from_item(item: Dict[str, str]) -> PointerItem:
+        """
+        Map a raw DynamoDB item into a PointerItem.
+
+        :param item: the item to map
+        :returns: the modeled PointerItem
+        """
         partition_key = item.pop(BaseItem.partition_key_name())
         sort_key = item.pop(BaseItem.sort_key_name())
         return PointerItem(partition_key, sort_key, item)
@@ -201,14 +300,29 @@ class PointerItem(BaseItem):
 
 @dataclass
 class DocumentBundle:
+    """
+    The complete, aggregated form of a Document Bucket document. Contains the data,
+    the unique identifier key, and the context.
+    """
+
     key: BaseItem
     data: bytes
 
     @staticmethod
     def from_pointer_and_data(key: PointerItem, data: bytes):
+        """
+        Build a bundled document from the provdied document key and data.
+
+        :returns: a DocumentBundle for this pointer and data
+        """
         return DocumentBundle(key, data)
 
     @staticmethod
     def from_data_and_context(data: bytes, context: Dict[str, str]):
+        """
+        Build a bundled document from the provided data and document context.
+
+        :returns: a DocumentBundle for this data and context
+        """
         key = PointerItem.generate(context)
         return DocumentBundle(key, data)

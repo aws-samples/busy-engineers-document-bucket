@@ -3,7 +3,6 @@
 
 import os
 
-
 # ADD-ESDK-COMPLETE: Add the ESDK Dependency
 import aws_encryption_sdk  # type: ignore
 import boto3  # type: ignore
@@ -14,6 +13,10 @@ from .config import config
 
 
 def initialize() -> DocumentBucketOperations:
+    """
+    Configure a Document Bucket API automatically with resources bootstrapped
+    by CloudFormation.
+    """
     # Load the pointers to CloudFormation resources that you just deployed
     state = toml.load(os.path.expanduser(config["base"]["state_file"]))["state"]
 

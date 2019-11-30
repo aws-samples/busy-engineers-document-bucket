@@ -12,9 +12,21 @@ from .model import (ContextItem, ContextQuery, DocumentBundle, PointerItem,
 
 
 class DocumentBucketOperations:
+    """
+    Operations available for interaction with the Document Bucket.
+    """
 
     # ADD-ESDK-COMPLETE: Add the ESDK Dependency
     def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
+        """
+        Initialize a new operations object with the provided arguments.
+
+        Args:
+            bucket: S3 bucket for storing document objects
+            table: DynamoDB table for storing document pointers and context keys
+            master_key_provider: Encryption SDK Master Key Provider for encryption
+                                 and decryption operations
+        """
         self.bucket = bucket
         self.table = table
         self.master_key_provider: KMSMasterKeyProvider = master_key_provider
@@ -66,6 +78,11 @@ class DocumentBucketOperations:
         return pointers
 
     def list(self) -> Set[PointerItem]:
+        """
+        List all of the inventoried items in the Document Bucket system.
+
+        :returns: the set of pointers to Document Bucket documents
+        """
         return self._scan_table()
 
     def retrieve(
@@ -74,21 +91,33 @@ class DocumentBucketOperations:
         expected_context_keys: Set[str] = set(),
         expected_context: Dict[str, str] = {},
     ) -> DocumentBundle:
+        """
+        Retrieves a document from the Document Bucket system.
+
+        :param pointer_key: the key for the document to retrieve
+        :param expected_context_keys: TODO do something with this parameter :)
+        :param expected_context: TODO do something with this parameter :)
+        :returns: the document, its key, and associated context
+        """
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
-        encrypted_data = self._get_object(item)
         # ADD-ESDK-COMPLETE: Add Decryption to retrieve
+        encrypted_data = self._get_object(item)
         plaintext, header = aws_encryption_sdk.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
-        return DocumentBundle.from_data_and_context(
-            plaintext, item.context
-        )
+        return DocumentBundle.from_data_and_context(plaintext, item.context)
 
     def store(self, data: bytes, context: Dict[str, str] = {}) -> PointerItem:
+        """
+        Stores a document in the Document Bucket system.
+
+        :param data: the bytes of the document to store
+        :param context: TODO do something with this parameter :)
+        :returns: the pointer reference for this document in the Document Bucket system
+        """
         # ADD-ESDK-COMPLETE: Add Encryption to store
         encrypted_data, header = aws_encryption_sdk.encrypt(
-            source=data,
-            key_provider=self.master_key_provider,
+            source=data, key_provider=self.master_key_provider,
         )
         item = PointerItem.generate(context)
         self._write_pointer(item)
@@ -97,5 +126,12 @@ class DocumentBucketOperations:
         return item
 
     def search_by_context_key(self, context_key: str) -> Set[PointerItem]:
+        """
+        Search for the documents in the Document Bucket system that have the provided
+        key in their context.
+
+        :param context_key: the context key for which to find matching documents
+        :returns: the pointers for the matching documents, if any
+        """
         key = ContextQuery(context_key)
         return self._query_for_context_key(key)
