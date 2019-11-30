@@ -1,30 +1,14 @@
 # Exercise 1: Add the AWS Encryption SDK
 
-In this section, you will add client-side encryption using the AWS Encryption SDK and KMS to the Busy Engineer's Document Bucket.
+In this section, you will add client-side encryption to the Busy Engineer's Document Bucket using the AWS Encryption SDK and AWS KMS.
 
 ## Background
 
-The Busy Engineer's Document Bucket is an example application meant to show some high-level examples of real world AWS patterns. This includes how to integrate client-side encryption using AWS KMS and the AWS Encryption SDK in application code.
+In [Getting Started](./getting-started.md), you set up your Busy Engineer's Document Bucket environment and selected a workshop language. 
 
-Right now, the Document Bucket supports storing files (or documents, or other blobs of data) in a private S3 bucket, and indexing them in DynamoDB. This allows Document Bucket users to share files with other users, or store them for retrieval later. The DynamoDB entries provide fast lookups to the content of the bucket, along with metadata context for each bucket item.
+Now you will add the AWS Encryption SDK to encrypt objects on the client, before they are transmitted off of the host machine to the internet. You will use AWS KMS to provide a `data key` for each object, using a CMK that you set up in [Getting Started](./getting-started.md).
 
-This context allows storing additional information about the S3 item. Perhaps the origin user, the destination fleet, the project, or any other tag that would be useful to know without downloading and examining the item.
-
-DynamoDB is also configured to allow indexing on which documents have which keys. So, for example, it's a quick query to find out which documents in the bucket have been tagged with "configuration" as a piece of metadata about the object contents.
-
-Here's the API the Document Bucket supports:
-
-* `list`: This operation queries DynamoDB for all entries for all items in the bucket, and their metadata. It returns the `set` of items that have been stored.
-* `store`: This operation accepts a blob of bytes and a `map` of metadata context. It generates a unique identifier for the document. The identifier and associated metadata are written to DynamoDB. The bytes of the data are written to S3 under a key of that unique identifier. Any context metadata keys in DynamoDB are updated to include that new object identifier.
-* `retrieve`: This operation accepts a unique identifier as an argument. First it looks that identifier up in DynamoDB and pulls the identifier and its context out. Then it retrieves that object from S3. It bundles these items together and returns them to the caller.
-* `search`: This operation accepts a metadata key to search. It then queries DynamoDB for the `set` of documents in the Document Bucket that have context matching that key. This operation then returns that set of document identifiers and their metadata.
-    * Once the desired document or documents have been identified with the returned metadata, the document identifiers can be passed to `retrieve` to actually fetch the documents.
-
-This is a start for sharing, storing, and searching documents of a variety of types. But what about sensitive documents? Or protecting, say, important configuration files from accidental corruption during storing or retrieving?
-
-Now you will add the AWS Encryption SDK to encrypt close to where the data originates: client-side encrypting the Document Bucket document before it is transmitted off of the host machine to the internet. You will use KMS to provide a `data key` for each document, using a CMK that you set up in [Getting Started](./getting-started.md) when you deployed your stacks.
-
-## Make the Change
+## Let's Go!
 
 ### Starting Directory
 
@@ -48,7 +32,7 @@ cd ~/environment/workshop/exercises/python/add-esdk-start
 
 ### Step 1: Add the ESDK Dependency
 
-Look for `ADD-ESDK-START` comments to help orient yourself in the code.
+Look for `ADD-ESDK-START` comments in the code to help orient yourself.
 
 Start by adding the Encryption SDK dependency to the code.
 
@@ -151,11 +135,10 @@ def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
 # Save and exit
 ```
 
-#### What Just Happened
+#### What Happened?
 
-You just imported a dependency on the AWS Encryption SDK library in your code.
-
-You also changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in `store` and `retrieve` operations.
+1. You added a dependency on the AWS Encryption SDK library in your code
+1. You changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in `store` and `retrieve` operations
 
 ### Step 2: Add Encryption to `store`
 
@@ -205,20 +188,19 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
     self._write_object(encrypted_data, item)
 ```
 
-#### What Just Happened
+#### What Happened?
 
-The application will now encrypt data client-side with the AWS Encryption SDK and KMS before storing it.
+The application will use the AWS Encryption SDK to encrypt your data client-side under a CMK before storing it by:
 
-Now, before storing data in the Document Bucket, it uses the AWS Encryption SDK to:
-
-1. Request a new data key using your keyring or Master Key Provider
-1. Encrypt that data for you
-1. Return the encrypted data in the AWS Encryption SDK message format
-1. Extract the ciphertext to pass to the AWS S3 SDK to store in S3
+1. Requesting a new data key using your Keyring or Master Key Provider
+1. Encrypting your data with the returned data key
+1. Returning your encrypted data in the AWS Encryption SDK message format
+1. Extracting the ciphertext from the AWS Encryption SDK message
+1. Passing the ciphertext to the AWS S3 SDK for storage in S3
 
 ### Step 3: Add Decryption to `retrieve`
 
-Now that the application will encrypt data before storing it, it will need to decrypt the data before returning it to the caller. At least for the data to be useful, anyway.
+Now that the application encypts your data before storing it, it will need to decrypt your data before returning it to the caller (at least for the data to be useful, anyway).
 
 ```java tab="Java" hl_lines="5 7"
 // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
@@ -272,21 +254,21 @@ Now that the application will encrypt data before storing it, it will need to de
 # Save and exit
 ```
 
-#### What Just Happened
+#### What Happened?
 
-The application now decrypts data client-side as well.
+The application now decrypts data client-side, as well.
 
-The data returned from S3 for `retrieve` is now encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK:
+The data returned from S3 for `retrieve` is encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK is:
 
-1. Read the AWS Encryption SDK formatted encrypted message
-1. Called KMS to request to decrypt your message's encrypted data key using the Faythe CMK
-1. Used the decrypted data key to decrypt the message
-1. Returned the message plaintext and Encryption SDK headers to you
+1. Reading the AWS Encryption SDK formatted encrypted message
+1. Calling KMS to request to decrypt your message's encrypted data key using the Faythe CMK
+1. Using the decrypted data key to decrypt the message
+1. Returning the message plaintext and Encryption SDK headers to you
 
 
 ### Step 4: Configure the Faythe CMK in the Encryption SDK
 
-Now that you have your dependencies declared and your code updated to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
+Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
 ```java tab="Java" hl_lines="6 9 10 13"
 // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
@@ -363,11 +345,11 @@ operations = DocumentBucketOperations(bucket, table, mkp)
 # Save and exit
 ```
 
-#### What Just Happened
+#### What Happened?
 
-In Getting Started, you launched CloudFormation stacks for CMKs. One of these CMKs was nicknamed Faythe. As part of launching these templates, the CMK's Amazon Resource Name (ARN) was written to a configuration file on disk, the `state` variable that is loaded and parsed.
+In [Getting Started](./getting-started.md), you launched CloudFormation stacks for CMKs. One of these CMKs was nicknamed Faythe. As part of launching these templates, the CMK's Amazon Resource Name (ARN) was written to a configuration file on disk, the `state` variable that is loaded and parsed.
 
-Now Faythe's ARN is pulled into a variable, and used to initialize a keyring or master key provider that will use the Faythe CMK. That new keyring/master key provider is passed in to your API, and you are set to start encrypting and decrypting with KMS and the Encryption SDK.
+Now Faythe's ARN is pulled into a variable, and used to initialize a Keyring or Master Key Provider that will use the Faythe CMK. That new Keyring/Master Key Provider is passed into your API, and you are set to start encrypting and decrypting with KMS and the Encryption SDK.
 
 ### Checking Your Work
 
@@ -397,13 +379,15 @@ Now that the code is written, let's load it up and try it out.
 
 If you'd like to try a finished example, use your language's `-complete` directory as described above.
 
-Experiment using the API as much as you like. To get you started, here are some suggested things to try.
+Experiment using the API as much as you like. 
 
-* Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large).
-* Take a look at the <a href="https://s3.console.aws.amazon.com/s3/home" target="_blank">contents of your S3 Document Bucket</a> to inspect the raw object.
+To get started, here are some things to try:
+
+* Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)
+* Take a look at the <a href="https://s3.console.aws.amazon.com/s3/home" target="_blank">contents of your S3 Document Bucket</a> to inspect the raw object
 
 
-If you want more ideas to extend, check out [Explore Further](#explore-further) below.
+For more things to try, check out [Explore Further](#explore-further), below.
 
 ```java tab="Java"
 // Compile your code
