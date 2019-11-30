@@ -56,10 +56,10 @@ To set up your environment, you will:
    * At this point you have deployed your workshop stacks using CDK and set up language environments for all of the workshop languages
 1. In Cloud9, close your Terminal window and open a new one (`Window -> New Terminal`) to pick up the changes `make bootstrap` installed
 1. Choose your workshop language, and `cd` to its folder under `exercises`
-    * For Java, type `cd ~/environment/workshop/exercises/java` and hit `Enter`
-    * For NodeJS in JavaScript, type `cd ~/environment/workshop/exercises/node-javascript` and hit `Enter`
-    * For NodeJS in TypeScript, type `cd ~/environment/workshop/exercises/node-typescript` and hit `Enter`
-    * For Python, type `cd ~/environment/workshop/exercises/python` and hit `Enter`
+    * For **Java**, type `cd ~/environment/workshop/exercises/java` and hit `Enter`
+    * For **NodeJS in JavaScript**, type `cd ~/environment/workshop/exercises/node-javascript` and hit `Enter`
+    * For **NodeJS in TypeScript**, type `cd ~/environment/workshop/exercises/node-typescript` and hit `Enter`
+    * For **Python**, type `cd ~/environment/workshop/exercises/python` and hit `Enter`
 1. Your environment is ready! 
 
 Start the workshop with [Exercise 1: Add the Encryption SDK](./add-the-encryption-sdk.md).
