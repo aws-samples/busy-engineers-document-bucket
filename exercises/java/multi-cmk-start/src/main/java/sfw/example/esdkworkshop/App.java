@@ -1,6 +1,3 @@
-// CHECKSTYLE:OFF MissingJavadocMethod
-// TODO https://github.com/aws-samples/busy-engineers-document-bucket/issues/24
-
 package sfw.example.esdkworkshop;
 
 import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
@@ -9,11 +6,22 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
+/**
+ * Entry point for writing logic to work with the Document Bucket, with a helper to obtain an API
+ * instance to use.
+ */
 public class App {
 
   // The names of resources from the configuration file must exactly match those
   // keys for the automatic mapping.
   // CHECKSTYLE:OFF AbbreviationAsWordInName
+
+  /**
+   * Obtain a Document Bucket API initialized with the resources as configured by the bootstrap
+   * configuration system.
+   *
+   * @return a new {@link Api} configured automatically by the bootstrapping system.
+   */
   public static Api initializeDocumentBucket() {
     // Load the TOML State file with the information about launched CloudFormation resources
     State state = new State(Config.contents.base.state_file);
@@ -39,6 +47,11 @@ public class App {
   }
   // CHECKSTYLE:ON AbbreviationAsWordInName
 
+  /**
+   * Entry point for writing logic to interact with the Document Bucket system.
+   *
+   * @param args the command-line arguments to the Document Bucket.
+   */
   public static void main(String[] args) {
     // Interact with the Document Bucket here or in jshell (mvn jshell:run)
   }

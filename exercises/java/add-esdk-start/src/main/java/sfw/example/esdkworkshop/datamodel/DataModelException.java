@@ -1,8 +1,6 @@
-// CHECKSTYLE:OFF MissingJavadocMethod
-// TODO https://github.com/aws-samples/busy-engineers-document-bucket/issues/24
-
 package sfw.example.esdkworkshop.datamodel;
 
+/** A wrapper exception for problems with data model operations. */
 public class DataModelException extends RuntimeException {
   static final long serialVersionUID = 1L;
 

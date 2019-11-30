@@ -1,10 +1,8 @@
-// CHECKSTYLE:OFF MissingJavadocMethod
-// TODO https://github.com/aws-samples/busy-engineers-document-bucket/issues/24
-
 package sfw.example.esdkworkshop.datamodel;
 
 import java.util.UUID;
 
+/** Models the unique key for identifying pointer items in S3 and DynamoDB. */
 public class UuidKey {
   private final UUID key;
 
