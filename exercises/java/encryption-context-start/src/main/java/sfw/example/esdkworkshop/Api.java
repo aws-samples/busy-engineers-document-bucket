@@ -18,7 +18,6 @@ import com.amazonaws.util.IOUtils;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import sfw.example.esdkworkshop.datamodel.BaseItem;

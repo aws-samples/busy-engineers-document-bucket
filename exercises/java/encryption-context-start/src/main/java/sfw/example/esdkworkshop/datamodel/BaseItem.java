@@ -8,8 +8,8 @@ import sfw.example.esdkworkshop.Config;
 
 /**
  * Parent class for modeling items for the DocumentBucket DynamoDB table. See {@link ContextItem}
- * for items corresponding to key records for indexing items with a context key. See
- * {@link PointerItem} for items corresponding to pointer records for documents.
+ * for items corresponding to key records for indexing items with a context key. See {@link
+ * PointerItem} for items corresponding to pointer records for documents.
  */
 public abstract class BaseItem {
   protected final AttributeValue partitionKey;
