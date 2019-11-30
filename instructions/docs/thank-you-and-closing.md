@@ -21,14 +21,14 @@ After emptying your Document Bucket, you can now use CDK to destroy your stack.
 
 ```bash
 cd ~/environment/workshop/cdk
-cdk destroy BusyEngineer*
+npx cdk destroy BusyEngineer*
 ```
 
 ## Shutting Down Cloud9
 
 Use the CloudFormation console to delete your Cloud9 stack.
 
-1. <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#" target="_blank">Open the Cloud9 Console</a>
+1. <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#" target="_blank">Open the CloudFormation Console</a>
 1. Select the "BusyEngineersDocumentBucketEnvironment" stack
 1. Press "Delete"
 
