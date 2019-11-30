@@ -383,7 +383,7 @@ context.put("origin", "development");
 documentBucket.list();
 documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
 for (PointerItem item : documentBucket.list()) {
-    DocumentBundle document = documentBucket.retrieve(item.partitionKey(), context);
+    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
     System.out.println(document.toString());
 }
 // Ctrl+D to exit jshell
