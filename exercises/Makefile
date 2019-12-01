@@ -12,3 +12,6 @@ revoke_walter_grant:
 
 revoke_faythe_grant:
 	$(MAKE) -C ../cdk revoke_faythe_grant
+
+list_grants:
+	$(MAKE) -C ../cdk list_grants
