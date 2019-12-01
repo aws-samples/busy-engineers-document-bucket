@@ -21,7 +21,9 @@ public class State {
    * @param path the path to the state file.
    */
   public State(String path) {
-    contents = new Toml().read(new File(path)).to(Contents.class);
+    // Java does not expand ~ automatically
+    String canonicalizedPath = path.replaceFirst("~", System.getProperty("user.home"));
+    contents = new Toml().read(new File(canonicalizedPath)).to(Contents.class);
   }
 
   /** The top-level content structure of the state file. */
