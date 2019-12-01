@@ -22,3 +22,8 @@ the stack as developers rather than classroom students.
 1. Bootstrap the CDK environment
     1. `cd workshop`
     1. `make bootstrap`
+
+
+## License
+
+This project is licensed under the Apache-2.0 License.
