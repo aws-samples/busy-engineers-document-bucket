@@ -49,8 +49,7 @@ markdown_extensions:
 nav:
   - Home: 'index.md'
   - Getting Started: 'getting-started.md'
-  - Exercises:
-      - 'Add the Encryption SDK': 'add-the-encryption-sdk.md'
-      - 'Using Multiple CMKs': 'multi-cmk.md'
-      - 'Working With Encryption Context': 'encryption-context.md'
+  - 'Exercise 1': 'add-the-encryption-sdk.md'
+  - 'Exercise 2': 'multi-cmk.md'
+  - 'Exercise 3': 'encryption-context.md'
   - 'Thank You and Closing': 'thank-you-and-closing.md'
