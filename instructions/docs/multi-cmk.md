@@ -187,7 +187,9 @@ In `~/environment/workshop/exercises`, you'll find a `Makefile` with several tar
 * `make revoke_grants` will remove the Grants for both CMKs
 * `make create_grants` will add Grants to use either or both CMK, as needed
 
-You can observe the impact of changing Granted permissions by monitoring CloudTrail.
+The application behavior will change. **Important** when you revoke permissions to the first CMK in the list for a keyring (which is Faythe by default), you will need to change the keyring configuration to use Walter as your generator to resume operations. See <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/js-examples.html" target="_blank">documentation of Generator CMKs</a> for more.
+
+You can also observe the impact of changing Granted permissions by monitoring CloudTrail.
 
 * Faythe is in `us-east-2`, so <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#" target="_blank">check CloudTrail in us-east-2</a>
 * Walter is in `us-west-2`, so <a href="https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/dashboard" target="_blank">check CloudTrail in us-west-2</a>
