@@ -15,7 +15,5 @@ import { revokeGrant, getCurrentPrinciple } from "../lib/grant_helpers";
 
   const faytheKeyId = cfnState[config.faythe.export];
 
-  await Promise.all([
-    revokeGrant(faytheKeyId, currentPrinciple)
-  ]);
+  await Promise.all([revokeGrant(faytheKeyId, currentPrinciple)]);
 })();

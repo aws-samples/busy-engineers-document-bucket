@@ -15,7 +15,5 @@ import { revokeGrant, getCurrentPrinciple } from "../lib/grant_helpers";
 
   const walterKeyId = cfnState[config.walter.export];
 
-  await Promise.all([
-    revokeGrant(walterKeyId, currentPrinciple)
-  ]);
+  await Promise.all([revokeGrant(walterKeyId, currentPrinciple)]);
 })();
