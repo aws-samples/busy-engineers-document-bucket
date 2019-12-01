@@ -29,8 +29,6 @@ export class CMKStack extends cdk.Stack {
       "kms:ScheduleKeyDeletion",
       "kms:CancelKeyDeletion"
     );
-    //policyStatement.addAccountCondition(cdk.Aws.ACCOUNT_ID);
-    //policyStatement.addAnyPrincipal();
     policyStatement.addAccountRootPrincipal();
     policyStatement.addResources("*");
 
