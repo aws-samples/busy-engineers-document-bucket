@@ -1,2 +1,5 @@
 /exercises/busy_engineers_state.toml
 /.history
+.idea/
+*.iml
+.DS_Store

@@ -8,4 +8,4 @@ coverage:
 
 javadoc:
 	mvn javadoc:javadoc
-	cd ./target/site/apidocs; python3 -m http.server
+	cd ./target/site/apidocs; python3 -m http.server 8080
