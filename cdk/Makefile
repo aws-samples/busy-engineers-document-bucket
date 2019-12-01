@@ -33,5 +33,8 @@ revoke_walter_grant:
 revoke_faythe_grant:
 	npx ts-node bin/revoke_faythe_grants.ts
 
+list_grants:
+	npx ts-node bin/list_grants.ts
+
 data_purge:
 	npx ts-node bin/data_purge.ts

@@ -182,6 +182,7 @@ Using these targets, you can add and remove permission for the application to us
 
 In `~/environment/workshop/exercises`, you'll find a `Makefile` with several targets for you to experiment with:
 
+* `make list_grants` will show you the current state of grants on your CMKs
 * `make revoke_walter_grant` will remove the Grant providing permissions to use Walter in the application
 * `make revoke_faythe_grant` will remove the Grant providing permissions to use Faythe in the application
 * `make revoke_grants` will remove the Grants for both CMKs
