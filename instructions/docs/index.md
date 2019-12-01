@@ -14,7 +14,7 @@ After your work in the workshop is complete, you will have added client-side enc
 
 ## Exercises
 
-Here are the exercises in this workshop:
+In this workshop, you will work through the following modules:
 
 1. Using the AWS Encryption SDK
 1. Adding multiple Master Keys to your encryption
