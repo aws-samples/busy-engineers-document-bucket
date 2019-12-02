@@ -88,7 +88,7 @@ const walterCMK = config.state.getWalterCMK();
 walter_cmk = state["WalterCMK"]
 ```
 
-#### What Just Happened
+#### What Happened?
 
 When you launched your workshop stacks in [Getting Started](./getting-started.md), along with the Faythe CMK, you also launched a CMK called Walter. Walter's ARN was also plumbed through to the configuration state file that is set up for you by the workshop. Now that ARN is being pulled into a variable to use in the Encryption SDK configuration.
 
@@ -146,7 +146,7 @@ cmk = [faythe_cmk, walter_cmk]
 # Save and exit
 ```
 
-#### What Just Happened
+#### What Happened?
 
 In the previous exercise, you configured the Encryption SDK to use a list of CMKs that contained only Faythe. Configuring the Encryption SDK to also use Walter for encrypt, and to also try Walter for decrypt, required adding the ARN for Walter to the configuration list.
 
