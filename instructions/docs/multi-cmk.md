@@ -73,11 +73,11 @@ const walterCMK = config.state.getWalterCMK();
 
 ```typescript tab="Typescript Node.JS" hl_lines="3 7"
 // Edit ./src/store.ts
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Configure Walter
 const walterCMK = config.state.getWalterCMK();
 
 // Edit ./src/retrieve.ts
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Configure Walter
 const walterCMK = config.state.getWalterCMK();
 ```
 
@@ -121,7 +121,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
 ```typescript tab="Typescript Node.JS" hl_lines="4 5 6 7 13"
 // Edit ./src/store.ts
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Add Walter to the CMKs to Use
 ...
 const encryptKeyring = new KmsKeyringNode({
   generatorKeyId: faytheCMK,
@@ -130,7 +130,7 @@ const encryptKeyring = new KmsKeyringNode({
 
 // Save and exit
 // Edit ./src/retrieve.ts
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Add Walter to the CMKs to Use
 ...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 

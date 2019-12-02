@@ -19,9 +19,10 @@ const {
 const TableName = config.state.tableName();
 const Bucket = config.state.bucketName();
 
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Configure Walter
 
 const faytheCMK = config.state.getFaytheCMK();
+// MULTI-CMK-START: Add Walter to the CMKs to Use
 const encryptKeyring = new KmsKeyringNode({
   generatorKeyId: faytheCMK
 });

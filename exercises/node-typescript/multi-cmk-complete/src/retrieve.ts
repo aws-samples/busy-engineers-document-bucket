@@ -8,9 +8,10 @@ import { config } from "./config";
 import { EC } from "./store";
 const Bucket = config.state.bucketName();
 
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-COMPLETE: Configure Walter
 const walterCMK = config.state.getWalterCMK();
 const faytheCMK = config.state.getFaytheCMK();
+// MULTI-CMK-COMPLETE: Add Walter to the CMKs to Use
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
 export type retrieveOp = {

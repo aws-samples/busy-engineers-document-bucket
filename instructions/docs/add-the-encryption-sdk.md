@@ -82,14 +82,14 @@ import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
 ```typescript tab="Typescript Node.JS" hl_lines="4 11"
 // Edit ./src/store.ts
 
-// ADD-ESDK-START: Add the @aws-crypto/client-node dependency
+// ADD-ESDK-START: Add the ESDK Dependency
 import { encryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
 
 // Save and exit
 
 // Edit ./src/retrieve.ts
 
-// ADD-ESDK-START: Add the @aws-crypto/client-node dependency
+// ADD-ESDK-START: Add the ESDK Dependency
 import { decryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
 
 // Save and exit
@@ -289,7 +289,7 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
 // Edit ./src/store.ts
 
-// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
+// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
 const faytheCMK = config.state.getFaytheCMK();
 const encryptKeyring = new KmsKeyringNode({
   generatorKeyId: faytheCMK
