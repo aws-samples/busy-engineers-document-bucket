@@ -1,3 +1,6 @@
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 package sfw.example.esdkworkshop;
 
 // ADD-ESDK-START: Add the ESDK Dependency

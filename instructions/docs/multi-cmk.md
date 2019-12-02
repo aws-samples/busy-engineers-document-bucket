@@ -94,7 +94,7 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 
 ### Step 2: Add Walter to the CMKs to Use
 
-```java tab="Java" hl_lines="4"
+```java tab="Java" hl_lines="3 4"
 // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
     // MULTI-CMK-START: Add Walter to the CMKs to Use
     KmsMasterKeyProvider mkp =
@@ -214,6 +214,7 @@ Try out combinations of Grant permissions for your application and watch how the
 ```java tab="Java"
 // Compile your code
 mvn compile
+
 // To use the API programmatically, use this target to launch jshell
 mvn jshell:run
 /open startup.jsh
@@ -227,8 +228,8 @@ for (PointerItem item : documentBucket.list()) {
 // Ctrl+D to exit jshell
 
 // Use the make targets to change the Grants and see what happens!
-// To run logic that you write in App.java, use this target
-mvn compile
+// To run logic that you write in App.java, use this target after compile
+mvn exec:java
 ```
 
 ```javascript tab="JavaScript Node.JS"

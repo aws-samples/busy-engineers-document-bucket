@@ -89,7 +89,7 @@ cd ~/environment/workshop/exercises/python/encryption-context-start
 
 ### Step 1: Set Encryption Context on Encrypt
 
-```java tab="Java" hl_lines="4 6"
+```java tab="Java" hl_lines="4"
 // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)
     // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
     CryptoResult<byte[], KmsMasterKey> encryptedMessage =
@@ -371,6 +371,7 @@ There's a few simple suggestions to get you started in the snippets below.
 ```bash tab="Java"
 // Compile your code
 mvn compile
+
 // To use the API programmatically, use this target to launch jshell
 mvn jshell:run
 /open startup.jsh
@@ -388,8 +389,8 @@ for (PointerItem item : documentBucket.list()) {
 }
 // Ctrl+D to exit jshell
 
-// Or, to run logic that you write in App.java, use this target
-mvn compile
+// Or, to run logic that you write in App.java, use this target after compile
+mvn exec:java
 ```
 
 ```javascript tab="JavaScript Node.JS"
