@@ -9,6 +9,10 @@ This page contains reference information that might be useful as you work throug
 If you are getting a `NullPointerException` (Java), or a `KeyError` (Python), or similar errors when interacting with the TOML files (config and state), try running the state generation step again to make sure the file is generated and well formed.
 
 ```bash
+# Check the contents of your state file
+cat ~/.busy_engineers_state.toml
+
+# Regenerate your state file, if needed
 cd ~/environment/workshop/cdk/
 make state
 ```
@@ -83,6 +87,22 @@ sudo resize2fs /dev/nvme0n1p1
 ```
 
 ## Tips
+
+### API Documentation
+
+Python and Java have API documentation available for each exercise. You can view the documentation as you work in Cloud9.
+
+```bash tab="Java"
+make javadoc
+```
+
+```bash tab="Python"
+tox -e docs
+```
+
+Now select "Preview -> Preview Running Application" from the Cloud9 menu bar.
+
+Cloud9 will open a new pane in your IDE with a web browser rendering your API documentation.
 
 ### Cloud9
 
