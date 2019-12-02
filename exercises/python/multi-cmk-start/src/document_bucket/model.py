@@ -121,7 +121,7 @@ class PointerQuery:
     Models queries for pointer keys.
     """
 
-    partition_key: UUIDKey
+    partition_key: Union[str, UUIDKey]
 
     @staticmethod
     def from_key(pointer_key: str) -> PointerQuery:
@@ -129,7 +129,7 @@ class PointerQuery:
         :param pointer_key: the pointer key to query for
         :returns: a PointerQuery for the provided key
         """
-        return PointerQuery(UUIDKey(pointer_key))
+        return PointerQuery(str(UUIDKey(pointer_key)))
 
     @staticmethod
     def from_context_item(context_item) -> PointerQuery:
