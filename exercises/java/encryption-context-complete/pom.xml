@@ -9,9 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>esdkworkshop</name>
-    <description>A simple esdkworkshop.</description>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <description>The Busy Engineer's Document Bucket Workshop</description>
+    <url>https://document-bucket.awssecworkshops.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -138,10 +137,7 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <!-- TODO REPL Integration -->
                         <!-- https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-for-java-programs.html -->
-                        <!-- By default, run the program after each build -->
-                        <phase>compile</phase>
                         <goals>
                             <goal>java</goal>
                         </goals>
@@ -149,15 +145,6 @@
                 </executions>
                 <configuration>
                     <mainClass>sfw.example.esdkworkshop.App</mainClass>
-                    <arguments>
-                        <argument>argument1</argument>
-                    </arguments>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>myproperty</key>
-                            <value>myvalue</value>
-                        </systemProperty>
-                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>
