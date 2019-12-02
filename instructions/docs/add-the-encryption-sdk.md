@@ -393,6 +393,7 @@ For more things to try, check out [Explore Further](#explore-further), below.
 ```java tab="Java"
 // Compile your code
 mvn compile
+
 // To use the API programmatically, use this target to launch jshell
 mvn jshell:run
 /open startup.jsh
@@ -405,8 +406,8 @@ for (PointerItem item : documentBucket.list()) {
 }
 // Ctrl+D to exit jshell
 
-// Or, to run logic that you write in App.java, use this target
-mvn compile
+// Or, to run logic that you write in App.java, use this target after compile
+mvn exec:java
 ```
 
 ```javascript tab="JavaScript Node.JS"

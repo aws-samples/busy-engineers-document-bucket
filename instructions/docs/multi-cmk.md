@@ -214,6 +214,7 @@ Try out combinations of Grant permissions for your application and watch how the
 ```java tab="Java"
 // Compile your code
 mvn compile
+
 // To use the API programmatically, use this target to launch jshell
 mvn jshell:run
 /open startup.jsh
@@ -227,8 +228,8 @@ for (PointerItem item : documentBucket.list()) {
 // Ctrl+D to exit jshell
 
 // Use the make targets to change the Grants and see what happens!
-// To run logic that you write in App.java, use this target
-mvn compile
+// To run logic that you write in App.java, use this target after compile
+mvn exec:java
 ```
 
 ```javascript tab="JavaScript Node.JS"
