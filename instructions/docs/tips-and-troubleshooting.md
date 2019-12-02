@@ -9,6 +9,10 @@ This page contains reference information that might be useful as you work throug
 If you are getting a `NullPointerException` (Java), or a `KeyError` (Python), or similar errors when interacting with the TOML files (config and state), try running the state generation step again to make sure the file is generated and well formed.
 
 ```bash
+# Check the contents of your state file
+cat ~/.busy_engineers_state.toml
+
+# Regenerate your state file, if needed
 cd ~/environment/workshop/cdk/
 make state
 ```
