@@ -98,7 +98,7 @@ tox -e docs
 
 Now select "Preview -> Preview Running Application" from the Cloud9 menu bar.
 
-A web browser will pop up with access to your online documentation.
+Cloud9 will open a new pane in your IDE with a web browser rendering your API documentation.
 
 ### Cloud9
 
