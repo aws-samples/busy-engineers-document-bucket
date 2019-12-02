@@ -28,7 +28,7 @@ For encryption, the Encryption SDK will attempt to use every CMK it is configure
 
 You'll get to see all of this in action in just a minute, after a couple small code changes.
 
-## Make the Change
+## Let's Go!
 
 ### Starting Directory
 
