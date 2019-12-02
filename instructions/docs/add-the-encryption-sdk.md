@@ -36,7 +36,7 @@ Look for `ADD-ESDK-START` comments in the code to help orient yourself.
 
 Start by adding the Encryption SDK dependency to the code.
 
-```java tab="Java" hl_lines="5 6 7 8 9 14 15 25 30 31 36 39"
+```java tab="Java" hl_lines="5 6 7 8 9 15 16 26 31 32 40"
 // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
 package sfw.example.esdkworkshop;
 
@@ -48,7 +48,8 @@ import com.amazonaws.encryptionsdk.MasterKeyProvider;
 import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
 
 ...
-
+private final String tableName;
+private final String bucketName;
 // ADD-ESDK-START: Add the ESDK Dependency
 private final AwsCrypto awsEncryptionSdk;
 private final MasterKeyProvider mkp;
@@ -144,7 +145,7 @@ def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
 
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
-```java tab="Java" hl_lines="3 4 5"
+```java tab="Java" hl_lines="4 5 6"
 // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
 public PointerItem store(byte[] data, Map<String, String> context) {
     // ADD-ESDK-START: Add Encryption to store
@@ -270,7 +271,7 @@ The data returned from S3 for `retrieve` is encrypted. Before returning that dat
 
 Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
-```java tab="Java" hl_lines="6 9 10 13"
+```java tab="Java" hl_lines="6 9 10 12"
 // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 

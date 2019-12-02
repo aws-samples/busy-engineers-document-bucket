@@ -94,7 +94,7 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 
 ### Step 2: Add Walter to the CMKs to Use
 
-```java tab="Java" hl_lines="4"
+```java tab="Java" hl_lines="3 4"
 // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
     // MULTI-CMK-START: Add Walter to the CMKs to Use
     KmsMasterKeyProvider mkp =

@@ -89,7 +89,7 @@ cd ~/environment/workshop/exercises/python/encryption-context-start
 
 ### Step 1: Set Encryption Context on Encrypt
 
-```java tab="Java" hl_lines="4 6"
+```java tab="Java" hl_lines="4"
 // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)
     // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
     CryptoResult<byte[], KmsMasterKey> encryptedMessage =
