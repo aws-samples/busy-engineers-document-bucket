@@ -63,7 +63,7 @@ Also, after this change, the contents of `context` will be available in audit lo
 
 Remember, encryption context is not secret!
 
-## Make the Change
+## Let's Go!
 
 ### Starting Directory
 
@@ -132,7 +132,7 @@ encrypted_data, header = aws_encryption_sdk.encrypt(
 # Save your changes
 ```
 
-#### What Just Happened
+#### What Happened?
 
 The Document Bucket `context` will now be supplied to the AWS Encryption SDK and AWS KMS as encryption context. If a non-empty key-value pair map is supplied to `store`, those key-value pairs will be used in encryption and decryption operations all the way through to KMS:
 
@@ -202,7 +202,7 @@ return DocumentBundle.from_data_and_context(
 # Save your changes
 ```
 
-#### What Just Happened
+#### What Happened?
 
 Now on decrypt, the validated encryption context from the Encryption SDK Message Format header will be passed back to the application. Any business logic that would benefit from using the encryption context data for making decisions can use the version bound and validated by the Encryption SDK and KMS.
 
@@ -323,7 +323,7 @@ if not expected_context.items() <= header.encryption_context.items():
     raise AssertionError(error_msg)
 ```
 
-#### What Just Happened
+#### What Happened?
 
 `retrieve` will use its "expected context keys" argument to validate that all of those keys (with any associated values) are present in the encryption context. `retrieve` will also use its "expected context" argument to validate that the exact key-value pairs specified in expected context are present in the actual encryption context. If either of those assumptions is invalid, `retrieve` will raise an exception before returning the data. These assertions safeguard against accidentally returning unintended, corrupted, or tampered data to the application.
 
@@ -487,4 +487,4 @@ Encryption context can provide different types of features and guardrails in you
 
 # Next exercise
 
-That's it! You have officially completed the Busy Engineer's Document Bucket workshop. Proceed to [Thank You and Closing](./thank-you-and-closing.md) for some parting thoughts and information.
+Congratulations! You have officially completed the Busy Engineer's Document Bucket workshop. Proceed to [Thank You and Closing](./thank-you-and-closing.md) to tear down your workshop environment.
