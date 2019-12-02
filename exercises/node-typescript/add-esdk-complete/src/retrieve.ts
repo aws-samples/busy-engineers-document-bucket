@@ -10,7 +10,7 @@ import { config } from "./config";
 import { EC } from "./store";
 const Bucket = config.state.bucketName();
 
-// ADD-ESDK-COMPLETE: Set up a keyring to use Faythe's CMK for decrypting.
+// ADD-ESDK-COMPLETE: Configure the Faythe CMK in the Encryption SDK
 const faytheCMK = config.state.getFaytheCMK();
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 
