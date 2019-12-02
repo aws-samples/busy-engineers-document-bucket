@@ -84,6 +84,22 @@ sudo resize2fs /dev/nvme0n1p1
 
 ## Tips
 
+### API Documentation
+
+Python and Java have API documentation available for each exercise. You can view the documentation as you work in Cloud9.
+
+```bash tab="Java"
+make javadoc
+```
+
+```bash tab="Python"
+tox -e docs
+```
+
+Now select "Preview -> Preview Running Application" from the Cloud9 menu bar.
+
+A web browser will pop up with access to your online documentation.
+
 ### Cloud9
 
 Cloud9 has lots of IDE features for you to leverage. Here's some links to help you make the most of your Cloud9 experience. (Links all open in a new window.)
