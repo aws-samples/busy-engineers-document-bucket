@@ -7,9 +7,10 @@ const s3 = new S3();
 const config = require("./config");
 const Bucket = config.state.bucketName();
 
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Configure Walter
 
 const faytheCMK = config.state.getFaytheCMK();
+// MULTI-CMK-START: Add Walter to the CMKs to Use
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 
 module.exports = retrieve;

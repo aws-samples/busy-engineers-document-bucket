@@ -63,11 +63,11 @@ cd ~/environment/workshop/exercises/python/multi-cmk-start
 
 ```javascript tab="JavaScript Node.JS" hl_lines="3 7"
 // Edit ./store.js
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Configure Walter
 const walterCMK = config.state.getWalterCMK();
 
 // Edit ./retrieve.js
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Configure Walter
 const walterCMK = config.state.getWalterCMK();
 ```
 
@@ -103,7 +103,7 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 
 ```javascript tab="JavaScript Node.JS" hl_lines="4 5 6 7 13"
 // Edit ./store.js
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Add Walter to the CMKs to Use
 ...
 const encryptKeyring = new KmsKeyringNode({
   generatorKeyId: faytheCMK,
@@ -112,7 +112,7 @@ const encryptKeyring = new KmsKeyringNode({
 
 // Save and exit
 // Edit ./retrieve.js
-// MULTI-CMK-START: Add the WalterCMK
+// MULTI-CMK-START: Add Walter to the CMKs to Use
 ...
 const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
