@@ -75,12 +75,12 @@ If you aren't sure, or want to catch up, jump into the `encryption-context-start
 cd ~/environment/workshop/exercises/java/encryption-context-start
 ```
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/encryption-context-start
-```
-
 ```bash tab="JavaScript Node.JS"
 cd ~/environment/workshop/exercises/node-javascript/encryption-context-start
+```
+
+```bash tab="Typescript Node.JS"
+cd ~/environment/workshop/exercises/node-typescript/encryption-context-start
 ```
 
 ```bash tab="Python"
@@ -339,12 +339,12 @@ There is a `-complete` folder for each language.
 cd ~/environment/workshop/exercises/java/encryption-context-complete
 ```
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/encryption-context-complete
-```
-
 ```bash tab="JavaScript Node.JS"
 cd ~/environment/workshop/exercises/node-javascript/encryption-context-complete
+```
+
+```bash tab="Typescript Node.JS"
+cd ~/environment/workshop/exercises/node-typescript/encryption-context-complete
 ```
 
 ```bash tab="Python"
