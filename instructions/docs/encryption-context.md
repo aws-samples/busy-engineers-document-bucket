@@ -439,7 +439,7 @@ encryptionContext = {
   purpose: "simple demonstration",
   origin: "us-east-2"
 }
-store(fs.createReadStream("./src/store.js"), encryptionContext).then(r => {
+store(fs.createReadStream("./src/store.ts"), encryptionContext).then(r => {
   // Just storing the s3 key
   key = r.Key
   console.log(r)

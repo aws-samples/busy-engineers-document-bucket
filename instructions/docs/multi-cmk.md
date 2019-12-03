@@ -265,7 +265,7 @@ node -r ts-node/register
 ;({store} = require("./src/store.ts"))
 ;({retrieve} = require("./src/retrieve.ts"))
 list().then(console.log)
-store(fs.createReadStream("./src/store.js")).then(r => {
+store(fs.createReadStream("./src/store.ts")).then(r => {
   // Just storing the s3 key
   key = r.Key
   console.log(r)
