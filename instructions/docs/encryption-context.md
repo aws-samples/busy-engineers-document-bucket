@@ -4,7 +4,7 @@ In this section, you will work with encryption context and explore its use in th
 
 ## Background
 
-The Busy Engineer's Document Bucket has metadata, called `context`, associated with each document. This meatadata is a set of key-value string pairs, associated with the item in DynamoDB, searchable there, and attached to the S3 object as well.
+The Busy Engineer's Document Bucket has metadata, called `context`, associated with each document. This metadata is a set of key-value string pairs, associated with the item in DynamoDB, searchable there, and attached to the S3 object as well.
 
 One of the features AWS KMS and the AWS Encryption SDK both provide is called encryption context. At its core, encryption context is this metadata mapping: keys that are associated with context about the object, and values indicating information about what that context is. All the information in the map is non-secret, and is the basis for several feature integrations.
 
