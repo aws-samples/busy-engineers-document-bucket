@@ -15,22 +15,30 @@ import java.io.File;
  * Helper to pull configuration of CloudFormation-managed AWS resources out of the generated state
  * file.
  */
-public class State {
-  public final Contents contents;
+public class StateConfig {
+  public final ConfigContents contents;
 
   /**
    * Parse the state file at the provided path.
    *
    * @param path the path to the state file.
    */
-  public State(String path) {
+  public StateConfig(String path) {
     // Java does not expand ~ automatically
     String canonicalizedPath = path.replaceFirst("~", System.getProperty("user.home"));
-    contents = new Toml().read(new File(canonicalizedPath)).to(Contents.class);
+    contents = new Toml().read(new File(canonicalizedPath)).to(ConfigContents.class);
+  }
+
+  public static class ConfigContents {
+    public final State state;
+
+    ConfigContents(State state) {
+      this.state = state;
+    }
   }
 
   /** The top-level content structure of the state file. */
-  public static class Contents {
+  public static class State {
     /** The name of the Document Bucket S3 bucket. */
     public final String DocumentBucket;
     /** The name of the Document Bucket DynamoDB table. */
@@ -40,7 +48,7 @@ public class State {
     /** The ARN of Walter's CMK. */
     public final String WalterCMK;
 
-    Contents(String DocumentBucket, String DocumentTable, String FaytheCMK, String WalterCMK) {
+    State(String DocumentBucket, String DocumentTable, String FaytheCMK, String WalterCMK) {
       this.DocumentBucket = DocumentBucket;
       this.DocumentTable = DocumentTable;
       this.FaytheCMK = FaytheCMK;

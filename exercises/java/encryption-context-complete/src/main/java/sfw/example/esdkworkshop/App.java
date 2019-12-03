@@ -27,19 +27,19 @@ public class App {
    */
   public static Api initializeDocumentBucket() {
     // Load the TOML State file with the information about launched CloudFormation resources
-    State state = new State(Config.contents.base.state_file);
+    StateConfig stateConfig = new StateConfig(Config.contents.base.state_file);
 
     // Configure DynamoDB client
-    String tableName = state.contents.DocumentTable;
+    String tableName = stateConfig.contents.state.DocumentTable;
     AmazonDynamoDB ddbClient = AmazonDynamoDBClientBuilder.defaultClient();
 
     // Configure S3 client
-    String bucketName = state.contents.DocumentBucket;
+    String bucketName = stateConfig.contents.state.DocumentBucket;
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
     // Load configuration of KMS resources
-    String faytheCMK = state.contents.FaytheCMK;
-    String walterCMK = state.contents.WalterCMK;
+    String faytheCMK = stateConfig.contents.state.FaytheCMK;
+    String walterCMK = stateConfig.contents.state.WalterCMK;
 
     // Set up the Master Key Provider to use KMS
     KmsMasterKeyProvider mkp =
@@ -56,5 +56,6 @@ public class App {
    */
   public static void main(String[] args) {
     // Interact with the Document Bucket here or in jshell (mvn jshell:run)
+
   }
 }

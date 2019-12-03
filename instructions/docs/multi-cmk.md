@@ -56,9 +56,9 @@ cd ~/environment/workshop/exercises/python/multi-cmk-start
 
 ```java tab="Java" hl_lines="4"
 // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
-    String faytheCMK = state.contents.FaytheCMK;
+    String faytheCMK = stateConfig.contents.state.faytheCMK;
     // MULTI-CMK-START: Configure Walter
-    String walterCMK = state.contents.WalterCMK;
+    String walterCMK = stateConfig.contents.state.WalterCMK;
 ```
 
 ```javascript tab="JavaScript Node.JS" hl_lines="3 7"

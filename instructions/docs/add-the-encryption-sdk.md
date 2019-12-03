@@ -277,7 +277,7 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
     // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
     // Load configuration of KMS resources
-    String faytheCMK = state.contents.FaytheCMK;
+    String faytheCMK = stateConfig.contents.state.FaytheCMK;
 
     // Set up the Master Key Provider to use KMS
     KmsMasterKeyProvider mkp =
