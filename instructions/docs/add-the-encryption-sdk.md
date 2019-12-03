@@ -72,7 +72,7 @@ public Api(
 }
 
 // Save and close.
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/App.java
 package sfw.example.esdkworkshop;
 
 // ADD-ESDK-START: Add the ESDK Dependency
@@ -272,7 +272,7 @@ The data returned from S3 for `retrieve` is encrypted. Before returning that dat
 Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
 ```java tab="Java" hl_lines="6 9 10 12"
-// Edit ./src/main/java/sfw/example/esdkworkshop/App.java
+// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
     // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
