@@ -40,8 +40,18 @@ To set up your environment, you will:
 
 ## Let's Go!
 
+### Important Note About Accounts
+
+If you are using your own AWS Account for this workshop, make sure:
+
+1. It is not a production account. This is a workshop for learning and experimentation. Don't put production at risk!
+1. When you are done with the exercises, you follow the instructions in [Clean Up and Closing](./clean-up-and-closing.md) to clean up the deployed resources.
+
+If you are working through these exercises in an AWS classroom environment, AWS accounts have been created for you.
+
+### Procedure
+
 1. Sign in to your AWS Account for the workshop
-    * If you are using your own account, make sure this is **not** a production account! This is a workshop for learning and experimentation. Don't put production at risk!
 1. Click this link to <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment" target="_blank">load the CloudFormation template for your Cloud9 IDE</a>
 1. Click **Create Stack** to launch the stack
    * Do not change your region settings from the default and do not switch regions in the console
@@ -76,13 +86,7 @@ cd ~/environment/workshop/exercises/python
 
 **Your environment is ready!** 
 
-Start the workshop with [Exercise 1: Add the Encryption SDK](./add-the-encryption-sdk.md).
 
-## Explore Further
+# Start the workshop!
 
-* Check out the `~/environment/workshop/cdk` directory to see how the workshop resources are described using CDK
-* <a href="https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters" target="_blank">Who are Faythe and Walter?</a>
-
-# Next exercise
-
-Now that you have your environment and language selected, you can [Add the Encryption SDK](./add-the-encryption-sdk.md).
+Now that you have your environment and language selected, you can start [Adding the Encryption SDK](./adding-the-encryption-sdk.md).

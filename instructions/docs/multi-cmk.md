@@ -32,7 +32,7 @@ You'll get to see all of this in action in just a minute, after a couple small c
 
 ### Starting Directory
 
-If you just finished [Adding the Encryption SDK](./add-the-encryption-sdk.md), you are all set.
+If you just finished [Adding the Encryption SDK](./adding-the-encryption-sdk.md), you are all set.
 
 If you aren't sure, or want to catch up, jump into the `multi-cmk-start` directory for the language of your choice.
 
@@ -190,12 +190,13 @@ In `~/environment/workshop/exercises`, you'll find a `Makefile` with several tar
 
 The application behavior will change. **Important** when you revoke permissions to the first CMK in the list for a keyring (which is Faythe by default), you will need to change the keyring configuration to use Walter as your generator to resume operations. See <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/js-examples.html" target="_blank">documentation of Generator CMKs</a> for more.
 
-You can also observe the impact of changing Granted permissions by monitoring CloudTrail. Note that log entries take a few minutes to propagate to CloudTrail.
+You can also observe the impact of changing Granted permissions by monitoring CloudTrail. Note that log entries take a few minutes to propagate to CloudTrail, and that Faythe and Walter are in different regions, so you will need to look at CloudTrail in the region for each one.
 
 * Faythe is in `us-east-2`, so check CloudTrail in that region with these links:
     * <a href="https://console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=GenerateDataKey" target="_blank">GenerateDataKey operations in CloudTrail in us-east-2</a>
-    * <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-east-2</a>
     * <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=Decrypt" target="_blank">Decrypt operations in CloudTrail in us-east-2</a>
+    * <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-east-2</a>
+        * Note: To observe Encrypt calls using Faythe, explore some of the configuration and permissions changes suggested below.
 * Walter is in `us-west-2`, so check CloudTrail in that region with these links:
     * <a href="https://console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=GenerateDataKey" target="_blank">GenerateDataKey operations in CloudTrail in us-west-2</a>
     * <a href="https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-west-2</a>

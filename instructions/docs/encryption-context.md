@@ -487,4 +487,4 @@ Encryption context can provide different types of features and guardrails in you
 
 # Next exercise
 
-Congratulations! You have officially completed the Busy Engineer's Document Bucket workshop. Proceed to [Thank You and Closing](./thank-you-and-closing.md) to tear down your workshop environment.
+Congratulations! You have officially completed the Busy Engineer's Document Bucket workshop. Proceed to [Clean Up and Closing](./clean-up-and-closing.md) to tear down your workshop environment.
