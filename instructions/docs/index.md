@@ -14,11 +14,11 @@ After your work in the workshop is complete, you will have added client-side enc
 
 ## Exercises
 
-In this workshop, you will work through the following modules:
+In this workshop, you will work through the following exercises:
 
-1. Using the AWS Encryption SDK
-1. Adding multiple Master Keys to your encryption
-1. Using Encryption Context
+1. Addding the AWS Encryption SDK
+1. Adding Multi-CMK Support to the Document Bucket
+1. Working With Encryption Context
 
 ## Getting Started
 
