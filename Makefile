@@ -1,5 +1,5 @@
 
-bootstrap: | bootstrap_node_javascript bootstrap_environment bootstrap_done
+bootstrap: | resize bootstrap_node_javascript bootstrap_environment bootstrap_done
 
 # The 2 slowest tasks are the cdk standing up the stacks
 # and the python install
@@ -31,3 +31,6 @@ basic_cli_smoke_tests:
 	$(MAKE) -C cdk data_purge
 	$(MAKE) -C exercises/node-typescript basic_cli_smoke_tests
 	$(MAKE) -C cdk data_purge
+
+resize:
+	cdk/bin/resize.sh
