@@ -1,10 +1,10 @@
 
-bootstrap: | bootstrap_node_javascript bootstrap_environment bootstrap_done
+bootstrap: | resize bootstrap_node_javascript bootstrap_environment bootstrap_done
 
 # The 2 slowest tasks are the cdk standing up the stacks
 # and the python install
 bootstrap_environment:
-	$(MAKE) bootstrap_cdk bootstrap_python bootstrap_java bootstrap_node_typescript resize -j 4
+	$(MAKE) bootstrap_cdk bootstrap_python bootstrap_java bootstrap_node_typescript -j 4
 
 bootstrap_cdk:
 	$(MAKE) -C cdk bootstrap
