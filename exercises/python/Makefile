@@ -32,6 +32,7 @@ bootstrap:
 	PATH="/home/ec2-user/.pyenv/bin:$$PATH" pyenv install 3.8.0
 	PATH="/home/ec2-user/.pyenv/bin:$$PATH" pyenv global 3.8.0
 	@# No, really, don't use system pip :(
+	~/.pyenv/shims/python -m pip install --upgrade pip
 	~/.pyenv/shims/python -m pip install tox
 	@echo "==========================================================================="
 	@echo "Python install complete."
