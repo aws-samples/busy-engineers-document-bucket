@@ -10,12 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-crypto/client-node": "^1.0.2",
-    "@iarna/toml": "^2.2.3",
-    "aws-sdk": "^2.568.0",
-    "commander": "^4.0.1",
+    "@aws-crypto/client-node": "^1.0.5",
+    "@iarna/toml": "^2.2.5",
+    "aws-sdk": "^2.693.0",
+    "commander": "^4.1.1",
     "untildify": "^4.0.0",
-    "uuid": "^3.3.3"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "prettier": "^1.19.1"
