@@ -8,6 +8,8 @@ and the AWS Encryption SDK.
 The workshop instructions can be found at
 https://document-bucket.awssecworkshops.com/
 
+[Security issue notifications](./CONTRIBUTING.md#security-issue-notifications)
+
 ### Repository Structure
 
 * [cdk](https://github.com/aws-samples/busy-engineers-document-bucket/tree/master/cdk) - the AWS Cloud Development Kit code describing all AWS resources required for the workshop.
