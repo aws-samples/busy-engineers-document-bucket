@@ -38,3 +38,10 @@ list_grants:
 
 data_purge:
 	npx ts-node bin/data_purge.ts
+
+npm_update:
+	npm install
+	npm update
+
+npm_audit:
+	npm audit

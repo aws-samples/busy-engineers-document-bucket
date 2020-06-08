@@ -34,3 +34,16 @@ basic_cli_smoke_tests:
 
 resize:
 	cdk/bin/resize.sh
+
+# This is a helper to update all the npm modules in this project.
+# Both the CDK and all the JavaScript excersises
+npm_update:
+	$(MAKE) -C cdk npm_update
+	$(MAKE) -C exercises/node-javascript npm_update
+	$(MAKE) -C exercises/node-typescript npm_update
+
+# Helper to run npm audit everywhere
+npm_audit:
+	$(MAKE) -C cdk npm_audit
+	$(MAKE) -C exercises/node-javascript npm_audit
+	$(MAKE) -C exercises/node-typescript npm_audit
