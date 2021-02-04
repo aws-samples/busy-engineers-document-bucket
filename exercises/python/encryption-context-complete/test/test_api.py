@@ -9,7 +9,7 @@ from unittest.mock import call
 
 import aws_encryption_sdk
 import pytest
-from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
+from aws_encryption_sdk import StrictAwsKmsMasterKeyProvider  # type: ignore
 from document_bucket.api import DocumentBucketOperations
 from document_bucket.model import (BaseItem, ContextItem, ContextQuery,
                                    PointerItem)
@@ -81,7 +81,7 @@ def pointer_item():
 
 @pytest.fixture
 def mocked_dbo():
-    mkp = mock.Mock(spec=KMSMasterKeyProvider)
+    mkp = mock.Mock(spec=StrictAwsKmsMasterKeyProvider)
     table = mock.MagicMock()
     bucket = mock.MagicMock()
     ops = DocumentBucketOperations(bucket, table, mkp)
@@ -89,7 +89,7 @@ def mocked_dbo():
 
 
 def test_init_happy_case():
-    mkp = mock.Mock(spec=KMSMasterKeyProvider)
+    mkp = mock.Mock(spec=StrictAwsKmsMasterKeyProvider)
     table = mock.MagicMock()
     bucket = mock.MagicMock()
     ops = DocumentBucketOperations(bucket, table, mkp)
@@ -216,7 +216,7 @@ def test_ec_keys_happy_case(monkeypatch, mocked_dbo):
     def mock_decrypt(**kwargs):
         return (None, mocked_header)
 
-    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    mocked_dbo.encryption_client.decrypt = mock_decrypt
     mocked_dbo.retrieve(key, expected_keys)
 
 
@@ -232,7 +232,7 @@ def test_ec_keys_unhappy_case(monkeypatch, mocked_dbo):
     def mock_decrypt(**kwargs):
         return (None, mocked_header)
 
-    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    mocked_dbo.encryption_client.decrypt = mock_decrypt
     with pytest.raises(AssertionError):
         mocked_dbo.retrieve(key, expected_keys)
 
@@ -248,7 +248,7 @@ def test_ec_happy_case(monkeypatch, mocked_dbo):
     def mock_decrypt(**kwargs):
         return (None, mocked_header)
 
-    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    mocked_dbo.encryption_client.decrypt = mock_decrypt
     mocked_dbo.retrieve(key, expected_context=expected_ec)
 
 
@@ -264,7 +264,7 @@ def test_ec_unhappy_case(monkeypatch, mocked_dbo):
     def mock_decrypt(**kwargs):
         return (None, mocked_header)
 
-    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    mocked_dbo.encryption_client.decrypt = mock_decrypt
     with pytest.raises(AssertionError):
         mocked_dbo.retrieve(key, expected_context=expected_ec)
 
@@ -279,6 +279,6 @@ def test_retrieve_gets_expected_guid(monkeypatch, mocked_dbo):
     def mock_decrypt(**kwargs):
         return (b"decafbad", mocked_header)
 
-    monkeypatch.setattr(aws_encryption_sdk, "decrypt", mock_decrypt)
+    mocked_dbo.encryption_client.decrypt = mock_decrypt
     result = mocked_dbo.retrieve(key)
     assert result.key.partition_key == key
