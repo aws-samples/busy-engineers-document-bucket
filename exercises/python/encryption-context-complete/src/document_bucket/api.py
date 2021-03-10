@@ -4,7 +4,7 @@
 from typing import Dict, Set
 
 import aws_encryption_sdk  # type: ignore
-from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
+from aws_encryption_sdk import CommitmentPolicy, EncryptionSDKClient, StrictAwsKmsMasterKeyProvider  # type: ignore
 
 from .model import ContextItem, ContextQuery, DocumentBundle, PointerItem, PointerQuery
 
@@ -14,7 +14,7 @@ class DocumentBucketOperations:
     Operations available for interaction with the Document Bucket.
     """
 
-    def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
+    def __init__(self, bucket, table, master_key_provider: StrictAwsKmsMasterKeyProvider):
         """
         Initialize a new operations object with the provided arguments.
 
@@ -26,7 +26,10 @@ class DocumentBucketOperations:
         """
         self.bucket = bucket
         self.table = table
-        self.master_key_provider: KMSMasterKeyProvider = master_key_provider
+        self.master_key_provider: StrictAwsKmsMasterKeyProvider = master_key_provider
+        self.encryption_client = EncryptionSDKClient(
+            commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+        )
 
     def _write_pointer(self, item: PointerItem):
         self.table.put_item(Item=item.to_item())
@@ -99,7 +102,7 @@ class DocumentBucketOperations:
         """
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         encrypted_data = self._get_object(item)
-        plaintext, header = aws_encryption_sdk.decrypt(
+        plaintext, header = self.encryption_client.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
         # ENCRYPTION-CONTEXT-COMPLETE: Making Assertions
@@ -132,7 +135,7 @@ class DocumentBucketOperations:
         :returns: the pointer reference for this document in the Document Bucket system
         """
         # ENCRYPTION-CONTEXT-COMPLETE: Set Encryption Context on Encrypt
-        encrypted_data, header = aws_encryption_sdk.encrypt(
+        encrypted_data, header = self.encryption_client.encrypt(
             source=data,
             key_provider=self.master_key_provider,
             encryption_context=context,
