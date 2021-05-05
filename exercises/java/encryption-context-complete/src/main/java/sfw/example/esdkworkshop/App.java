@@ -42,8 +42,7 @@ public class App {
     String walterCMK = stateConfig.contents.state.WalterCMK;
 
     // Set up the Master Key Provider to use KMS
-    KmsMasterKeyProvider mkp =
-        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
+    KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK, walterCMK);
 
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
   }
