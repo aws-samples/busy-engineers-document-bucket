@@ -4,6 +4,7 @@
 package sfw.example.esdkworkshop;
 
 import com.amazonaws.encryptionsdk.AwsCrypto;
+import com.amazonaws.encryptionsdk.CommitmentPolicy;
 import com.amazonaws.encryptionsdk.CryptoResult;
 import com.amazonaws.encryptionsdk.MasterKey;
 import com.amazonaws.encryptionsdk.MasterKeyProvider;
@@ -59,7 +60,9 @@ public class Api {
         tableName,
         s3Client,
         bucketName,
-        AwsCrypto.builder().build(),
+        AwsCrypto.builder()
+            .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
+            .build(),
         mkp);
   }
 
