@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-encryption-sdk-java</artifactId>
-            <version>1.6.1</version>
+            <version>1.9.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
