@@ -53,7 +53,15 @@ public class Api {
       AmazonS3 s3Client,
       String bucketName,
       MasterKeyProvider mkp) {
-    this(ddbClient, tableName, s3Client, bucketName, AwsCrypto.standard(), mkp);
+    this(
+	    ddbClient,
+		tableName,
+		s3Client,
+		bucketName,
+		AwsCrypto.builder()
+            .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
+            .build(),
+		mkp);
   }
 
   /**

@@ -57,7 +57,15 @@ public class Api {
       // ADD-ESDK-COMPLETE: Add the ESDK Dependency
       MasterKeyProvider mkp) {
     // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-    this(ddbClient, tableName, s3Client, bucketName, AwsCrypto.standard(), mkp);
+    this(
+	    ddbClient,
+		tableName,
+		s3Client,
+		bucketName,
+		AwsCrypto.builder()
+            .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
+            .build(),
+		mkp);
   }
 
   /**

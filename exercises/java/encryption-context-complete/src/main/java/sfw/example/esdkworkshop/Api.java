@@ -56,12 +56,14 @@ public class Api {
       String bucketName,
       MasterKeyProvider mkp) {
     this(
-        ddbClient,
-        tableName,
-        s3Client,
-        bucketName,
-        AwsCrypto.standard(),
-        mkp);
+	    ddbClient,
+		tableName,
+		s3Client,
+		bucketName,
+		AwsCrypto.builder()
+            .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
+            .build(),
+		mkp);
   }
 
   /**
