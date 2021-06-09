@@ -1,8 +1,5 @@
 version: 0.2
 
-env:
-  image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
-
 batch:
   fast-fail: false
   build-list:
