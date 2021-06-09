@@ -1,29 +1,20 @@
 version: 0.2
 
+env:
+  image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+
 batch:
   fast-fail: false
   build-list:
     - identifier: add_esdk_complete
       buildspec: codebuild/add-esdk-complete.yml
-      env:
-        image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
     - identifier: add_esdk_start
       buildspec: codebuild/add-esdk-start.yml
-      env:
-        image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
     - identifier: encryption_context_complete
       buildspec: codebuild/encryption-context-complete.yml
-      env:
-        image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
     - identifier: encryption_context_start
       buildspec: codebuild/encryption-context-start.yml
-      env:
-        image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
     - identifier: multi_cmk_complete
       buildspec: codebuild/multi-cmk-complete.yml
-      env:
-        image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
     - identifier: multi_cmk_start
       buildspec: codebuild/multi-cmk-start.yml
-      env:
-        image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
