@@ -1,0 +1,30 @@
+version: 0.2
+
+batch:
+  fast-fail: false
+  build-list:
+    - identifier: add_esdk_complete
+      buildspec: codebuild/add_esdk_complete
+      env:
+        env:
+        image: aws/codebuild/standard:3.0
+    - identifier: add_esdk_start
+      buildspec: codebuild/add_esdk_start
+      env:
+        env:
+        image: aws/codebuild/standard:3.0
+    - identifier: encryption_context_complete
+      buildspec: codebuild/encryption_context_complete
+      env:
+        env:
+        image: aws/codebuild/standard:3.0
+    - identifier: encryption_context_start
+      buildspec: codebuild/encryption_context_start
+      env:
+        env:
+        image: aws/codebuild/standard:3.0
+    - identifier: multi_cmk_complete
+      buildspec: codebuild/multi_cmk_complete
+      env:
+        env:
+        image: aws/codebuild/standard:3.0

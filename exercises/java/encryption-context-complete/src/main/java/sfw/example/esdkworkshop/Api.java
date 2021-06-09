@@ -60,9 +60,7 @@ public class Api {
         tableName,
         s3Client,
         bucketName,
-        AwsCrypto.builder()
-            .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
-            .build(),
+        AwsCrypto.standard(),
         mkp);
   }
 
