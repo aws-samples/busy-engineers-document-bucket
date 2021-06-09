@@ -43,8 +43,7 @@ public class App {
     String faytheCMK = stateConfig.contents.state.FaytheCMK;
 
     // Set up the Master Key Provider to use KMS
-    KmsMasterKeyProvider mkp =
-        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
+    KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK);
 
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
   }

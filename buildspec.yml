@@ -1,0 +1,17 @@
+version: 0.2
+
+batch:
+  fast-fail: false
+  build-list:
+    - identifier: add_esdk_complete
+      buildspec: codebuild/add-esdk-complete.yml
+    - identifier: add_esdk_start
+      buildspec: codebuild/add-esdk-start.yml
+    - identifier: encryption_context_complete
+      buildspec: codebuild/encryption-context-complete.yml
+    - identifier: encryption_context_start
+      buildspec: codebuild/encryption-context-start.yml
+    - identifier: multi_cmk_complete
+      buildspec: codebuild/multi-cmk-complete.yml
+    - identifier: multi_cmk_start
+      buildspec: codebuild/multi-cmk-start.yml

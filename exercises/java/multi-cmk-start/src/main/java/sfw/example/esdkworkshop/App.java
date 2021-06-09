@@ -43,8 +43,7 @@ public class App {
 
     // Set up the Master Key Provider to use KMS
     // MULTI-CMK-START: Add Walter to the CMKs to Use
-    KmsMasterKeyProvider mkp =
-        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
+    KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK);
 
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
   }
