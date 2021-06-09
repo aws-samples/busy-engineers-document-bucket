@@ -5,6 +5,7 @@ package sfw.example.esdkworkshop;
 
 // ADD-ESDK-COMPLETE: Add the ESDK Dependency
 import com.amazonaws.encryptionsdk.AwsCrypto;
+import com.amazonaws.encryptionsdk.CommitmentPolicy;
 import com.amazonaws.encryptionsdk.CryptoResult;
 import com.amazonaws.encryptionsdk.MasterKey;
 import com.amazonaws.encryptionsdk.MasterKeyProvider;
@@ -58,14 +59,14 @@ public class Api {
       MasterKeyProvider mkp) {
     // ADD-ESDK-COMPLETE: Add the ESDK Dependency
     this(
-	    ddbClient,
-		tableName,
-		s3Client,
-		bucketName,
-		AwsCrypto.builder()
+        ddbClient,
+        tableName,
+        s3Client,
+        bucketName,
+        AwsCrypto.builder()
             .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
             .build(),
-		mkp);
+        mkp);
   }
 
   /**
