@@ -14,9 +14,9 @@
   "devDependencies": {
     "@aws-cdk/assert": "^1.91.0",
     "@types/iarna__toml": "^2.0.1",
-    "@types/jest": "^24.9.1",
+    "@types/jest": "^27.0.2",
     "aws-cdk": "^1.91.0",
-    "jest": "^26.6.3",
+    "jest": "^27.2.5",
     "prettier": "^1.19.1",
     "ts-jest": "^25.5.1"
   },
