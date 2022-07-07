@@ -385,7 +385,7 @@ documentBucket.list();
 documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
 for (PointerItem item : documentBucket.list()) {
     DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
-    System.out.println(document.toString());
+    System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
 }
 // Ctrl+D to exit jshell
 
