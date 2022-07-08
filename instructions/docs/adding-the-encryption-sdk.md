@@ -84,14 +84,20 @@ import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
 // Edit ./src/store.ts
 
 // ADD-ESDK-START: Add the ESDK Dependency
-import { encryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
+import { KmsKeyringNode, buildClient, CommitmentPolicy } from "@aws-crypto/client-node";
+const { encryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
 
 // Save and exit
 
 // Edit ./src/retrieve.ts
 
 // ADD-ESDK-START: Add the ESDK Dependency
-import { decryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
+import { KmsKeyringNode, buildClient, CommitmentPolicy } from "@aws-crypto/client-node";
+const { decryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
 
 // Save and exit
 ```
@@ -100,14 +106,20 @@ import { decryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
 // Edit ./store.js
 
 // ADD-ESDK-START: Add the ESDK Dependency
-const { encryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
+const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
+const { encryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
 
 // Save and exit
 
 // Edit ./retrieve.js
 
 // ADD-ESDK-START: Add the ESDK Dependency
-const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
+const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
+const { decryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
 
 // Save and exit
 ```
@@ -123,15 +135,16 @@ import aws_encryption_sdk
 
 # ADD-ESDK-START: Add the ESDK Dependency
 import aws_encryption_sdk
-from aws_encryption_sdk import KMSMasterKeyProvider
+from aws_encryption_sdk import StrictAwsKmsMasterKeyProvider  # type: ignore
+from aws_encryption_sdk.identifiers import CommitmentPolicy
 
 # Add a Master Key Provider to your __init__
 # ADD-ESDK-START: Add the ESDK Dependency
-def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
+def __init__(self, bucket, table, master_key_provider: StrictAwsKmsMasterKeyProvider):
     self.bucket = bucket
     self.table = table
     # ADD-ESDK-START: Add the ESDK Dependency
-    self.master_key_provider = master_key_provider
+    self.master_key_provider : StrictAwsKmsMasterKeyProvider = master_key_provider
 
 # Save and exit
 ```
@@ -181,7 +194,10 @@ const Body = fileStream.pipe(encryptStream(encryptKeyring));
 # Find the store function and edit it to add the Master Key Provider
 # and to write the encrypted data
     # ADD-ESDK-START: Add Encryption to store
-    encrypted_data, header = aws_encryption_sdk.encrypt(
+    client = aws_encryption_sdk.EncryptionSDKClient(
+        commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+    )
+    encrypted_data, header = client.encrypt(
         source=data,
         key_provider=self.master_key_provider,
     )
@@ -245,7 +261,10 @@ Now that the application encypts your data before storing it, it will need to de
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         # ADD-ESDK-START: Add Decryption to retrieve
         encrypted_data = self._get_object(item)
-        plaintext, header = aws_encryption_sdk.decrypt(
+        client = aws_encryption_sdk.EncryptionSDKClient(
+            commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+        )
+        plaintext, header = client.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
         return DocumentBundle.from_data_and_context(
@@ -339,7 +358,7 @@ const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 faythe_cmk = state["FaytheCMK"]
 # And the Master Key Provider configuring how to use KMS
 cmk = [faythe_cmk]
-mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=cmk)
+mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=cmk)
 
 operations = DocumentBucketOperations(bucket, table, mkp)
 
@@ -422,7 +441,7 @@ store(fs.createReadStream("./store.js")).then(r => {
   console.log(r)
 })
 list().then(console.log)
-retrieve(key).pipe(process.stdout)
+(() => {retrieve("TheKey").pipe(process.stdout)})()
 // Ctrl-D when finished to exit the REPL
 ```
 
@@ -447,7 +466,7 @@ store(fs.createReadStream("./src/store.ts")).then(r => {
   console.log(r)
 })
 list().then(console.log)
-retrieve(key).pipe(process.stdout)
+(() => {retrieve("TheKey").pipe(process.stdout)})()
 // Ctrl-D when finished to exit the REPL
 ```
 
@@ -467,6 +486,7 @@ ops = document_bucket.initialize()
 ops.list()
 ops.store(b'some data')
 ops.list()
+ops.retrieve("TheKey").data
 # Ctrl-D when finished to exit the REPL
 ```
 

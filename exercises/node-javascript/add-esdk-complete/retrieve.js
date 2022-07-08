@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-const { decryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
+const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
+const { decryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
 const { S3 } = require("aws-sdk");
 const s3 = new S3();
 const config = require("./config");
