@@ -486,7 +486,7 @@ ops = document_bucket.initialize()
 ops.list()
 ops.store(b'some data')
 ops.list()
-ops.retrieve("TheKey").data
+ops.retrieve("PutYourKeyHere").data
 # Ctrl-D when finished to exit the REPL
 ```
 
