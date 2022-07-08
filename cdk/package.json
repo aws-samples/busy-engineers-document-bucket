@@ -32,7 +32,7 @@
     "@aws-crypto/kms-keyring": "^1.7.0",
     "@iarna/toml": "^2.2.5",
     "@types/node": "^12.20.4",
-    "aws-sdk": "^2.854.0",
+    "aws-sdk": "^2.1169.0",
     "source-map-support": "^0.5.19",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.9",

@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-const { encryptStream, KmsKeyringNode } = require("@aws-crypto/client-node");
+const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
+const { encryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
 
 const assert = require("assert");
 const { S3, DynamoDB } = require("aws-sdk");
