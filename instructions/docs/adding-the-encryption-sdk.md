@@ -441,7 +441,7 @@ store(fs.createReadStream("./store.js")).then(r => {
   console.log(r)
 })
 list().then(console.log)
-(() => {retrieve("TheKey").pipe(process.stdout)})()
+(() => {retrieve("ReplaceWithYourKeyValue").pipe(process.stdout)})()
 // Ctrl-D when finished to exit the REPL
 ```
 
