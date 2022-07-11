@@ -7,6 +7,7 @@ bootstrap: | install deploy state create_grants
 
 install:
 	npm ci
+	npm install -g ts-node
 
 deploy:
 	@echo "*** START CDK STACK DEPLOYMENT ***"
