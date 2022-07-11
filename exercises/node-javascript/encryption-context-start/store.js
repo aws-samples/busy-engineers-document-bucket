@@ -1,11 +1,10 @@
 // Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-const {
-  encryptStream,
-  KmsKeyringNode,
-  needs
-} = require("@aws-crypto/client-node");
+const { KmsKeyringNode, buildClient, CommitmentPolicy, needs } = require("@aws-crypto/client-node");
+const { encryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
 const { S3, DynamoDB } = require("aws-sdk");
 const uuid = require("uuid");
 const s3 = new S3();

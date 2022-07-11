@@ -4,7 +4,8 @@
 from typing import Dict, Set
 
 import aws_encryption_sdk  # type: ignore
-from aws_encryption_sdk import KMSMasterKeyProvider  # type: ignore
+from aws_encryption_sdk import StrictAwsKmsMasterKeyProvider  # type: ignore
+from aws_encryption_sdk.identifiers import CommitmentPolicy
 
 from .model import ContextItem, ContextQuery, DocumentBundle, PointerItem, PointerQuery
 
@@ -14,7 +15,7 @@ class DocumentBucketOperations:
     Operations available for interaction with the Document Bucket.
     """
 
-    def __init__(self, bucket, table, master_key_provider: KMSMasterKeyProvider):
+    def __init__(self, bucket, table, master_key_provider: StrictAwsKmsMasterKeyProvider):
         """
         Initialize a new operations object with the provided arguments.
 
@@ -26,7 +27,7 @@ class DocumentBucketOperations:
         """
         self.bucket = bucket
         self.table = table
-        self.master_key_provider: KMSMasterKeyProvider = master_key_provider
+        self.master_key_provider: StrictAwsKmsMasterKeyProvider = master_key_provider
 
     def _write_pointer(self, item: PointerItem):
         self.table.put_item(Item=item.to_item())
@@ -98,7 +99,10 @@ class DocumentBucketOperations:
         """
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         encrypted_data = self._get_object(item)
-        plaintext, header = aws_encryption_sdk.decrypt(
+        client = aws_encryption_sdk.EncryptionSDKClient(
+            commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+        )
+        plaintext, header = client.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
         return DocumentBundle.from_data_and_context(plaintext, item.context)
@@ -111,7 +115,10 @@ class DocumentBucketOperations:
         :param context: TODO do something with this parameter :)
         :returns: the pointer reference for this document in the Document Bucket system
         """
-        encrypted_data, header = aws_encryption_sdk.encrypt(
+        client = aws_encryption_sdk.EncryptionSDKClient(
+            commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+        )
+        encrypted_data, header = client.encrypt(
             source=data, key_provider=self.master_key_provider,
         )
         item = PointerItem.generate(context)

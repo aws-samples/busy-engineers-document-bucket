@@ -1,7 +1,10 @@
 // Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { encryptStream, KmsKeyringNode } from "@aws-crypto/client-node";
+import { KmsKeyringNode, buildClient, CommitmentPolicy } from "@aws-crypto/client-node";
+const { encryptStream } = buildClient(
+    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+);
 import { S3, DynamoDB } from "aws-sdk";
 import * as uuid from "uuid";
 import { Readable } from "stream";
