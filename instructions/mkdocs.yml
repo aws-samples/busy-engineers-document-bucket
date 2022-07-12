@@ -28,13 +28,13 @@ extra_javascript:
   - 'javascripts/extra.js'
 extra:
   social:
-    - type: 'home'
+    - icon: 'material/home'
       link: 'https://awssecworkshops.com'
-    - type: 'shield'
+    - icon: 'material/shield-half-full'
       link: 'https://aws.amazon.com/security/'
-    - type: 'twitter'
+    - icon: 'material/twitter'
       link: 'https://twitter.com/awssecurityinfo?lang=en'
-    - type: 'rss'
+    - icon: 'material/rss'
       link: 'https://aws.amazon.com/blogs/security/'
 
 # Extensions
