@@ -28,7 +28,7 @@ mkdocs serve
 
 ## Deploy
 
-If you have admin permission in this repo, you can build and deploy the site to
+If you have write permission in this repo, you can build and deploy the site to
 `https://document-bucket.awssecworkshops.com/`.
 
 Once you have verified your changes, just run:
