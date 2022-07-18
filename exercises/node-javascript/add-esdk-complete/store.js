@@ -23,10 +23,10 @@ const {
 const TableName = config.state.tableName();
 const Bucket = config.state.bucketName();
 
-// ADD-ESDK-COMPLETE: Configure the Faythe CMK in the Encryption SDK
-const faytheCMK = config.state.getFaytheCMK();
+// ADD-ESDK-COMPLETE: Configure the Faythe KMS Key in the Encryption SDK
+const faytheKmsKey = config.state.getFaytheKmsKey();
 const encryptKeyring = new KmsKeyringNode({
-  generatorKeyId: faytheCMK
+  generatorKeyId: faytheKmsKey
 });
 
 const contextPrefix = ctx_prefix.toUpperCase();

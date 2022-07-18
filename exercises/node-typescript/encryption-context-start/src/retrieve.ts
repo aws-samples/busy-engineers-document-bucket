@@ -11,9 +11,9 @@ import { config } from "./config";
 import { EC } from "./store";
 const Bucket = config.state.bucketName();
 
-const faytheCMK = config.state.getFaytheCMK();
-const walterCMK = config.state.getWalterCMK();
-const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
+const faytheKmsKey = config.state.getFaytheKmsKey();
+const walterKmsKey = config.state.getWalterKmsKey();
+const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheKmsKey, walterKmsKey] });
 
 export type retrieveOp = {
   expectedContext?: EC;

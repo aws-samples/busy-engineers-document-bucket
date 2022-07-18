@@ -12,8 +12,8 @@ install:
 deploy:
 	@echo "*** START CDK STACK DEPLOYMENT ***"
 	npx cdk deploy BusyEngineersDocumentBucketStack --require-approval never
-	npx cdk deploy BusyEngineersFaytheCMKStack --require-approval never
-	npx cdk deploy BusyEngineersWalterCMKStack --require-approval never
+	npx cdk deploy BusyEngineersFaytheKmsKeyStack --require-approval never
+	npx cdk deploy BusyEngineersWalterKmsKeyStack --require-approval never
 	@echo "*** CDK STACK DEPLOYMENT COMPLETE ***"
 
 state:

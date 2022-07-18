@@ -28,7 +28,7 @@ For example, if a bad deployment swaps `us-west-2.cfg` with `eu-central-1.cfg` o
 
 ### AWS KMS: Policy and Audit Hooks
 
-KMS also makes the encryption context available to use in Key Policies and Grants. This means that you can use assertions you make about your data to control usage of your CMKs. Perhaps your `eu-central-1` fleet should only ever be permitted to access encrypted data for `{ shard: europe }`. You can write CMK policies that require `{ shard: europe }` to be asserted about all cryptographic operations, so that KMS refuses to authorize an attempt to decrypt, say, `{ shard: north-america }`. These options can help you secure your application and defend against both operational and security-related risks.
+KMS also makes the encryption context available to use in Key Policies and Grants. This means that you can use assertions you make about your data to control usage of your KMS Keys. Perhaps your `eu-central-1` fleet should only ever be permitted to access encrypted data for `{ shard: europe }`. You can write KMS Key policies that require `{ shard: europe }` to be asserted about all cryptographic operations, so that KMS refuses to authorize an attempt to decrypt, say, `{ shard: north-america }`. These options can help you secure your application and defend against both operational and security-related risks.
 
 Additionally, as part of the audit features that KMS provides, it logs the encryption context that was supplied with every operation. You can use this information to audit who was accessing what data and when, to detect anomalous call patterns, or to identify unexpected system states.
 
@@ -67,7 +67,7 @@ Remember, encryption context is not secret!
 
 ### Starting Directory
 
-If you just finished [Using Multiple CMKs](./multi-cmk.md), you are all set.
+If you just finished [Using Multiple KMS Keys](./multi-kms-key.md), you are all set.
 
 If you aren't sure, or want to catch up, jump into the `encryption-context-start` directory for the language of your choice.
 

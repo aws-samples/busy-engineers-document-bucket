@@ -22,11 +22,11 @@ config.state = {
     return state[config.document_bucket.document_table.export];
   },
 
-  getFaytheCMK() {
+  getFaytheKmsKey() {
     return state[config.faythe.export];
   },
 
-  getWalterCMK() {
+  getWalterKmsKey() {
     return state[config.walter.export];
   }
 };

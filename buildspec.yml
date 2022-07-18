@@ -11,7 +11,7 @@ batch:
       buildspec: codebuild/encryption-context-complete.yml
     - identifier: encryption_context_start
       buildspec: codebuild/encryption-context-start.yml
-    - identifier: multi_cmk_complete
-      buildspec: codebuild/multi-cmk-complete.yml
-    - identifier: multi_cmk_start
-      buildspec: codebuild/multi-cmk-start.yml
+    - identifier: multi_kms_key_complete
+      buildspec: codebuild/multi-kms-key-complete.yml
+    - identifier: multi_kms_key_start
+      buildspec: codebuild/multi-kms-key-start.yml

@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+    install:
+        runtime-versions:
+            java: corretto11
+    build:
+        commands:
+            - cd exercises/java/multi-kms-key-complete
+            - mvn install

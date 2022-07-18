@@ -17,7 +17,7 @@ After your work in the workshop is complete, you will have added client-side enc
 In this workshop, you will work through the following exercises:
 
 1. Adding the AWS Encryption SDK
-1. Adding Multi-CMK Support to the Document Bucket
+1. Adding Multi-KMS-Key Support to the Document Bucket
 1. Working With Encryption Context
 
 ## Getting Started

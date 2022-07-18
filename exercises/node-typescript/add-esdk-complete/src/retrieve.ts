@@ -13,9 +13,9 @@ import { config } from "./config";
 import { EC } from "./store";
 const Bucket = config.state.bucketName();
 
-// ADD-ESDK-COMPLETE: Configure the Faythe CMK in the Encryption SDK
-const faytheCMK = config.state.getFaytheCMK();
-const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
+// ADD-ESDK-COMPLETE: Configure the Faythe KMS Key in the Encryption SDK
+const faytheKmsKey = config.state.getFaytheKmsKey();
+const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheKmsKey] });
 
 export type retrieveOp = {
   expectedContext?: EC;

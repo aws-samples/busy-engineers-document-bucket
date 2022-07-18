@@ -17,7 +17,7 @@ the stack as developers rather than classroom students.
 
 1. Launch the base CFN template (Cloud9) from the S3 bucket: https://busy-engineers-cfn.s3.us-east-2.amazonaws.com/document-bucket-cloud9-bootstrap.yaml
     * Convenience link: https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment
-    * Ensure you are using a role with admin privileges / sufficient privs to launch stacks and create CMKs/S3 buckets/CF distributions, etc.
+    * Ensure you are using a role with admin privileges / sufficient privs to launch stacks and create KMS Keys/S3 buckets/CF distributions, etc.
 1. Go to https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2# and launch the BusyEngineersCloud9IDE IDE
 1. Bootstrap the CDK environment
     1. `cd workshop`
