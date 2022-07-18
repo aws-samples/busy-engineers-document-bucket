@@ -14,21 +14,29 @@ Now you will add the AWS Encryption SDK to encrypt objects on the client, before
 
 Make sure you are in the `exercises` directory for the language of your choice:
 
-```bash tab="Java"
-cd ~/environment/workshop/exercises/java/add-esdk-start
-```
+=== "Java"
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/add-esdk-start
-```
-
-```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript/add-esdk-start
-```
-
-```bash tab="Python"
-cd ~/environment/workshop/exercises/python/add-esdk-start
-```
+    ```bash
+    cd ~/environment/workshop/exercises/java/add-esdk-start
+    ```
+    
+=== "Typescript Node.JS"
+    
+    ```bash
+    cd ~/environment/workshop/exercises/node-typescript/add-esdk-start
+    ```
+    
+=== "JavaScript Node.JS"
+    
+    ```bash
+    cd ~/environment/workshop/exercises/node-javascript/add-esdk-start
+    ```
+    
+=== "Python"
+    
+    ```bash
+    cd ~/environment/workshop/exercises/python/add-esdk-start
+    ```
 
 ### Step 1: Add the ESDK Dependency
 
@@ -36,118 +44,126 @@ Look for `ADD-ESDK-START` comments in the code to help orient yourself.
 
 Start by adding the Encryption SDK dependency to the code.
 
-```java tab="Java" hl_lines="5 6 7 8 9 15 16 26 31 32 40"
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
-package sfw.example.esdkworkshop;
+=== "Java"
 
-// ADD-ESDK-START: Add the ESDK Dependency
-import com.amazonaws.encryptionsdk.AwsCrypto;
-import com.amazonaws.encryptionsdk.CryptoResult;
-import com.amazonaws.encryptionsdk.MasterKey;
-import com.amazonaws.encryptionsdk.MasterKeyProvider;
-import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
+    ```{.java hl_lines="5 6 7 8 9 15 16 26 31 32 40"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
+    package sfw.example.esdkworkshop;
 
-...
-private final String tableName;
-private final String bucketName;
-// ADD-ESDK-START: Add the ESDK Dependency
-private final AwsCrypto awsEncryptionSdk;
-private final MasterKeyProvider mkp;
-
-...
-
-public Api(
-    AmazonDynamoDB ddbClient,
-    String tableName,
-    AmazonS3 s3Client,
-    String bucketName,
     // ADD-ESDK-START: Add the ESDK Dependency
-    MasterKeyProvider<? extends MasterKey> mkp) {
-  this.ddbClient = ddbClient;
-  this.tableName = tableName;
-  this.s3Client = s3Client
-  // ADD-ESDK-START: Add the ESDK Dependency
-  this.awsEncryptionSdk = new AwsCrypto();
-  this.mkp = mkp;
-}
+    import com.amazonaws.encryptionsdk.AwsCrypto;
+    import com.amazonaws.encryptionsdk.CryptoResult;
+    import com.amazonaws.encryptionsdk.MasterKey;
+    import com.amazonaws.encryptionsdk.MasterKeyProvider;
+    import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
 
-// Save and close.
-// Edit ./src/main/java/sfw/example/esdkworkshop/App.java
-package sfw.example.esdkworkshop;
+    ...
+    private final String tableName;
+    private final String bucketName;
+    // ADD-ESDK-START: Add the ESDK Dependency
+    private final AwsCrypto awsEncryptionSdk;
+    private final MasterKeyProvider mkp;
 
-// ADD-ESDK-START: Add the ESDK Dependency
-import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
-// Save and close.
-```
+    ...
 
-```typescript tab="Typescript Node.JS" hl_lines="4 11"
-// Edit ./src/store.ts
+    public Api(
+        AmazonDynamoDB ddbClient,
+        String tableName,
+        AmazonS3 s3Client,
+        String bucketName,
+        // ADD-ESDK-START: Add the ESDK Dependency
+        MasterKeyProvider<? extends MasterKey> mkp) {
+    this.ddbClient = ddbClient;
+    this.tableName = tableName;
+    this.s3Client = s3Client
+    // ADD-ESDK-START: Add the ESDK Dependency
+    this.awsEncryptionSdk = new AwsCrypto();
+    this.mkp = mkp;
+    }
 
-// ADD-ESDK-START: Add the ESDK Dependency
-import { KmsKeyringNode, buildClient, CommitmentPolicy } from "@aws-crypto/client-node";
-const { encryptStream } = buildClient(
-    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
-)
+    // Save and close.
+    // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
+    package sfw.example.esdkworkshop;
 
-// Save and exit
+    // ADD-ESDK-START: Add the ESDK Dependency
+    import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
+    // Save and close.
+    ```
 
-// Edit ./src/retrieve.ts
+=== "Typescript Node.JS"
 
-// ADD-ESDK-START: Add the ESDK Dependency
-import { KmsKeyringNode, buildClient, CommitmentPolicy } from "@aws-crypto/client-node";
-const { decryptStream } = buildClient(
-    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
-)
+    ```{.typescript hl_lines="4 5 6 7 14 15 16 17"}
+    // Edit ./src/store.ts
 
-// Save and exit
-```
+    // ADD-ESDK-START: Add the ESDK Dependency
+    import { KmsKeyringNode, buildClient, CommitmentPolicy } from "@aws-crypto/client-node";
+    const { encryptStream } = buildClient(
+        CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+    )
 
-```javascript tab="JavaScript Node.JS" hl_lines="4 11"
-// Edit ./store.js
+    // Save and exit
 
-// ADD-ESDK-START: Add the ESDK Dependency
-const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
-const { encryptStream } = buildClient(
-    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
-)
+    // Edit ./src/retrieve.ts
 
-// Save and exit
+    // ADD-ESDK-START: Add the ESDK Dependency
+    import { KmsKeyringNode, buildClient, CommitmentPolicy } from "@aws-crypto/client-node";
+    const { decryptStream } = buildClient(
+        CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+    )
 
-// Edit ./retrieve.js
+    // Save and exit
+    ```
 
-// ADD-ESDK-START: Add the ESDK Dependency
-const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
-const { decryptStream } = buildClient(
-    CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
-)
+=== "JavaScript Node.JS"
 
-// Save and exit
-```
+    ```{.javascript hl_lines="4 5 6 7 14 15 16 17"}
+    // Edit ./store.js
 
-```python tab="Python" hl_lines="4 10 11 15 19"
-# Edit src/document_bucket/__init__.py
+    // ADD-ESDK-START: Add the ESDK Dependency
+    const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
+    const { encryptStream } = buildClient(
+        CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+    )
 
-# ADD-ESDK-START: Add the ESDK Dependency
-import aws_encryption_sdk
+    // Save and exit
 
-# Save and exit
-# Edit src/document_bucket/api.py
+    // Edit ./retrieve.js
 
-# ADD-ESDK-START: Add the ESDK Dependency
-import aws_encryption_sdk
-from aws_encryption_sdk import StrictAwsKmsMasterKeyProvider  # type: ignore
-from aws_encryption_sdk.identifiers import CommitmentPolicy
+    // ADD-ESDK-START: Add the ESDK Dependency
+    const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
+    const { decryptStream } = buildClient(
+        CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+    )
 
-# Add a Master Key Provider to your __init__
-# ADD-ESDK-START: Add the ESDK Dependency
-def __init__(self, bucket, table, master_key_provider: StrictAwsKmsMasterKeyProvider):
-    self.bucket = bucket
-    self.table = table
+    // Save and exit
+    ```
+
+=== "Python"
+
+    ```{.python hl_lines="4 10 11 12 16 20"}
+    # Edit src/document_bucket/__init__.py
+
     # ADD-ESDK-START: Add the ESDK Dependency
-    self.master_key_provider : StrictAwsKmsMasterKeyProvider = master_key_provider
+    import aws_encryption_sdk
 
-# Save and exit
-```
+    # Save and exit
+    # Edit src/document_bucket/api.py
+
+    # ADD-ESDK-START: Add the ESDK Dependency
+    import aws_encryption_sdk
+    from aws_encryption_sdk import StrictAwsKmsMasterKeyProvider  # type: ignore
+    from aws_encryption_sdk.identifiers import CommitmentPolicy
+
+    # Add a Master Key Provider to your __init__
+    # ADD-ESDK-START: Add the ESDK Dependency
+    def __init__(self, bucket, table, master_key_provider: StrictAwsKmsMasterKeyProvider):
+        self.bucket = bucket
+        self.table = table
+        # ADD-ESDK-START: Add the ESDK Dependency
+        self.master_key_provider : StrictAwsKmsMasterKeyProvider = master_key_provider
+
+    # Save and exit
+    ```
 
 #### What Happened?
 
@@ -158,52 +174,60 @@ def __init__(self, bucket, table, master_key_provider: StrictAwsKmsMasterKeyProv
 
 Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.
 
-```java tab="Java" hl_lines="4 5 6"
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
-public PointerItem store(byte[] data, Map<String, String> context) {
+=== "Java"
+
+    ```{.java hl_lines="4 5 6"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
+    public PointerItem store(byte[] data, Map<String, String> context) {
+        // ADD-ESDK-START: Add Encryption to store
+        CryptoResult<byte[], KmsMasterKey> encryptedMessage = awsEncryptionSdk.encryptData(mkp, data);
+        DocumentBundle bundle =
+            DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
+        writeItem(bundle.getPointer());
+        ...
+    ```
+
+=== "Typescript Node.JS"
+
+    ```{.typescript hl_lines="4"}
+    // Edit ./src/store.ts
+
     // ADD-ESDK-START: Add Encryption to store
-    CryptoResult<byte[], KmsMasterKey> encryptedMessage = awsEncryptionSdk.encryptData(mkp, data);
-    DocumentBundle bundle =
-        DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
-    writeItem(bundle.getPointer());
-    ...
-```
+    const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
-```typescript tab="Typescript Node.JS" hl_lines="4"
-// Edit ./src/store.ts
+    // Save and exit
 
-// ADD-ESDK-START: Add Encryption to store
-const Body = fileStream.pipe(encryptStream(encryptKeyring));
+    ```
 
-// Save and exit
+=== "JavaScript Node.JS"
 
-```
+    ```{.javascript hl_lines="4"}
+    // Edit ./store.js
 
-```javascript tab="JavaScript Node.JS" hl_lines="4"
-// Edit ./store.js
+    // ADD-ESDK-START: Add Encryption to store
+    const Body = fileStream.pipe(encryptStream(encryptKeyring));
 
-// ADD-ESDK-START: Add Encryption to store
-const Body = fileStream.pipe(encryptStream(encryptKeyring));
+    // Save and exit
 
-// Save and exit
+    ```
 
-```
+=== "Python"
 
-```python tab="Python" hl_lines="5 6 7 8 10"
-# Edit src/document_bucket/api.py
-# Find the store function and edit it to add the Master Key Provider
-# and to write the encrypted data
-    # ADD-ESDK-START: Add Encryption to store
-    client = aws_encryption_sdk.EncryptionSDKClient(
-        commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
-    )
-    encrypted_data, header = client.encrypt(
-        source=data,
-        key_provider=self.master_key_provider,
-    )
-    ...
-    self._write_object(encrypted_data, item)
-```
+    ```{.python hl_lines="5 6 7 8 9 10 11 13"}
+    # Edit src/document_bucket/api.py
+    # Find the store function and edit it to add the Master Key Provider
+    # and to write the encrypted data
+        # ADD-ESDK-START: Add Encryption to store
+        client = aws_encryption_sdk.EncryptionSDKClient(
+            commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+        )
+        encrypted_data, header = client.encrypt(
+            source=data,
+            key_provider=self.master_key_provider,
+        )
+        ...
+        self._write_object(encrypted_data, item)
+    ```
 
 #### What Happened?
 
@@ -219,60 +243,67 @@ The application will use the AWS Encryption SDK to encrypt your data client-side
 
 Now that the application encypts your data before storing it, it will need to decrypt your data before returning it to the caller (at least for the data to be useful, anyway).
 
-```java tab="Java" hl_lines="5 7"
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
-// Find retrieve(...)
-    byte[] data = getObjectData(key);
+=== "Java"
+
+    ```{.java hl_lines="5 7"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
+    // Find retrieve(...)
+        byte[] data = getObjectData(key);
+        // ADD-ESDK-START: Add Decryption to retrieve
+        CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
+        ...
+        return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
+    ```
+
+=== "Typescript Node.JS"
+
+    ```{.typescript hl_lines="7"}
+    // Edit ./src/retrieve.ts
+
     // ADD-ESDK-START: Add Decryption to retrieve
-    CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
-    ...
-    return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
-```
+    return s3
+        .getObject({ Bucket, Key })
+        .createReadStream()
+        .pipe(decryptStream(decryptKeyring));
 
+    // Save and Exit
+    ```
 
-```typescript tab="Typescript Node.JS" hl_lines="7"
-// Edit ./src/retrieve.ts
+=== "JavaScript Node.JS"
 
-  // ADD-ESDK-START: Add Decryption to retrieve
-  return s3
-    .getObject({ Bucket, Key })
-    .createReadStream()
-    .pipe(decryptStream(decryptKeyring));
+    ```{.javascript hl_lines="7"}
+    // Edit ./retrieve.js
 
-// Save and Exit
-```
+    // ADD-ESDK-START: Add Decryption to retrieve
+    return s3
+        .getObject({ Bucket, Key })
+        .createReadStream()
+        .pipe(decryptStream(decryptKeyring));
 
-```javascript tab="JavaScript Node.JS" hl_lines="7"
-// Edit ./retrieve.js
+    // Save and Exit
+    ```
 
-  // ADD-ESDK-START: Add Decryption to retrieve
-  return s3
-    .getObject({ Bucket, Key })
-    .createReadStream()
-    .pipe(decryptStream(decryptKeyring));
+=== "Python"
 
-// Save and Exit
-```
+    ```{.python hl_lines="6 7 8 9 10 11 12 14"}
+    # Edit src/document_bucket/api.py
+    # Find the retrieve function and edit it to add a call to decrypt the
+    # encrypted data before returning it
+            item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
+            # ADD-ESDK-START: Add Decryption to retrieve
+            encrypted_data = self._get_object(item)
+            client = aws_encryption_sdk.EncryptionSDKClient(
+                commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+            )
+            plaintext, header = client.decrypt(
+                source=encrypted_data, key_provider=self.master_key_provider
+            )
+            return DocumentBundle.from_data_and_context(
+                plaintext, item.context
+            )
 
-```python tab="Python" hl_lines="6 7 8 9 11"
-# Edit src/document_bucket/api.py
-# Find the retrieve function and edit it to add a call to decrypt the
-# encrypted data before returning it
-        item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
-        # ADD-ESDK-START: Add Decryption to retrieve
-        encrypted_data = self._get_object(item)
-        client = aws_encryption_sdk.EncryptionSDKClient(
-            commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
-        )
-        plaintext, header = client.decrypt(
-            source=encrypted_data, key_provider=self.master_key_provider
-        )
-        return DocumentBundle.from_data_and_context(
-            plaintext, item.context
-        )
-
-# Save and exit
-```
+    # Save and exit
+    ```
 
 #### What Happened?
 
@@ -290,80 +321,88 @@ The data returned from S3 for `retrieve` is encrypted. Before returning that dat
 
 Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
 
-```java tab="Java" hl_lines="6 9 10 12"
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
-    AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+=== "Java"
+
+    ```{.java hl_lines="6 9 10 12"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
+        AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+
+        // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+        // Load configuration of KMS resources
+        String faytheCMK = stateConfig.contents.state.FaytheCMK;
+
+        // Set up the Master Key Provider to use KMS
+        KmsMasterKeyProvider mkp =
+            KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
+
+        return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
+    ```
+
+=== "Typescript Node.JS"
+
+    ```{.typescript hl_lines="4 5 6 7 14 15"}
+
+    // Edit ./src/store.ts
 
     // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
-    // Load configuration of KMS resources
-    String faytheCMK = stateConfig.contents.state.FaytheCMK;
+    const faytheCMK = config.state.getFaytheCMK();
+    const encryptKeyring = new KmsKeyringNode({
+    generatorKeyId: faytheCMK
+    });
 
-    // Set up the Master Key Provider to use KMS
-    KmsMasterKeyProvider mkp =
-        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
+    // Save and exit
 
-    return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
-```
+    // Edit ./src/retrieve.ts
 
-```typescript tab="Typescript Node.JS"  hl_lines="4 5 6 7 14 15"
+    // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
+    const faytheCMK = config.state.getFaytheCMK();
+    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 
-// Edit ./src/store.ts
+    // Save and exit
+    ```
 
-// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
-const faytheCMK = config.state.getFaytheCMK();
-const encryptKeyring = new KmsKeyringNode({
-  generatorKeyId: faytheCMK
-});
+=== "JavaScript Node.JS"
 
-// Save and exit
+    ```{.javascript hl_lines="4 5 6 7 14 15"}
 
-// Edit ./src/retrieve.ts
+    // Edit ./store.js
 
-// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
-const faytheCMK = config.state.getFaytheCMK();
-const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
+    // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+    const faytheCMK = config.state.getFaytheCMK();
+    const encryptKeyring = new KmsKeyringNode({
+    generatorKeyId: faytheCMK
+    });
 
-// Save and exit
-```
+    // Save and exit
 
-```javascript tab="JavaScript Node.JS"  hl_lines="4 5 6 7 14 15"
+    // Edit ./retrieve.js
 
-// Edit ./store.js
+    // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
+    const faytheCMK = config.state.getFaytheCMK();
+    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
 
-// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
-const faytheCMK = config.state.getFaytheCMK();
-const encryptKeyring = new KmsKeyringNode({
-  generatorKeyId: faytheCMK
-});
+    // Save and exit
+    ```
 
-// Save and exit
+=== "Python"
 
-// Edit ./retrieve.js
+    ```{.python hl_lines="7 9 10 12"}
 
-// ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
-const faytheCMK = config.state.getFaytheCMK();
-const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
+    # Edit src/document_bucket/__init__.py
 
-// Save and exit
-```
+    ...
 
-```python tab="Python" hl_lines="7 9 10 12"
+    # ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+    # Pull configuration of KMS resources
+    faythe_cmk = state["FaytheCMK"]
+    # And the Master Key Provider configuring how to use KMS
+    cmk = [faythe_cmk]
+    mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=cmk)
 
-# Edit src/document_bucket/__init__.py
+    operations = DocumentBucketOperations(bucket, table, mkp)
 
-...
-
-# ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
-# Pull configuration of KMS resources
-faythe_cmk = state["FaytheCMK"]
-# And the Master Key Provider configuring how to use KMS
-cmk = [faythe_cmk]
-mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=cmk)
-
-operations = DocumentBucketOperations(bucket, table, mkp)
-
-# Save and exit
-```
+    # Save and exit
+    ```
 
 #### What Happened?
 
@@ -377,21 +416,29 @@ Want to check your progress, or compare what you've done versus a finished examp
 
 Check out the code in one of the `-complete` folders to compare.
 
-```bash tab="Java"
-cd ~/environment/workshop/exercises/java/add-esdk-complete
-```
+=== "Java"
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/add-esdk-complete
-```
+    ```bash 
+    cd ~/environment/workshop/exercises/java/add-esdk-complete
+    ```
 
-```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript/add-esdk-complete
-```
+=== "Typescript Node.JS"
 
-```bash tab="Python"
-cd ~/environment/workshop/exercises/python/add-esdk-complete
-```
+    ```bash
+    cd ~/environment/workshop/exercises/node-typescript/add-esdk-complete
+    ```
+
+=== "JavaScript Node.JS"
+
+    ```bash
+    cd ~/environment/workshop/exercises/node-javascript/add-esdk-complete
+    ```
+
+=== "Python"
+
+    ```bash
+    cd ~/environment/workshop/exercises/python/add-esdk-complete
+    ```
 
 ## Try it Out
 
@@ -409,86 +456,98 @@ To get started, here are some things to try:
 
 For more things to try, check out [Explore Further](#explore-further), below.
 
-```java tab="Java"
-// Compile your code
-mvn compile
+=== "Java"
 
-// To use the API programmatically, use this target to launch jshell
-mvn jshell:run
-/open startup.jsh
-Api documentBucket = App.initializeDocumentBucket();
-documentBucket.list();
-documentBucket.store("Store me in the Document Bucket!".getBytes());
-for (PointerItem item : documentBucket.list()) {
-    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS());
-    System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
-}
-// Ctrl+D to exit jshell
+    ```java
+    // Compile your code
+    mvn compile
 
-// Or, to run logic that you write in App.java, use this target after compile
-mvn exec:java
-```
+    // To use the API programmatically, use this target to launch jshell
+    mvn jshell:run
+    /open startup.jsh
+    Api documentBucket = App.initializeDocumentBucket();
+    documentBucket.list();
+    documentBucket.store("Store me in the Document Bucket!".getBytes());
+    for (PointerItem item : documentBucket.list()) {
+        DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS());
+        System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
+    }
+    // Ctrl+D to exit jshell
 
-```javascript tab="JavaScript Node.JS"
-node
-list = require("./list.js")
-store = require("./store.js")
-retrieve = require("./retrieve")
-list().then(console.log)
-store(fs.createReadStream("./store.js")).then(r => {
-  // Just storing the s3 key
-  key = r.Key
-  console.log(r)
-})
-list().then(console.log)
-(() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
-// Ctrl-D when finished to exit the REPL
-```
+    // Or, to run logic that you write in App.java, use this target after compile
+    mvn exec:java
+    ```
 
-```bash tab="JavaScript Node.JS CLI"
-./cli.js list
-./cli.js store ./store.js
-# Note the "Key" value
-./cli.js list
-# Note the "reference" value
-./cli.js retrieve $KeyOrReferenceValue
-```
+=== "JavaScript Node.JS"
 
-```typescript tab="Typescript Node.JS"
-node -r ts-node/register
-;({list} = require("./src/list.ts"))
-;({store} = require("./src/store.ts"))
-;({retrieve} = require("./src/retrieve.ts"))
-list().then(console.log)
-store(fs.createReadStream("./src/store.ts")).then(r => {
-  // Just storing the s3 key
-  key = r.Key
-  console.log(r)
-})
-list().then(console.log)
-(() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
-// Ctrl-D when finished to exit the REPL
-```
+    ```javascript
+    node
+    list = require("./list.js")
+    store = require("./store.js")
+    retrieve = require("./retrieve")
+    list().then(console.log)
+    store(fs.createReadStream("./store.js")).then(r => {
+    // Just storing the s3 key
+    key = r.Key
+    console.log(r)
+    })
+    list().then(console.log)
+    (() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
+    // Ctrl-D when finished to exit the REPL
+    ```
 
-```bash tab="Typescript Node.JS CLI"
-./cli.ts list
-./cli.ts store ./store.js
-# Note the "Key" value
-./cli.ts list
-# Note the "reference" value
-./cli.ts retrieve $KeyOrReferenceValue
-```
+=== "JavaScript Node.JS CLI"
 
-```python tab="Python"
-tox -e repl
-import document_bucket
-ops = document_bucket.initialize()
-ops.list()
-ops.store(b'some data')
-ops.list()
-ops.retrieve("PutYourKeyHere").data
-# Ctrl-D when finished to exit the REPL
-```
+    ```bash
+    ./cli.js list
+    ./cli.js store ./store.js
+    # Note the "Key" value
+    ./cli.js list
+    # Note the "reference" value
+    ./cli.js retrieve $KeyOrReferenceValue
+    ```
+
+=== "Typescript Node.JS"
+
+    ```typescript
+    node -r ts-node/register
+    ;({list} = require("./src/list.ts"))
+    ;({store} = require("./src/store.ts"))
+    ;({retrieve} = require("./src/retrieve.ts"))
+    list().then(console.log)
+    store(fs.createReadStream("./src/store.ts")).then(r => {
+    // Just storing the s3 key
+    key = r.Key
+    console.log(r)
+    })
+    list().then(console.log)
+    (() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
+    // Ctrl-D when finished to exit the REPL
+    ```
+
+=== "Typescript Node.JS CLI"
+
+    ```bash
+    ./cli.ts list
+    ./cli.ts store ./store.js
+    # Note the "Key" value
+    ./cli.ts list
+    # Note the "reference" value
+    ./cli.ts retrieve $KeyOrReferenceValue
+    ```
+
+=== "Python"
+
+    ```python
+    tox -e repl
+    import document_bucket
+    ops = document_bucket.initialize()
+    ops.list()
+    ops.store(b'some data')
+    ops.list()
+    ops.retrieve("PutYourKeyHere").data
+    # Ctrl-D when finished to exit the REPL
+    ```
 
 ## Explore Further
 

@@ -36,57 +36,73 @@ If you just finished [Adding the Encryption SDK](./adding-the-encryption-sdk.md)
 
 If you aren't sure, or want to catch up, jump into the `multi-cmk-start` directory for the language of your choice.
 
-```bash tab="Java"
-cd ~/environment/workshop/exercises/java/multi-cmk-start
-```
+=== "Java"
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/multi-cmk-start
-```
+    ```bash 
+    cd ~/environment/workshop/exercises/java/multi-cmk-start
+    ```
 
-```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript/multi-cmk-start
-```
+=== "Typescript Node.JS"
 
-```bash tab="Python"
-cd ~/environment/workshop/exercises/python/multi-cmk-start
-```
+    ```bash
+    cd ~/environment/workshop/exercises/node-typescript/multi-cmk-start
+    ```
+
+=== "JavaScript Node.JS"
+
+    ```bash
+    cd ~/environment/workshop/exercises/node-javascript/multi-cmk-start
+    ```
+
+=== "Python"
+
+    ```bash
+    cd ~/environment/workshop/exercises/python/multi-cmk-start
+    ```
 
 ### Step 1: Configure Walter
 
-```java tab="Java" hl_lines="4"
-// Edit ./src/main/java/sfw/example/esdkworkshop/App.java
-    String faytheCMK = stateConfig.contents.state.faytheCMK;
+=== "Java"
+
+    ```{.java hl_lines="4"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
+        String faytheCMK = stateConfig.contents.state.faytheCMK;
+        // MULTI-CMK-START: Configure Walter
+        String walterCMK = stateConfig.contents.state.WalterCMK;
+    ```
+
+=== "JavaScript Node.JS"
+
+    ```{.javascript hl_lines="3 7"}
+    // Edit ./store.js
     // MULTI-CMK-START: Configure Walter
-    String walterCMK = stateConfig.contents.state.WalterCMK;
-```
+    const walterCMK = config.state.getWalterCMK();
 
-```javascript tab="JavaScript Node.JS" hl_lines="3 7"
-// Edit ./store.js
-// MULTI-CMK-START: Configure Walter
-const walterCMK = config.state.getWalterCMK();
+    // Edit ./retrieve.js
+    // MULTI-CMK-START: Configure Walter
+    const walterCMK = config.state.getWalterCMK();
+    ```
 
-// Edit ./retrieve.js
-// MULTI-CMK-START: Configure Walter
-const walterCMK = config.state.getWalterCMK();
-```
+=== "Typescript Node.JS"
 
-```typescript tab="Typescript Node.JS" hl_lines="3 7"
-// Edit ./src/store.ts
-// MULTI-CMK-START: Configure Walter
-const walterCMK = config.state.getWalterCMK();
+    ```{.typescript hl_lines="3 7"}
+    // Edit ./src/store.ts
+    // MULTI-CMK-START: Configure Walter
+    const walterCMK = config.state.getWalterCMK();
 
-// Edit ./src/retrieve.ts
-// MULTI-CMK-START: Configure Walter
-const walterCMK = config.state.getWalterCMK();
-```
+    // Edit ./src/retrieve.ts
+    // MULTI-CMK-START: Configure Walter
+    const walterCMK = config.state.getWalterCMK();
+    ```
 
-```python tab="Python" hl_lines="4"
-# Edit src/document_bucket/__init__.py
+=== "Python"
 
-# MULTI-CMK-START: Configure Walter
-walter_cmk = state["WalterCMK"]
-```
+    ```{.python hl_lines="4"}
+    # Edit src/document_bucket/__init__.py
+
+    # MULTI-CMK-START: Configure Walter
+    walter_cmk = state["WalterCMK"]
+    ```
 
 #### What Happened?
 
@@ -94,57 +110,65 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 
 ### Step 2: Add Walter to the CMKs to Use
 
-```java tab="Java" hl_lines="3 4"
-// Edit ./src/main/java/sfw/example/esdkworkshop/App.java
+=== "Java"
+
+    ```{.java hl_lines="3 4"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
+        // MULTI-CMK-START: Add Walter to the CMKs to Use
+        KmsMasterKeyProvider mkp =
+            KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
+    ```
+
+=== "JavaScript Node.JS"
+
+    ```{.javascript hl_lines="4 5 6 7 13"}
+    // Edit ./store.js
     // MULTI-CMK-START: Add Walter to the CMKs to Use
-    KmsMasterKeyProvider mkp =
-        KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
-```
+    ...
+    const encryptKeyring = new KmsKeyringNode({
+      generatorKeyId: faytheCMK,
+      keyIds: [walterCMK]
+    });
 
-```javascript tab="JavaScript Node.JS" hl_lines="4 5 6 7 13"
-// Edit ./store.js
-// MULTI-CMK-START: Add Walter to the CMKs to Use
-...
-const encryptKeyring = new KmsKeyringNode({
-  generatorKeyId: faytheCMK,
-  keyIds: [walterCMK]
-});
+    // Save and exit
+    // Edit ./retrieve.js
+    // MULTI-CMK-START: Add Walter to the CMKs to Use
+    ...
+    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
-// Save and exit
-// Edit ./retrieve.js
-// MULTI-CMK-START: Add Walter to the CMKs to Use
-...
-const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
+    // Save and exit
+    ```
 
-// Save and exit
-```
+=== "Typescript Node.JS"
 
-```typescript tab="Typescript Node.JS" hl_lines="4 5 6 7 13"
-// Edit ./src/store.ts
-// MULTI-CMK-START: Add Walter to the CMKs to Use
-...
-const encryptKeyring = new KmsKeyringNode({
-  generatorKeyId: faytheCMK,
-  keyIds: [walterCMK]
-});
+    ```{.typescript hl_lines="4 5 6 7 13"}
+    // Edit ./src/store.ts
+    // MULTI-CMK-START: Add Walter to the CMKs to Use
+    ...
+    const encryptKeyring = new KmsKeyringNode({
+      generatorKeyId: faytheCMK,
+      keyIds: [walterCMK]
+    });
 
-// Save and exit
-// Edit ./src/retrieve.ts
-// MULTI-CMK-START: Add Walter to the CMKs to Use
-...
-const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
+    // Save and exit
+    // Edit ./src/retrieve.ts
+    // MULTI-CMK-START: Add Walter to the CMKs to Use
+    ...
+    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK, walterCMK] });
 
-// Save and exit
-```
+    // Save and exit
+    ```
 
-```python tab="Python" hl_lines="4"
-# Edit src/document_bucket/__init__.py
+=== "Python"
 
-# MULTI-CMK-START: Add Walter to the CMKs to Use
-cmk = [faythe_cmk, walter_cmk]
+    ```{.python hl_lines="4"}
+    # Edit src/document_bucket/__init__.py
 
-# Save and exit
-```
+    # MULTI-CMK-START: Add Walter to the CMKs to Use
+    cmk = [faythe_cmk, walter_cmk]
+
+    # Save and exit
+    ```
 
 #### What Happened?
 
@@ -156,21 +180,29 @@ If you want to check your progress, or compare what you've done versus a finishe
 
 There is a `-complete` folder for each language.
 
-```bash tab="Java"
-cd ~/environment/workshop/exercises/java/multi-cmk-complete
-```
+=== "Java"
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/multi-cmk-complete
-```
+    ```bash 
+    cd ~/environment/workshop/exercises/java/multi-cmk-complete
+    ```
 
-```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript/multi-cmk-complete
-```
+=== "Typescript Node.JS"
 
-```bash tab="Python"
-cd ~/environment/workshop/exercises/python/multi-cmk-complete
-```
+    ```bash
+    cd ~/environment/workshop/exercises/node-typescript/multi-cmk-complete
+    ```
+
+=== "JavaScript Node.JS"
+
+    ```bash
+    cd ~/environment/workshop/exercises/node-javascript/multi-cmk-complete
+    ```
+
+=== "Python"
+
+    ```bash
+    cd ~/environment/workshop/exercises/python/multi-cmk-complete
+    ```
 
 ## Try it Out
 
@@ -212,92 +244,104 @@ Try out combinations of Grant permissions for your application and watch how the
 * Revoke permission to Walter, and encrypt some data with Faythe. Then, add permission back to Walter, revoke permission to use Faythe, and try to decrypt that data
 * What other interesting access patterns can you imagine?
 
-```java tab="Java"
-// Compile your code
-mvn compile
+=== "Java"
 
-// To use the API programmatically, use this target to launch jshell
-mvn jshell:run
-/open startup.jsh
-Api documentBucket = App.initializeDocumentBucket();
-documentBucket.list();
-documentBucket.store("Store me in the Document Bucket!".getBytes());
-for (PointerItem item : documentBucket.list()) {
-    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS());
-    System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
-}
-// Ctrl+D to exit jshell
+    ```java
+    // Compile your code
+    mvn compile
 
-// Use the make targets to change the Grants and see what happens!
-// To run logic that you write in App.java, use this target after compile
-mvn exec:java
-```
+    // To use the API programmatically, use this target to launch jshell
+    mvn jshell:run
+    /open startup.jsh
+    Api documentBucket = App.initializeDocumentBucket();
+    documentBucket.list();
+    documentBucket.store("Store me in the Document Bucket!".getBytes());
+    for (PointerItem item : documentBucket.list()) {
+        DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS());
+        System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
+    }
+    // Ctrl+D to exit jshell
 
-```javascript tab="JavaScript Node.JS"
-node
-list = require("./list.js")
-store = require("./store.js")
-retrieve = require("./retrieve")
-list().then(console.log)
-store(fs.createReadStream("./store.js")).then(r => {
-  // Just storing the s3 key
-  key = r.Key
-  console.log(r)
-})
-list().then(console.log)
-retrieve(key).pipe(process.stdout)
-// Use the make targets to change the Grants and see what happens!
-// Ctrl-D when finished to exit the REPL
-```
+    // Use the make targets to change the Grants and see what happens!
+    // To run logic that you write in App.java, use this target after compile
+    mvn exec:java
+    ```
 
-```bash tab="JavaScript Node.JS CLI"
-./cli.js list
-./cli.js store ./store.js
-# Note the "Key" value
-./cli.js list
-# Note the "reference" value
-./cli.js retrieve $KeyOrReferenceValue
-# Use the make targets to change the grants and see what happens!
-```
+=== "JavaScript Node.JS"
 
-```typescript tab="Typescript Node.JS"
-node -r ts-node/register
-;({list} = require("./src/list.ts"))
-;({store} = require("./src/store.ts"))
-;({retrieve} = require("./src/retrieve.ts"))
-list().then(console.log)
-store(fs.createReadStream("./src/store.ts")).then(r => {
-  // Just storing the s3 key
-  key = r.Key
-  console.log(r)
-})
-list().then(console.log)
-retrieve(key).pipe(process.stdout)
-// Ctrl-D when finished to exit the REPL
-// Use the make targets to change the Grants and see what happens!
-```
+    ```javascript
+    node
+    list = require("./list.js")
+    store = require("./store.js")
+    retrieve = require("./retrieve")
+    list().then(console.log)
+    store(fs.createReadStream("./store.js")).then(r => {
+      // Just storing the s3 key
+      key = r.Key
+      console.log(r)
+    })
+    list().then(console.log)
+    retrieve(key).pipe(process.stdout)
+    // Use the make targets to change the Grants and see what happens!
+    // Ctrl-D when finished to exit the REPL
+    ```
 
-```bash tab="Typescript Node.JS CLI"
-./cli.ts list
-./cli.ts store ./store.js
-# Note the "Key" value
-./cli.ts list
-# Note the "reference" value
-./cli.ts retrieve $KeyOrReferenceValue
-# Use the make targets to change the grants and see what happens!
-```
+=== "JavaScript Node.JS CLI"
 
-```python tab="Python"
-tox -e repl
-import document_bucket
-ops = document_bucket.initialize()
-ops.list()
-ops.store(b'some data')
-for item in ops.list():
-    print(ops.retrieve(item.partition_key))
-# Use the make targets to change the grants and see what happens!
-# Ctrl-D when finished to exit the REPL
-```
+    ```bash
+    ./cli.js list
+    ./cli.js store ./store.js
+    # Note the "Key" value
+    ./cli.js list
+    # Note the "reference" value
+    ./cli.js retrieve $KeyOrReferenceValue
+    # Use the make targets to change the grants and see what happens!
+    ```
+
+=== "Typescript Node.JS"
+
+    ```{.typescript}
+    node -r ts-node/register
+    ;({list} = require("./src/list.ts"))
+    ;({store} = require("./src/store.ts"))
+    ;({retrieve} = require("./src/retrieve.ts"))
+    list().then(console.log)
+    store(fs.createReadStream("./src/store.ts")).then(r => {
+      // Just storing the s3 key
+      key = r.Key
+      console.log(r)
+    })
+    list().then(console.log)
+    retrieve(key).pipe(process.stdout)
+    // Ctrl-D when finished to exit the REPL
+    // Use the make targets to change the Grants and see what happens!
+    ```
+
+=== "Typescript Node.JS CLI"
+
+    ```bash
+    ./cli.ts list
+    ./cli.ts store ./store.js
+    # Note the "Key" value
+    ./cli.ts list
+    # Note the "reference" value
+    ./cli.ts retrieve $KeyOrReferenceValue
+    # Use the make targets to change the grants and see what happens!
+    ```
+
+=== "Python"
+
+    ```python
+    tox -e repl
+    import document_bucket
+    ops = document_bucket.initialize()
+    ops.list()
+    ops.store(b'some data')
+    for item in ops.list():
+        print(ops.retrieve(item.partition_key))
+    # Use the make targets to change the grants and see what happens!
+    # Ctrl-D when finished to exit the REPL
+    ```
 
 ## Explore Further
 
