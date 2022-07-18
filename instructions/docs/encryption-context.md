@@ -71,66 +71,82 @@ If you just finished [Using Multiple CMKs](./multi-cmk.md), you are all set.
 
 If you aren't sure, or want to catch up, jump into the `encryption-context-start` directory for the language of your choice.
 
-```bash tab="Java"
-cd ~/environment/workshop/exercises/java/encryption-context-start
-```
+=== "Java"
 
-```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript/encryption-context-start
-```
+    ```bash 
+    cd ~/environment/workshop/exercises/java/encryption-context-start
+    ```
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/encryption-context-start
-```
+=== "JavaScript Node.JS"
 
-```bash tab="Python"
-cd ~/environment/workshop/exercises/python/encryption-context-start
-```
+    ```bash
+    cd ~/environment/workshop/exercises/node-javascript/encryption-context-start
+    ```
+
+=== "Typescript Node.JS"
+
+    ```bash
+    cd ~/environment/workshop/exercises/node-typescript/encryption-context-start
+    ```
+
+=== "Python"
+
+    ```bash
+    cd ~/environment/workshop/exercises/python/encryption-context-start
+    ```
 
 ### Step 1: Set Encryption Context on Encrypt
 
-```java tab="Java" hl_lines="4"
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)
-    // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
-    CryptoResult<byte[], KmsMasterKey> encryptedMessage =
-        awsEncryptionSdk.encryptData(mkp, data, context);
-    DocumentBundle bundle =
-        DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
-// Save your changes
-```
+=== "Java"
 
-```javascript tab="JavaScript Node.JS" hl_lines="3 4 5"
-  // Edit ./store.js
-  // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
-  const Body = fileStream.pipe(
-    encryptStream(encryptKeyring, { encryptionContext })
-  );
+    ```{.java hl_lines="4"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)
+        // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
+        CryptoResult<byte[], KmsMasterKey> encryptedMessage =
+            awsEncryptionSdk.encryptData(mkp, data, context);
+        DocumentBundle bundle =
+            DocumentBundle.fromDataAndContext(encryptedMessage.getResult(), context);
+    // Save your changes
+    ```
 
-// Save your changes
-```
+=== "JavaScript Node.JS"
 
-```typescript tab="Typescript Node.JS" hl_lines="3 4 5"
-  // Edit ./src/store.ts
-  // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
-  const Body = fileStream.pipe(
-    encryptStream(encryptKeyring, { encryptionContext })
-  );
+    ```{.javascript hl_lines="3 4 5"}
+      // Edit ./store.js
+      // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
+      const Body = fileStream.pipe(
+        encryptStream(encryptKeyring, { encryptionContext })
+      );
 
-// Save your changes
-```
+    // Save your changes
+    ```
 
-```python tab="Python" hl_lines="8"
-# Edit src/document_bucket/api.py
-# Find the store(...) function, and add context to the encrypt call
+=== "Typescript Node.JS"
 
-# ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
-encrypted_data, header = aws_encryption_sdk.encrypt(
-    source=data,
-    key_provider=self.master_key_provider,
-    encryption_context=context,
-)
-# Save your changes
-```
+    ```{.typescript hl_lines="3 4 5"}
+      // Edit ./src/store.ts
+      // ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
+      const Body = fileStream.pipe(
+        encryptStream(encryptKeyring, { encryptionContext })
+      );
+
+    // Save your changes
+    ```
+
+=== "Python"
+
+    ```{.python hl_lines="8"}
+    # Edit src/document_bucket/api.py
+    # Find the store(...) function, and add context to the encrypt call
+
+    # ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
+    encrypted_data, header = aws_encryption_sdk.encrypt(
+        source=data,
+        key_provider=self.master_key_provider,
+        encryption_context=context,
+    )
+    # Save your changes
+    ```
 
 #### What Happened?
 
@@ -146,61 +162,69 @@ Next you will update `retrieve` to use the encryption context on decrypt.
 
 ### Step 2: Use Encryption Context on Decrypt
 
-```java tab="Java" hl_lines="3 4"
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)
-    // ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
-    Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
-    PointerItem pointer = PointerItem.fromKeyAndContext(key, actualContext);
-// Save your changes
-```
+=== "Java"
 
-```javascript tab="JavaScript Node.JS" hl_lines="9 10 11"
-// Edit ./retrieve.js
+    ```{.java hl_lines="3 4"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)
+        // ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
+        Map<String, String> actualContext = decryptedMessage.getEncryptionContext();
+        PointerItem pointer = PointerItem.fromKeyAndContext(key, actualContext);
+    // Save your changes
+    ```
 
-  return (
-    s3
-      .getObject({ Bucket, Key })
-      .createReadStream()
-      .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-START: Making Assertions
-      .once("MessageHeader", function(header) {
+=== "JavaScript Node.JS"
 
-      })
-  );
+    ```{.javascript hl_lines="9 10 11"}
+    // Edit ./retrieve.js
 
-// Save your changes
+      return (
+        s3
+          .getObject({ Bucket, Key })
+          .createReadStream()
+          .pipe(decryptStream(decryptKeyring))
+          // ENCRYPTION-CONTEXT-START: Making Assertions
+          .once("MessageHeader", function(header) {
 
-```
+          })
+      );
 
-```typescript tab="Typescript Node.JS" hl_lines="9 10 11"
-// Edit ./src/retrieve.ts
+    // Save your changes
 
-  return (
-    s3
-      .getObject({ Bucket, Key })
-      .createReadStream()
-      .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-START: Making Assertions
-      .once("MessageHeader", function(this: Writable, header: MessageHeader) {
+    ```
 
-      })
-  );
+=== "Typescript Node.JS"
 
-// Save your changes
+    ```{.typescript hl_lines="9 10 11"}
+    // Edit ./src/retrieve.ts
 
-```
+      return (
+        s3
+          .getObject({ Bucket, Key })
+          .createReadStream()
+          .pipe(decryptStream(decryptKeyring))
+          // ENCRYPTION-CONTEXT-START: Making Assertions
+          .once("MessageHeader", function(this: Writable, header: MessageHeader) {
 
-```python tab="Python" hl_lines="7"
-# Edit src/document_bucket/api.py
-# Find the retrieve(...) function, and use the Encryption SDK header's encryption
-# context to construct the DocumentBundle to return
+          })
+      );
 
-# ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt
-return DocumentBundle.from_data_and_context(
-    plaintext, header.encryption_context
-)
-# Save your changes
-```
+    // Save your changes
+
+    ```
+
+=== "Python"
+
+    ```{.python hl_lines="7"}
+    # Edit src/document_bucket/api.py
+    # Find the retrieve(...) function, and use the Encryption SDK header's encryption
+    # context to construct the DocumentBundle to return
+
+    # ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt
+    return DocumentBundle.from_data_and_context(
+        plaintext, header.encryption_context
+    )
+    # Save your changes
+    ```
 
 #### What Happened?
 
@@ -210,118 +234,126 @@ Next you will add a mechanism for the application to test assertions made in enc
 
 ### Step 3: Making Assertions
 
-```java tab="Java" hl_lines="3 4 14 15 16"
-// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)
-    // ENCRYPTION-CONTEXT-START: Making Assertions
-    boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
-    if (!allExpectedContextKeysFound) {
-        // Remove all of the keys that were found
-        expectedContextKeys.removeAll(actualContext.keySet());
-        String error =
-        String.format(
-            "Expected context keys were not found in the actual encryption context! "
-            + "Missing keys were: %s",
-            expectedContextKeys.toString());
-       throw new DocumentBucketException(error, new NoSuchElementException());
-    }
-    boolean allExpectedContextFound =
-        actualContext.entrySet().containsAll(expectedContext.entrySet());
-    if (!allExpectedContextFound) {
-        Set<Map.Entry<String, String>> expectedContextEntries = expectedContext.entrySet();
-        expectedContextEntries.removeAll(actualContext.entrySet());
-        String error =
+=== "Java"
+
+    ```{.java hl_lines="3 4 14 15 16"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)
+        // ENCRYPTION-CONTEXT-START: Making Assertions
+        boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
+        if (!allExpectedContextKeysFound) {
+            // Remove all of the keys that were found
+            expectedContextKeys.removeAll(actualContext.keySet());
+            String error =
             String.format(
-                "Expected context pairs were not found in the actual encryption context! "
-                + "Missing pairs were: %s",
-                expectedContextEntries.toString());
-        throw new DocumentBucketException(error, new NoSuchElementException());
-   }
-// Save your work
-```
-
-```javascript tab="JavaScript Node.JS" hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
-// Edit ./retrieve.js
-  return (
-    s3
-      .getObject({ Bucket, Key })
-      .createReadStream()
-      .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-START: Making Assertions
-      .once("MessageHeader", function(header) {
-        const { encryptionContext } = header;
-        const pairs = Object.entries(expectedContext || {});
-        const keys = (expectedContextKeys || []).slice();
-        if (
-          !(
-            pairs.every(([key, value]) => encryptionContext[key] === value) &&
-            keys.every(key =>
-              Object.hasOwnProperty.call(encryptionContext, key)
-            )
-          )
-        ) {
-          this.emit(
-            "error",
-            new Error("Encryption context does not match expected shape")
-          );
+                "Expected context keys were not found in the actual encryption context! "
+                + "Missing keys were: %s",
+                expectedContextKeys.toString());
+          throw new DocumentBucketException(error, new NoSuchElementException());
         }
-      })
-  );
+        boolean allExpectedContextFound =
+            actualContext.entrySet().containsAll(expectedContext.entrySet());
+        if (!allExpectedContextFound) {
+            Set<Map.Entry<String, String>> expectedContextEntries = expectedContext.entrySet();
+            expectedContextEntries.removeAll(actualContext.entrySet());
+            String error =
+                String.format(
+                    "Expected context pairs were not found in the actual encryption context! "
+                    + "Missing pairs were: %s",
+                    expectedContextEntries.toString());
+            throw new DocumentBucketException(error, new NoSuchElementException());
+      }
+    // Save your work
+    ```
 
-// Save your changes
-```
+=== "JavaScript Node.JS"
 
-```typescript tab="Typescript Node.JS" hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
-// Edit ./src/retrieve.ts
-  return (
-    s3
-      .getObject({ Bucket, Key })
-      .createReadStream()
-      .pipe(decryptStream(decryptKeyring))
-      // ENCRYPTION-CONTEXT-START: Making Assertions
-      .once("MessageHeader", function(this: Writable, header: MessageHeader) {
-        const { encryptionContext } = header;
-        const pairs = Object.entries(expectedContext || {});
-        const keys = (expectedContextKeys || []).slice();
-        if (
-          !(
-            pairs.every(([key, value]) => encryptionContext[key] === value) &&
-            keys.every(key =>
-              Object.hasOwnProperty.call(encryptionContext, key)
-            )
-          )
-        ) {
-          this.emit(
-            "error",
-            new Error("Encryption context does not match expected shape")
-          );
-        }
-      })
-  );
+    ```{.javascript hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"}
+    // Edit ./retrieve.js
+      return (
+        s3
+          .getObject({ Bucket, Key })
+          .createReadStream()
+          .pipe(decryptStream(decryptKeyring))
+          // ENCRYPTION-CONTEXT-START: Making Assertions
+          .once("MessageHeader", function(header) {
+            const { encryptionContext } = header;
+            const pairs = Object.entries(expectedContext || {});
+            const keys = (expectedContextKeys || []).slice();
+            if (
+              !(
+                pairs.every(([key, value]) => encryptionContext[key] === value) &&
+                keys.every(key =>
+                  Object.hasOwnProperty.call(encryptionContext, key)
+                )
+              )
+            ) {
+              this.emit(
+                "error",
+                new Error("Encryption context does not match expected shape")
+              );
+            }
+          })
+      );
 
-// Save your changes
-```
+    // Save your changes
+    ```
 
-```python tab="Python" hl_lines="6 13"
-# Edit src/document_bucket/api.py
-# Find the retrieve(...) function, and add some assertions about the contents
-# of the encryption context validated by the Encryption SDK
+=== "Typescript Node.JS"
 
-# ENCRYPTION-CONTEXT-START: Making Assertions
-if not expected_context_keys <= header.encryption_context.keys():
-    error_msg = (
-        "Encryption context assertion failed! "
-        f"Expected all these keys: {expected_context_keys}, "
-        f"but got {header.encryption_context}!"
-    )
-    raise AssertionError(error_msg)
-if not expected_context.items() <= header.encryption_context.items():
-    error_msg = (
-        "Encryption context assertion failed! "
-        f"Expected {expected_context}, "
-        f"but got {header.encryption_context}!"
-    )
-    raise AssertionError(error_msg)
-```
+    ```{.typescript hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"}
+    // Edit ./src/retrieve.ts
+      return (
+        s3
+          .getObject({ Bucket, Key })
+          .createReadStream()
+          .pipe(decryptStream(decryptKeyring))
+          // ENCRYPTION-CONTEXT-START: Making Assertions
+          .once("MessageHeader", function(this: Writable, header: MessageHeader) {
+            const { encryptionContext } = header;
+            const pairs = Object.entries(expectedContext || {});
+            const keys = (expectedContextKeys || []).slice();
+            if (
+              !(
+                pairs.every(([key, value]) => encryptionContext[key] === value) &&
+                keys.every(key =>
+                  Object.hasOwnProperty.call(encryptionContext, key)
+                )
+              )
+            ) {
+              this.emit(
+                "error",
+                new Error("Encryption context does not match expected shape")
+              );
+            }
+          })
+      );
+
+    // Save your changes
+    ```
+
+=== "Python"
+
+    ```{.python hl_lines="6 13"}
+    # Edit src/document_bucket/api.py
+    # Find the retrieve(...) function, and add some assertions about the contents
+    # of the encryption context validated by the Encryption SDK
+
+    # ENCRYPTION-CONTEXT-START: Making Assertions
+    if not expected_context_keys <= header.encryption_context.keys():
+        error_msg = (
+            "Encryption context assertion failed! "
+            f"Expected all these keys: {expected_context_keys}, "
+            f"but got {header.encryption_context}!"
+        )
+        raise AssertionError(error_msg)
+    if not expected_context.items() <= header.encryption_context.items():
+        error_msg = (
+            "Encryption context assertion failed! "
+            f"Expected {expected_context}, "
+            f"but got {header.encryption_context}!"
+        )
+        raise AssertionError(error_msg)
+    ```
 
 #### What Happened?
 
@@ -335,21 +367,29 @@ If you want to check your progress, or compare what you've done versus a finishe
 
 There is a `-complete` folder for each language.
 
-```bash tab="Java"
-cd ~/environment/workshop/exercises/java/encryption-context-complete
-```
+=== "Java"
 
-```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript/encryption-context-complete
-```
+    ```bash 
+    cd ~/environment/workshop/exercises/java/encryption-context-complete
+    ```
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript/encryption-context-complete
-```
+=== "JavaScript Node.JS"
 
-```bash tab="Python"
-cd ~/environment/workshop/exercises/python/encryption-context-complete
-```
+    ```bash
+    cd ~/environment/workshop/exercises/node-javascript/encryption-context-complete
+    ```
+
+=== "Typescript Node.JS"
+
+    ```bash
+    cd ~/environment/workshop/exercises/node-typescript/encryption-context-complete
+    ```
+
+=== "Python"
+
+    ```bash
+    cd ~/environment/workshop/exercises/python/encryption-context-complete
+    ```
 
 ## Try it Out
 
@@ -368,112 +408,124 @@ Here's some ideas for things to test:
 
 There's a few simple suggestions to get you started in the snippets below.
 
-```bash tab="Java"
-// Compile your code
-mvn compile
+=== "Java"
 
-// To use the API programmatically, use this target to launch jshell
-mvn jshell:run
-/open startup.jsh
-import java.util.HashMap;
-Api documentBucket = App.initializeDocumentBucket();
-HashMap<String, String> context = new HashMap<String, String>();
-context.put("shard", "test");
-context.put("app", "document-bucket");
-context.put("origin", "development");
-documentBucket.list();
-documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
-for (PointerItem item : documentBucket.list()) {
-    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
-    System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
-}
-// Ctrl+D to exit jshell
+    ```bash 
+    // Compile your code
+    mvn compile
 
-// Or, to run logic that you write in App.java, use this target after compile
-mvn exec:java
-```
+    // To use the API programmatically, use this target to launch jshell
+    mvn jshell:run
+    /open startup.jsh
+    import java.util.HashMap;
+    Api documentBucket = App.initializeDocumentBucket();
+    HashMap<String, String> context = new HashMap<String, String>();
+    context.put("shard", "test");
+    context.put("app", "document-bucket");
+    context.put("origin", "development");
+    documentBucket.list();
+    documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
+    for (PointerItem item : documentBucket.list()) {
+        DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
+        System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
+    }
+    // Ctrl+D to exit jshell
 
-```javascript tab="JavaScript Node.JS"
-node
-list = require("./list.js")
-store = require("./store.js")
-retrieve = require("./retrieve")
-list().then(console.log)
-encryptionContext = {
-  stage: "demo",
-  purpose: "simple demonstration",
-  origin: "us-east-2"
-}
-store(fs.createReadStream("./store.js"), encryptionContext).then(r => {
-  // Just storing the s3 key
-  key = r.Key
-  console.log(r)
-})
-list().then(console.log)
-retrieve(key, { expectedContext: { stage: "demo"}, expectedContextKeys: [ "purpose" ] }).pipe(process.stdout)
-// Ctrl-D when finished to exit the REPL
-```
+    // Or, to run logic that you write in App.java, use this target after compile
+    mvn exec:java
+    ```
 
-```bash tab="JavaScript Node.JS CLI"
-./cli.js list
-./cli.js store ./store.js \
-  -c "stage:demo" \
-  -c "purpose:simple demonstration" \
-  -c "origin:us-east-2"
-# Note the "Key" value
-./cli.js list
-# Note the "reference" value
-./cli.js retrieve $KeyOrReferenceValue \
-  -c "stage:demo" \
-  -k purpose
-```
+=== "JavaScript Node.JS"
 
-```typescript tab="Typescript Node.JS"
-node -r ts-node/register
-;({list} = require("./src/list.ts"))
-;({store} = require("./src/store.ts"))
-;({retrieve} = require("./src/retrieve.ts"))
-list().then(console.log)
-encryptionContext = {
-  stage: "demo",
-  purpose: "simple demonstration",
-  origin: "us-east-2"
-}
-store(fs.createReadStream("./src/store.ts"), encryptionContext).then(r => {
-  // Just storing the s3 key
-  key = r.Key
-  console.log(r)
-})
-list().then(console.log)
-retrieve(key, { expectedContext: { stage: "demo"}, expectedContextKeys: [ "purpose" ] }).pipe(process.stdout)
-// Ctrl-D when finished to exit the REPL
-```
+    ```javascript
+    node
+    list = require("./list.js")
+    store = require("./store.js")
+    retrieve = require("./retrieve")
+    list().then(console.log)
+    encryptionContext = {
+      stage: "demo",
+      purpose: "simple demonstration",
+      origin: "us-east-2"
+    }
+    store(fs.createReadStream("./store.js"), encryptionContext).then(r => {
+      // Just storing the s3 key
+      key = r.Key
+      console.log(r)
+    })
+    list().then(console.log)
+    retrieve(key, { expectedContext: { stage: "demo"}, expectedContextKeys: [ "purpose" ] }).pipe(process.stdout)
+    // Ctrl-D when finished to exit the REPL
+    ```
 
-```bash tab="Typescript Node.JS CLI"
-./cli.ts list
-./cli.ts store ./store.js \
-  -c "stage:demo" \
-  -c "purpose:simple demonstration" \
-  -c "origin:us-east-2"
-# Note the "Key" value
-./cli.ts list
-# Note the "reference" value
-./cli.ts retrieve $KeyOrReferenceValue \
-  -c "stage:demo" \
-  -k purpose
-```
+=== "JavaScript Node.JS CLI"
 
-```bash tab="Python"
-tox -e repl
-import document_bucket
-ops = document_bucket.initialize()
-context = {"host": "cloud9", "shard": "development", "purpose": "experimental"}
-ops.list()
-ops.store(b'some data', context)
-for item in ops.list():
-    ops.retrieve(item.partition_key, expected_context=context)
-# Ctrl-D when finished to exit the REPL
-```
+    ```bash
+    ./cli.js list
+    ./cli.js store ./store.js \
+      -c "stage:demo" \
+      -c "purpose:simple demonstration" \
+      -c "origin:us-east-2"
+    # Note the "Key" value
+    ./cli.js list
+    # Note the "reference" value
+    ./cli.js retrieve $KeyOrReferenceValue \
+      -c "stage:demo" \
+      -k purpose
+    ```
+
+=== "Typescript Node.JS"
+
+    ```{.typescript}
+    node -r ts-node/register
+    ;({list} = require("./src/list.ts"))
+    ;({store} = require("./src/store.ts"))
+    ;({retrieve} = require("./src/retrieve.ts"))
+    list().then(console.log)
+    encryptionContext = {
+      stage: "demo",
+      purpose: "simple demonstration",
+      origin: "us-east-2"
+    }
+    store(fs.createReadStream("./src/store.ts"), encryptionContext).then(r => {
+      // Just storing the s3 key
+      key = r.Key
+      console.log(r)
+    })
+    list().then(console.log)
+    retrieve(key, { expectedContext: { stage: "demo"}, expectedContextKeys: [ "purpose" ] }).pipe(process.stdout)
+    // Ctrl-D when finished to exit the REPL
+    ```
+
+=== "Typescript Node.JS CLI"
+
+    ```bash
+    ./cli.ts list
+    ./cli.ts store ./store.js \
+      -c "stage:demo" \
+      -c "purpose:simple demonstration" \
+      -c "origin:us-east-2"
+    # Note the "Key" value
+    ./cli.ts list
+    # Note the "reference" value
+    ./cli.ts retrieve $KeyOrReferenceValue \
+      -c "stage:demo" \
+      -k purpose
+    ```
+
+=== "Python"
+
+    ```python
+    tox -e repl
+    import document_bucket
+    ops = document_bucket.initialize()
+    context = {"host": "cloud9", "shard": "development", "purpose": "experimental"}
+    ops.list()
+    ops.store(b'some data', context)
+    for item in ops.list():
+        ops.retrieve(item.partition_key, expected_context=context)
+    # Ctrl-D when finished to exit the REPL
+    ```
 
 ## Explore Further
 

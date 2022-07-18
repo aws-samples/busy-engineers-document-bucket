@@ -68,21 +68,29 @@ If you are working through these exercises in an AWS classroom environment, AWS 
 1. In Cloud9, close your Terminal window and open a new one (`Window -> New Terminal`) to pick up the changes `make bootstrap` installed
 1. Choose your workshop language, and `cd` to its folder under `exercises`
 
-```bash tab="Java"
-cd ~/environment/workshop/exercises/java
-```
+=== "Java"
 
-```bash tab="Typescript Node.JS"
-cd ~/environment/workshop/exercises/node-typescript
-```
+    ```bash 
+    cd ~/environment/workshop/exercises/java
+    ```
 
-```bash tab="JavaScript Node.JS"
-cd ~/environment/workshop/exercises/node-javascript
-```
+=== "Typescript Node.JS"
 
-```bash tab="Python"
-cd ~/environment/workshop/exercises/python
-```
+    ```bash 
+    cd ~/environment/workshop/exercises/node-typescript
+    ```
+
+=== "JavaScript Node.JS"
+
+    ```bash
+    cd ~/environment/workshop/exercises/node-javascript
+    ```
+
+=== "Python"
+
+    ```bash
+    cd ~/environment/workshop/exercises/python
+    ```
 
 **Your environment is ready!** 
 

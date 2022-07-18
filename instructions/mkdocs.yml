@@ -10,40 +10,40 @@ repo_name: 'aws-samples/busy-engineers-document-bucket'
 repo_url: 'https://github.com/aws-samples/busy-engineers-document-bucket'
 
 # Copyright
-copyright: '&copy; 2019, Amazon Web Services, Inc. or its affiliates. All rights reserved.'
+copyright: '<a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site terms</a> | &copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.'
 
 # Configuration
 theme:
   name: 'material'
   logo: 'assets/images/aws_smile_logo.png'
   favicon: 'assets/images/aws-favicon.ico'
-  feature:
-    tabs: true
-  custom_dir: 'docs/theme'
+  features:
+    - tabs
+  font: false
 
 # Customization
 extra_css:
   - 'stylesheets/custom.css'
-extra_javascript:
-  - 'javascripts/extra.js'
 extra:
   social:
-    - icon: 'material/home'
-      link: 'https://awssecworkshops.com'
-    - icon: 'material/shield-half-full'
-      link: 'https://aws.amazon.com/security/'
-    - icon: 'material/twitter'
-      link: 'https://twitter.com/awssecurityinfo?lang=en'
-    - icon: 'material/rss'
-      link: 'https://aws.amazon.com/blogs/security/'
+    - icon: fontawesome/solid/house    
+      link: https://awssecworkshops.com
+    - icon: fontawesome/solid/shield
+      link: https://aws.amazon.com/security/
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/awssecurityinfo?lang=en
+    - icon: fontawesome/solid/square-rss
+      link: https://aws.amazon.com/blogs/security/
 
 # Extensions
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
-  - codehilite:
+  - pymdownx.highlight:
         linenums: true
+  - pymdownx.tabbed:
+        alternate_style: true
 
 # Navigation
 nav:

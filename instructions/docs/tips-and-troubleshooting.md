@@ -23,21 +23,29 @@ Now try your work again.
 
 These commands will check your code for missing imports, syntax issues, and other minor issues that might trip you up.
 
-```bash tab="Java"
-mvn verify
-```
+=== "Java"
 
-```bash tab="JavaScript Node.JS"
-npm run prettier
-```
+    ```bash 
+    mvn verify
+    ```
 
-```bash tab="TypeScript Node.JS"
-npm run prettier
-```
+=== "JavaScript Node.JS"
 
-```bash tab="Python"
-tox -e check
-```
+    ```bash
+    npm run prettier
+    ```
+
+=== "Typescript Node.JS"
+
+    ```bash
+    npm run prettier
+    ```
+
+=== "Python"
+
+    ```bash
+    tox -e check
+    ```
 
 ### Missing CloudFormation resources
 
@@ -92,13 +100,17 @@ sudo resize2fs /dev/nvme0n1p1
 
 Python and Java have API documentation available for each exercise. You can view the documentation as you work in Cloud9.
 
-```bash tab="Java"
-make javadoc
-```
+=== "Java"
 
-```bash tab="Python"
-tox -e docs
-```
+    ```bash 
+    make javadoc
+    ```
+
+=== "Python"
+
+    ```bash
+    tox -e docs
+    ```
 
 Now select "Preview -> Preview Running Application" from the Cloud9 menu bar.
 
