@@ -1,0 +1,1492 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An introduction to using AWS KMS and the AWS Encryption SDK">
+      
+      
+        <meta name="author" content="aws-cryptools@amazon.com">
+      
+      
+        <link rel="canonical" href="https://awssecworkshops.com/encryption-context/">
+      
+      <link rel="icon" href="../assets/images/aws-favicon.ico">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
+    
+    
+      
+        <title>Exercise 3 - Busy Engineer's Document Bucket Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#exercise-3-working-with-encryption-context" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Busy Engineer&#39;s Document Bucket Workshop" class="md-header__button md-logo" aria-label="Busy Engineer's Document Bucket Workshop" data-md-component="logo">
+      
+  <img src="../assets/images/aws_smile_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Busy Engineer's Document Bucket Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Exercise 3
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws-samples/busy-engineers-document-bucket" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws-samples/busy-engineers-document-bucket
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Busy Engineer&#39;s Document Bucket Workshop" class="md-nav__button md-logo" aria-label="Busy Engineer's Document Bucket Workshop" data-md-component="logo">
+      
+  <img src="../assets/images/aws_smile_logo.png" alt="logo">
+
+    </a>
+    Busy Engineer's Document Bucket Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws-samples/busy-engineers-document-bucket" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws-samples/busy-engineers-document-bucket
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adding-the-encryption-sdk/" class="md-nav__link">
+        Exercise 1
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi-cmk/" class="md-nav__link">
+        Exercise 2
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Exercise 3
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Exercise 3
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    Background
+  </a>
+  
+    <nav class="md-nav" aria-label="Background">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-kms-kms-operations-and-encryption-context" class="md-nav__link">
+    AWS KMS: KMS Operations and Encryption Context
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-kms-policy-and-audit-hooks" class="md-nav__link">
+    AWS KMS: Policy and Audit Hooks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-aws-encryption-sdk" class="md-nav__link">
+    The AWS Encryption SDK
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-in-the-document-bucket" class="md-nav__link">
+    Use in the Document Bucket
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lets-go" class="md-nav__link">
+    Let's Go!
+  </a>
+  
+    <nav class="md-nav" aria-label="Let's Go!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-directory" class="md-nav__link">
+    Starting Directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-encryption-context-on-encrypt" class="md-nav__link">
+    Step 1: Set Encryption Context on Encrypt
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Set Encryption Context on Encrypt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-use-encryption-context-on-decrypt" class="md-nav__link">
+    Step 2: Use Encryption Context on Decrypt
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Use Encryption Context on Decrypt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened_1" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-making-assertions" class="md-nav__link">
+    Step 3: Making Assertions
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Making Assertions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened_2" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-your-work" class="md-nav__link">
+    Checking Your Work
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-out" class="md-nav__link">
+    Try it Out
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-further" class="md-nav__link">
+    Explore Further
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean-up-and-closing/" class="md-nav__link">
+        Clean Up and Closing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tips-and-troubleshooting/" class="md-nav__link">
+        Tips and Troubleshooting
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    Background
+  </a>
+  
+    <nav class="md-nav" aria-label="Background">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-kms-kms-operations-and-encryption-context" class="md-nav__link">
+    AWS KMS: KMS Operations and Encryption Context
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-kms-policy-and-audit-hooks" class="md-nav__link">
+    AWS KMS: Policy and Audit Hooks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-aws-encryption-sdk" class="md-nav__link">
+    The AWS Encryption SDK
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-in-the-document-bucket" class="md-nav__link">
+    Use in the Document Bucket
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lets-go" class="md-nav__link">
+    Let's Go!
+  </a>
+  
+    <nav class="md-nav" aria-label="Let's Go!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-directory" class="md-nav__link">
+    Starting Directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-encryption-context-on-encrypt" class="md-nav__link">
+    Step 1: Set Encryption Context on Encrypt
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Set Encryption Context on Encrypt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-use-encryption-context-on-decrypt" class="md-nav__link">
+    Step 2: Use Encryption Context on Decrypt
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Use Encryption Context on Decrypt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened_1" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-making-assertions" class="md-nav__link">
+    Step 3: Making Assertions
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Making Assertions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened_2" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-your-work" class="md-nav__link">
+    Checking Your Work
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-out" class="md-nav__link">
+    Try it Out
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-further" class="md-nav__link">
+    Explore Further
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/aws-samples/busy-engineers-document-bucket/edit/master/docs/encryption-context.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+
+<h1 id="exercise-3-working-with-encryption-context">Exercise 3: Working With Encryption Context</h1>
+<p>In this section, you will work with encryption context and explore its use in the Document Bucket and other applications.</p>
+<h2 id="background">Background</h2>
+<p>The Busy Engineer's Document Bucket has metadata, called <code>context</code>, associated with each document. This metadata is a set of key-value string pairs, associated with the item in DynamoDB, searchable there, and attached to the S3 object as well.</p>
+<p>One of the features AWS KMS and the AWS Encryption SDK both provide is called encryption context. At its core, encryption context is this metadata mapping: keys that are associated with context about the object, and values indicating information about what that context is. All the information in the map is non-secret, and is the basis for several feature integrations.</p>
+<p>One useful model for thinking about encryption context is as Assertions about the <a href="https://en.wikipedia.org/wiki/Five_Ws" target="_blank">Five Ws</a>: Who, What, Where, When, Why. For example:</p>
+<ul>
+<li><em>Who</em> should have access to this decrypted data?</li>
+<li><em>What</em> data is being decrypted?</li>
+<li><em>Where</em> is the decryption happening?</li>
+<li><em>When</em> is this data being used?</li>
+<li><em>Why</em> is this data being decrypted?</li>
+</ul>
+<h3 id="aws-kms-kms-operations-and-encryption-context">AWS KMS: KMS Operations and Encryption Context</h3>
+<p>AWS KMS allows you to specify an encryption context on <code>kms:Encrypt</code>. If you do so, you must provide the exact same encryption context on <code>kms:Decrypt</code>, or the operation will fail. (The match is case-sensitive, and key-value pairs are compared in an order independent way.)</p>
+<p>Behind the scenes, KMS is cryptographically binding the encryption context to the key material you are <code>kms:Encrypt</code> or <code>kms:Decrypt</code>ing as <em>Additional Authenticated Data (AAD)</em>. In short, this is non-secret data that must be identical (not tampered-with or incomplete), or decryption fails.</p>
+<p>This feature defends against risks from ciphertexts being tampered with, modified, or replaced -- intentionally or unintentionally. It both defends against an attacker replacing one ciphertext with another as well as problems like operational events.</p>
+<p>For example, if a bad deployment swaps <code>us-west-2.cfg</code> with <code>eu-central-1.cfg</code> on your fleets, having <code>{ fleet: us-west-2 }</code> asserted in <code>us-west-2.cfg</code>'s encryption context will prevent it from accidentally being loaded by <code>eu-central-1</code>.</p>
+<h3 id="aws-kms-policy-and-audit-hooks">AWS KMS: Policy and Audit Hooks</h3>
+<p>KMS also makes the encryption context available to use in Key Policies and Grants. This means that you can use assertions you make about your data to control usage of your CMKs. Perhaps your <code>eu-central-1</code> fleet should only ever be permitted to access encrypted data for <code>{ shard: europe }</code>. You can write CMK policies that require <code>{ shard: europe }</code> to be asserted about all cryptographic operations, so that KMS refuses to authorize an attempt to decrypt, say, <code>{ shard: north-america }</code>. These options can help you secure your application and defend against both operational and security-related risks.</p>
+<p>Additionally, as part of the audit features that KMS provides, it logs the encryption context that was supplied with every operation. You can use this information to audit who was accessing what data and when, to detect anomalous call patterns, or to identify unexpected system states.</p>
+<p>What questions would you like to answer with CloudTrail Logs for your KMS operations? encryption context can help.</p>
+<h3 id="the-aws-encryption-sdk">The AWS Encryption SDK</h3>
+<p>The AWS Encryption SDK includes the encryption context as a core component. Encryption context <em>may</em> be supplied on encrypt -- it is optional, both for the Encryption SDK and for KMS, but strongly recommended.</p>
+<p>The Encryption SDK writes the encryption context in the encrypted message format. And on decrypt, the Encryption SDK validates the encryption context with KMS and returns the contents to you for you to make assertions about the contents.</p>
+<p>Using the Encryption SDK with KMS, you can use all of KMS' policy and audit features from encryption context, and use the Encryption SDK to make assertions to safeguard your application.</p>
+<h3 id="use-in-the-document-bucket">Use in the Document Bucket</h3>
+<p>So how can encryption context be useful in the Document Bucket?</p>
+<p>In this exercise, you will walk through a few examples of how leveraging encryption context can help you secure and audit your application, and even build some convenience features.</p>
+<p>The Document Bucket already has the <code>context</code> map available for operations. It writes the <code>context</code> to the DynamoDB records for objects as well, and generates searchable DynamoDB records for context keys, to let you find documents that have certain attributes.</p>
+<p>Now you will plumb that context through the AWS Encryption SDK, so that KMS and the Encryption SDK bind those properties as security assertions about your data. You will also add an assertion facility to ensure that your data is what you expect it to be when you call <code>retrieve</code>.</p>
+<p>What this means is that with this change, you will be able to use encryption context to defend against these kind of risks:</p>
+<ul>
+<li>DynamoDB record updates that create metadata mismatches between a document and its properties</li>
+<li>Swapping objects in S3 so that the data is no longer what it was expected to be</li>
+<li>Accidentally loading the wrong data blob</li>
+<li>Defending against objects being listed as having a certain context key / property when they actually do not</li>
+</ul>
+<p>Also, after this change, the contents of <code>context</code> will be available in audit log entries written by KMS, and you can now use that metadata in your Key Policies and Grants.</p>
+<p>Remember, encryption context is not secret!</p>
+<h2 id="lets-go">Let's Go!</h2>
+<h3 id="starting-directory">Starting Directory</h3>
+<p>If you just finished <a href="../multi-cmk/">Using Multiple CMKs</a>, you are all set.</p>
+<p>If you aren't sure, or want to catch up, jump into the <code>encryption-context-start</code> directory for the language of your choice.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label><label for="__tabbed_1_2">JavaScript Node.JS</label><label for="__tabbed_1_3">Typescript Node.JS</label><label for="__tabbed_1_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/java/encryption-context-start
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-javascript/encryption-context-start
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-typescript/encryption-context-start
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/python/encryption-context-start
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h3 id="step-1-set-encryption-context-on-encrypt">Step 1: Set Encryption Context on Encrypt</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label><label for="__tabbed_2_2">JavaScript Node.JS</label><label for="__tabbed_2_3">Typescript Node.JS</label><label for="__tabbed_2_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt</span><span class="w"></span>
+<span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="hll"><span class="w">        </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">encryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">);</span><span class="w"></span>
+</span><span class="w">    </span><span class="n">DocumentBundle</span><span class="w"> </span><span class="n">bundle</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">        </span><span class="n">DocumentBundle</span><span class="p">.</span><span class="na">fromDataAndContext</span><span class="p">(</span><span class="n">encryptedMessage</span><span class="p">.</span><span class="na">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">context</span><span class="p">);</span><span class="w"></span>
+<span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">  </span><span class="c1">// Edit ./store.js</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt</span><span class="w"></span>
+<span class="hll"><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fileStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="nx">encryptStream</span><span class="p">(</span><span class="nx">encryptKeyring</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="p">);</span><span class="w"></span>
+</span>
+<span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">  </span><span class="c1">// Edit ./src/store.ts</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt</span><span class="w"></span>
+<span class="hll"><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fileStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="nx">encryptStream</span><span class="p">(</span><span class="nx">encryptKeyring</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="p">);</span><span class="w"></span>
+</span>
+<span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
+<span class="c1"># Find the store(...) function, and add context to the encrypt call</span>
+
+<span class="c1"># ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt</span>
+<span class="n">encrypted_data</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">aws_encryption_sdk</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+    <span class="n">source</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">key_provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">master_key_provider</span><span class="p">,</span>
+<span class="hll">    <span class="n">encryption_context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+</span><span class="p">)</span>
+<span class="c1"># Save your changes</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h4 id="what-happened">What Happened?</h4>
+<p>The Document Bucket <code>context</code> will now be supplied to the AWS Encryption SDK and AWS KMS as encryption context. If a non-empty key-value pair map is supplied to <code>store</code>, those key-value pairs will be used in encryption and decryption operations all the way through to KMS:</p>
+<ul>
+<li>The contents of <code>context</code> will appear in KMS audit logs.</li>
+<li>The contents of <code>context</code> will be availble to use in KMS Key Policies and Grants to make authorization decisions.</li>
+<li>The contents of <code>context</code> will be written to the Encryption SDK message.</li>
+<li>Supplying the exact-match contents of <code>context</code> will be required to decrypt any encrypted data keys.</li>
+<li>The contents of <code>context</code> will now be available on Decrypt to use in making assertions.</li>
+</ul>
+<p>Next you will update <code>retrieve</code> to use the encryption context on decrypt.</p>
+<h3 id="step-2-use-encryption-context-on-decrypt">Step 2: Use Encryption Context on Decrypt</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Java</label><label for="__tabbed_3_2">JavaScript Node.JS</label><label for="__tabbed_3_3">Typescript Node.JS</label><label for="__tabbed_3_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">actualContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">decryptedMessage</span><span class="p">.</span><span class="na">getEncryptionContext</span><span class="p">();</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="n">PointerItem</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PointerItem</span><span class="p">.</span><span class="na">fromKeyAndContext</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">actualContext</span><span class="p">);</span><span class="w"></span>
+</span><span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="nx">s3</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">))</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// ENCRYPTION-CONTEXT-START: Making Assertions</span><span class="w"></span>
+<span class="hll"><span class="w">      </span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="s2">&quot;MessageHeader&quot;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class="hll">
+</span><span class="hll"><span class="w">      </span><span class="p">})</span><span class="w"></span>
+</span><span class="w">  </span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="nx">s3</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">))</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// ENCRYPTION-CONTEXT-START: Making Assertions</span><span class="w"></span>
+<span class="hll"><span class="w">      </span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="s2">&quot;MessageHeader&quot;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">this</span><span class="o">:</span><span class="w"> </span><span class="kt">Writable</span><span class="p">,</span><span class="w"> </span><span class="nx">header</span><span class="o">:</span><span class="w"> </span><span class="kt">MessageHeader</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class="hll">
+</span><span class="hll"><span class="w">      </span><span class="p">})</span><span class="w"></span>
+</span><span class="w">  </span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
+<span class="c1"># Find the retrieve(...) function, and use the Encryption SDK header&#39;s encryption</span>
+<span class="c1"># context to construct the DocumentBundle to return</span>
+
+<span class="c1"># ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt</span>
+<span class="k">return</span> <span class="n">DocumentBundle</span><span class="o">.</span><span class="n">from_data_and_context</span><span class="p">(</span>
+<span class="hll">    <span class="n">plaintext</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span>
+</span><span class="p">)</span>
+<span class="c1"># Save your changes</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h4 id="what-happened_1">What Happened?</h4>
+<p>Now on decrypt, the validated encryption context from the Encryption SDK Message Format header will be passed back to the application. Any business logic that would benefit from using the encryption context data for making decisions can use the version bound and validated by the Encryption SDK and KMS.</p>
+<p>Next you will add a mechanism for the application to test assertions made in encryption context before working with the returned data.</p>
+<h3 id="step-3-making-assertions">Step 3: Making Assertions</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Java</label><label for="__tabbed_4_2">JavaScript Node.JS</label><label for="__tabbed_4_3">Typescript Node.JS</label><label for="__tabbed_4_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// ENCRYPTION-CONTEXT-START: Making Assertions</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">allExpectedContextKeysFound</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">actualContext</span><span class="p">.</span><span class="na">keySet</span><span class="p">().</span><span class="na">containsAll</span><span class="p">(</span><span class="n">expectedContextKeys</span><span class="p">);</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">allExpectedContextKeysFound</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class="w">        </span><span class="c1">// Remove all of the keys that were found</span><span class="w"></span>
+<span class="w">        </span><span class="n">expectedContextKeys</span><span class="p">.</span><span class="na">removeAll</span><span class="p">(</span><span class="n">actualContext</span><span class="p">.</span><span class="na">keySet</span><span class="p">());</span><span class="w"></span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">        </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;Expected context keys were not found in the actual encryption context! &quot;</span><span class="w"></span>
+<span class="w">            </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;Missing keys were: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">expectedContextKeys</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w"></span>
+<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DocumentBucketException</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NoSuchElementException</span><span class="p">());</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">allExpectedContextFound</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">actualContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">().</span><span class="na">containsAll</span><span class="p">(</span><span class="n">expectedContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">());</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">allExpectedContextFound</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">expectedContextEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">expectedContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="n">expectedContextEntries</span><span class="p">.</span><span class="na">removeAll</span><span class="p">(</span><span class="n">actualContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">());</span><span class="w"></span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">            </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="s">&quot;Expected context pairs were not found in the actual encryption context! &quot;</span><span class="w"></span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;Missing pairs were: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="n">expectedContextEntries</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w"></span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DocumentBucketException</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NoSuchElementException</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="c1">// Save your work</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="nx">s3</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">))</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// ENCRYPTION-CONTEXT-START: Making Assertions</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="s2">&quot;MessageHeader&quot;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="hll"><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">header</span><span class="p">;</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">entries</span><span class="p">(</span><span class="nx">expectedContext</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{});</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">expectedContextKeys</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">[]).</span><span class="nx">slice</span><span class="p">();</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="o">!</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="nx">pairs</span><span class="p">.</span><span class="nx">every</span><span class="p">(([</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">])</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="nx">keys</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="nx">key</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"></span>
+</span><span class="hll"><span class="w">              </span><span class="nb">Object</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">encryptionContext</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="k">this</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="s2">&quot;error&quot;</span><span class="p">,</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;Encryption context does not match expected shape&quot;</span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="p">);</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="p">}</span><span class="w"></span>
+</span><span class="w">      </span><span class="p">})</span><span class="w"></span>
+<span class="w">  </span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="nx">s3</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">))</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// ENCRYPTION-CONTEXT-START: Making Assertions</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="s2">&quot;MessageHeader&quot;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">this</span><span class="o">:</span><span class="w"> </span><span class="kt">Writable</span><span class="p">,</span><span class="w"> </span><span class="nx">header</span><span class="o">:</span><span class="w"> </span><span class="kt">MessageHeader</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="hll"><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">header</span><span class="p">;</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">entries</span><span class="p">(</span><span class="nx">expectedContext</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{});</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">expectedContextKeys</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">[]).</span><span class="nx">slice</span><span class="p">();</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="o">!</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="nx">pairs</span><span class="p">.</span><span class="nx">every</span><span class="p">(([</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">])</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="nx">keys</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="nx">key</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"></span>
+</span><span class="hll"><span class="w">              </span><span class="nb">Object</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">encryptionContext</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="k">this</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="s2">&quot;error&quot;</span><span class="p">,</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;Encryption context does not match expected shape&quot;</span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">          </span><span class="p">);</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="p">}</span><span class="w"></span>
+</span><span class="w">      </span><span class="p">})</span><span class="w"></span>
+<span class="w">  </span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// Save your changes</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
+<span class="c1"># Find the retrieve(...) function, and add some assertions about the contents</span>
+<span class="c1"># of the encryption context validated by the Encryption SDK</span>
+
+<span class="c1"># ENCRYPTION-CONTEXT-START: Making Assertions</span>
+<span class="hll"><span class="k">if</span> <span class="ow">not</span> <span class="n">expected_context_keys</span> <span class="o">&lt;=</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span>    <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Encryption context assertion failed! &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Expected all these keys: </span><span class="si">{</span><span class="n">expected_context_keys</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="si">}</span><span class="s2">!&quot;</span>
+    <span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+<span class="hll"><span class="k">if</span> <span class="ow">not</span> <span class="n">expected_context</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span>    <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Encryption context assertion failed! &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_context</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="si">}</span><span class="s2">!&quot;</span>
+    <span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h4 id="what-happened_2">What Happened?</h4>
+<p><code>retrieve</code> will use its "expected context keys" argument to validate that all of those keys (with any associated values) are present in the encryption context. <code>retrieve</code> will also use its "expected context" argument to validate that the exact key-value pairs specified in expected context are present in the actual encryption context. If either of those assumptions is invalid, <code>retrieve</code> will raise an exception before returning the data. These assertions safeguard against accidentally returning unintended, corrupted, or tampered data to the application.</p>
+<p>Now the Document Bucket will use AWS KMS and the AWS Encryption SDK to ensure that the <code>context</code> metadata is consistent throughout the lifetime of the objects, resistant to tampering or corruption, and make the validated context available to the application logic to make additional business logic assertions safely.</p>
+<h3 id="checking-your-work">Checking Your Work</h3>
+<p>If you want to check your progress, or compare what you've done versus a finished example, check out the code in one of the <code>-complete</code> folders to compare.</p>
+<p>There is a <code>-complete</code> folder for each language.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:4"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Java</label><label for="__tabbed_5_2">JavaScript Node.JS</label><label for="__tabbed_5_3">Typescript Node.JS</label><label for="__tabbed_5_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/java/encryption-context-complete
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-javascript/encryption-context-complete
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-typescript/encryption-context-complete
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/python/encryption-context-complete
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h2 id="try-it-out">Try it Out</h2>
+<p>Now that you pass encryption context all the way through to KMS and validate it on return, what assertions do you want to make about your data?</p>
+<p>Here's some ideas for things to test:</p>
+<ul>
+<li>Expecting exact match of key-value pairs for keys like <code>stage</code>, <code>shard</code>, and <code>source-fleet</code></li>
+<li>Expecting a set of keys to be present like <code>submit-date</code> and <code>category</code></li>
+<li>Expecting an exact match of a subset of the supplied key-value pairs (e.g. only <code>stage</code> and <code>shard</code>, not <code>source-fleet</code>)</li>
+<li>Doing the same for expected keys with any value</li>
+<li>Adding a constraint of a new key that you didn't supply at encryption time</li>
+<li>Adding a constraint with a different value, like <code>stage=production</code></li>
+<li>Changing capitalization</li>
+<li>Using sorted versus unsorted mappings, such as <code>java.util.SortedMap&lt;K, V&gt;</code> in Java or <code>collections.OrderedDict</code> in Python</li>
+</ul>
+<p>There's a few simple suggestions to get you started in the snippets below.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:6"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><input id="__tabbed_6_4" name="__tabbed_6" type="radio" /><input id="__tabbed_6_5" name="__tabbed_6" type="radio" /><input id="__tabbed_6_6" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Java</label><label for="__tabbed_6_2">JavaScript Node.JS</label><label for="__tabbed_6_3">JavaScript Node.JS CLI</label><label for="__tabbed_6_4">Typescript Node.JS</label><label for="__tabbed_6_5">Typescript Node.JS CLI</label><label for="__tabbed_6_6">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code>// Compile your code
+mvn compile
+
+// To use the API programmatically, use this target to launch jshell
+mvn jshell:run
+/open startup.jsh
+import java.util.HashMap<span class="p">;</span>
+Api <span class="nv">documentBucket</span> <span class="o">=</span> App.initializeDocumentBucket<span class="o">()</span><span class="p">;</span>
+HashMap&lt;String, String&gt; <span class="nv">context</span> <span class="o">=</span> new HashMap&lt;String, String&gt;<span class="o">()</span><span class="p">;</span>
+context.put<span class="o">(</span><span class="s2">&quot;shard&quot;</span>, <span class="s2">&quot;test&quot;</span><span class="o">)</span><span class="p">;</span>
+context.put<span class="o">(</span><span class="s2">&quot;app&quot;</span>, <span class="s2">&quot;document-bucket&quot;</span><span class="o">)</span><span class="p">;</span>
+context.put<span class="o">(</span><span class="s2">&quot;origin&quot;</span>, <span class="s2">&quot;development&quot;</span><span class="o">)</span><span class="p">;</span>
+documentBucket.list<span class="o">()</span><span class="p">;</span>
+documentBucket.store<span class="o">(</span><span class="s2">&quot;Store me in the Document Bucket!&quot;</span>.getBytes<span class="o">()</span>, context<span class="o">)</span><span class="p">;</span>
+<span class="k">for</span> <span class="o">(</span>PointerItem item : documentBucket.list<span class="o">())</span> <span class="o">{</span>
+    DocumentBundle <span class="nv">document</span> <span class="o">=</span> documentBucket.retrieve<span class="o">(</span>item.partitionKey<span class="o">()</span>.getS<span class="o">()</span>, context<span class="o">)</span><span class="p">;</span>
+    System.out.println<span class="o">(</span>document.getPointer<span class="o">()</span>.partitionKey<span class="o">()</span>.getS<span class="o">()</span> + <span class="s2">&quot; : &quot;</span> + new String<span class="o">(</span>document.getData<span class="o">()</span>, java.nio.charset.StandardCharsets.UTF_8<span class="o">))</span><span class="p">;</span>
+<span class="o">}</span>
+// Ctrl+D to <span class="nb">exit</span> jshell
+
+// Or, to run logic that you write <span class="k">in</span> App.java, use this target after compile
+mvn exec:java
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span><span class="w"></span>
+<span class="nx">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./list.js&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="nx">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="nx">retrieve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./retrieve&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">encryptionContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">stage</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nx">purpose</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;simple demonstration&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-2&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">),</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Just storing the s3 key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
+<span class="p">})</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expectedContext</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">stage</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="p">},</span><span class="w"> </span><span class="nx">expectedContextKeys</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;purpose&quot;</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)</span><span class="w"></span>
+<span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.js list
+./cli.js store ./store.js <span class="se">\</span>
+  -c <span class="s2">&quot;stage:demo&quot;</span> <span class="se">\</span>
+  -c <span class="s2">&quot;purpose:simple demonstration&quot;</span> <span class="se">\</span>
+  -c <span class="s2">&quot;origin:us-east-2&quot;</span>
+<span class="c1"># Note the &quot;Key&quot; value</span>
+./cli.js list
+<span class="c1"># Note the &quot;reference&quot; value</span>
+./cli.js retrieve <span class="nv">$KeyOrReferenceValue</span> <span class="se">\</span>
+  -c <span class="s2">&quot;stage:demo&quot;</span> <span class="se">\</span>
+  -k purpose
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="nx">ts</span><span class="o">-</span><span class="nx">node</span><span class="o">/</span><span class="nx">register</span><span class="w"></span>
+<span class="p">;({</span><span class="nx">list</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/list.ts&quot;</span><span class="p">))</span><span class="w"></span>
+<span class="p">;({</span><span class="nx">store</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">))</span><span class="w"></span>
+<span class="p">;({</span><span class="nx">retrieve</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/retrieve.ts&quot;</span><span class="p">))</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">encryptionContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">stage</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nx">purpose</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;simple demonstration&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-2&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">),</span><span class="w"> </span><span class="nx">encryptionContext</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Just storing the s3 key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
+<span class="p">})</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expectedContext</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">stage</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="p">},</span><span class="w"> </span><span class="nx">expectedContextKeys</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;purpose&quot;</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)</span><span class="w"></span>
+<span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.ts list
+./cli.ts store ./store.js <span class="se">\</span>
+  -c <span class="s2">&quot;stage:demo&quot;</span> <span class="se">\</span>
+  -c <span class="s2">&quot;purpose:simple demonstration&quot;</span> <span class="se">\</span>
+  -c <span class="s2">&quot;origin:us-east-2&quot;</span>
+<span class="c1"># Note the &quot;Key&quot; value</span>
+./cli.ts list
+<span class="c1"># Note the &quot;reference&quot; value</span>
+./cli.ts retrieve <span class="nv">$KeyOrReferenceValue</span> <span class="se">\</span>
+  -c <span class="s2">&quot;stage:demo&quot;</span> <span class="se">\</span>
+  -k purpose
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">repl</span>
+<span class="kn">import</span> <span class="nn">document_bucket</span>
+<span class="n">ops</span> <span class="o">=</span> <span class="n">document_bucket</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;cloud9&quot;</span><span class="p">,</span> <span class="s2">&quot;shard&quot;</span><span class="p">:</span> <span class="s2">&quot;development&quot;</span><span class="p">,</span> <span class="s2">&quot;purpose&quot;</span><span class="p">:</span> <span class="s2">&quot;experimental&quot;</span><span class="p">}</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">():</span>
+    <span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">partition_key</span><span class="p">,</span> <span class="n">expected_context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+<span class="c1"># Ctrl-D when finished to exit the REPL</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h2 id="explore-further">Explore Further</h2>
+<p>Encryption context can provide different types of features and guardrails in your application logic. Consider these ideas for further exploration:</p>
+<ul>
+<li><strong>Detecting Drift</strong> - <code>context</code> contents are stored on the DynamoDB item. S3 has object metadata that could also use the <code>context</code> pairs. How would you use the validated encryption context to validate and guardrail those two data sources? What could that feature add to your application?</li>
+<li><strong>Meta-operations on Encryption Context</strong> - the encryption context is stored on the <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/message-format.html" target="_blank">open-specification AWS Encryption SDK Message Format</a>. Would it help your system to write tools to process the metadata -- such as the encryption context -- on the message format?</li>
+<li><strong>DynamoDB Keys and Indexes</strong> - the Document Bucket adds composite indexes by <code>context</code> key. What about adding composite keys by key-value pairs? If you know a particular key should always be present in well-formed encrypted data, perhaps that should also be a <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html" target="_blank">Secondary Index</a>?</li>
+<li><strong>Enforing EC Keys</strong> - If you know that there is a key that should always be present, and that you want to index on in DynamoDB, do you want to enforce that it's always present? You can extend the <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/concepts.html#crypt-materials-manager" target="_blank">Cryptographic Materials Manager</a> component in the AWS Encryption SDK to enforce this during cryptographic operations.</li>
+<li><strong>Alarms and Monitoring</strong> - How can you leverage encryption context and <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html" target="_blank">CloudWatch Alarms for CloudTrail</a> to monitor and protect your application?</li>
+</ul>
+<h1 id="next-exercise">Next exercise</h1>
+<p>Congratulations! You have officially completed the Busy Engineer's Document Bucket workshop. Proceed to <a href="../clean-up-and-closing/">Clean Up and Closing</a> to tear down your workshop environment.</p>
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../multi-cmk/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Exercise 2" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Exercise 2
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../clean-up-and-closing/" class="md-footer__link md-footer__link--next" aria-label="Next: Clean Up and Closing" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Clean Up and Closing
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site terms</a> | &copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://awssecworkshops.com" target="_blank" rel="noopener" title="awssecworkshops.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.1c0 2.8-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40h-16c-1.1 0-2.2-.9-3.3-.1-1.4-.8-2.8.1-4.2.1H392c-22.1 0-40-17.9-40-40v-88c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32v88c0 22.1-17.9 40-40 40h-55.9c-1.5 0-3-.1-4.5-.2-1.2.1-2.4.2-3.6.2h-16c-22.09 0-40-17.9-40-40V360c0-.9.03-1.9.09-2.8v-69.6H32.05C14.02 287.6 0 273.5 0 255.5c0-9 3.004-17 10.01-24L266.4 8.016c7-7.014 15-8.016 22-8.016s15 2.004 21.1 7.014L564.8 231.5c8 7 12.1 15 11 24z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://aws.amazon.com/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M256-.008c4.7 0 9.2 1.016 13.4 2.921L457.7 82.79c22 9.33 38.5 31.01 38.3 56.31-.5 100.1-41.3 281.6-213.6 364.1-16.7 7.9-36.1 7.9-52.8 0-172.35-82.5-213.11-264-214.5-364.1.77-25.3 17.22-46.98 39.2-56.31L242.7 2.913c4.1-1.905 8.7-2.921 13.3-2.92z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/awssecurityinfo?lang=en" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://aws.amazon.com/blogs/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M384 32H64C28.65 32 0 60.66 0 96v320c0 35.34 28.65 64 64 64h320c35.35 0 64-28.66 64-64V96c0-35.34-28.7-64-64-64zM150.6 374.6c-6.2 6.3-14.4 9.4-22.6 9.4s-16.38-3.121-22.63-9.371c-12.5-12.5-12.5-32.76 0-45.26C111.6 323.1 119.8 320 128 320s16.38 3.121 22.63 9.371C163.1 341.9 163.1 362.1 150.6 374.6zm99 9.3c-.6-.8-1.1.1-2.5.1-12.53 0-23.09-9.75-23.92-22.44C220.5 306.9 173.1 259.5 118.4 255.9c-13.22-.844-23.25-12.28-22.39-25.5.86-13.25 12.41-22.81 25.52-22.38 77.86 5.062 145.3 72.5 150.4 150.4.87 13.28-9.13 24.68-22.33 25.48zm95.4-.8c-.3.9-.7.9-1.9.9-12.8 0-23.42-10.09-23.97-23C315.6 254.6 225.4 164.4 119 159.1c-13.2.3-23.53-10.8-22.98-24.1.56-13.2 11.88-23.8 24.98-23 130.7 5.469 241.5 116.3 246.1 246.1 1.4 14.2-8.8 25.3-22.1 25z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
+      
+    
+  </body>
+</html>

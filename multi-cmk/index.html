@@ -1,0 +1,1096 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An introduction to using AWS KMS and the AWS Encryption SDK">
+      
+      
+        <meta name="author" content="aws-cryptools@amazon.com">
+      
+      
+        <link rel="canonical" href="https://awssecworkshops.com/multi-cmk/">
+      
+      <link rel="icon" href="../assets/images/aws-favicon.ico">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
+    
+    
+      
+        <title>Exercise 2 - Busy Engineer's Document Bucket Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#exercise-2-adding-multi-cmk-support-to-the-document-bucket" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Busy Engineer&#39;s Document Bucket Workshop" class="md-header__button md-logo" aria-label="Busy Engineer's Document Bucket Workshop" data-md-component="logo">
+      
+  <img src="../assets/images/aws_smile_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Busy Engineer's Document Bucket Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Exercise 2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws-samples/busy-engineers-document-bucket" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws-samples/busy-engineers-document-bucket
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Busy Engineer&#39;s Document Bucket Workshop" class="md-nav__button md-logo" aria-label="Busy Engineer's Document Bucket Workshop" data-md-component="logo">
+      
+  <img src="../assets/images/aws_smile_logo.png" alt="logo">
+
+    </a>
+    Busy Engineer's Document Bucket Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws-samples/busy-engineers-document-bucket" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws-samples/busy-engineers-document-bucket
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adding-the-encryption-sdk/" class="md-nav__link">
+        Exercise 1
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Exercise 2
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Exercise 2
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    Background
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lets-go" class="md-nav__link">
+    Let's Go!
+  </a>
+  
+    <nav class="md-nav" aria-label="Let's Go!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-directory" class="md-nav__link">
+    Starting Directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-configure-walter" class="md-nav__link">
+    Step 1: Configure Walter
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Configure Walter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-walter-to-the-cmks-to-use" class="md-nav__link">
+    Step 2: Add Walter to the CMKs to Use
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Add Walter to the CMKs to Use">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened_1" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-your-work" class="md-nav__link">
+    Checking Your Work
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-out" class="md-nav__link">
+    Try it Out
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-further" class="md-nav__link">
+    Explore Further
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../encryption-context/" class="md-nav__link">
+        Exercise 3
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean-up-and-closing/" class="md-nav__link">
+        Clean Up and Closing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tips-and-troubleshooting/" class="md-nav__link">
+        Tips and Troubleshooting
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    Background
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lets-go" class="md-nav__link">
+    Let's Go!
+  </a>
+  
+    <nav class="md-nav" aria-label="Let's Go!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-directory" class="md-nav__link">
+    Starting Directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-configure-walter" class="md-nav__link">
+    Step 1: Configure Walter
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Configure Walter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-walter-to-the-cmks-to-use" class="md-nav__link">
+    Step 2: Add Walter to the CMKs to Use
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Add Walter to the CMKs to Use">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-happened_1" class="md-nav__link">
+    What Happened?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-your-work" class="md-nav__link">
+    Checking Your Work
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-out" class="md-nav__link">
+    Try it Out
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-further" class="md-nav__link">
+    Explore Further
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/aws-samples/busy-engineers-document-bucket/edit/master/docs/multi-cmk.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+
+<h1 id="exercise-2-adding-multi-cmk-support-to-the-document-bucket">Exercise 2: Adding Multi-CMK Support to the Document Bucket</h1>
+<p>In this section, you will configure the AWS Encryption SDK to use multiple CMKs that reside in different regions.</p>
+<h2 id="background">Background</h2>
+<p>Now your Document Bucket will encrypt files when you <code>store</code> them, and will decrypt the files for you when you <code>retrieve</code> them.</p>
+<p>You're using one of your CMKs, Faythe. But what if you want to use multiple CMKs?</p>
+<p>You might want to use a partner team's CMK, so that they can access documents relevant to them.</p>
+<p>Perhaps you want the Document Bucket to have two independent regions to access the contents, for high availability, or to put the contents closer to the recipients.</p>
+<p>Configuring multiple CMKs this way does not require re-encryption of the document data. That's because the data is still encrypted with a single data key, used exclusively for that document. Configuring multiple CMKs causes the AWS Encryption SDK to encrypt that data key again using the additional CMKs, and store that additional version of the data key on the encrypted message format. As long as there is one available CMK to decrypt any encrypted version of the data key, the document will be accessible.</p>
+<p>(There are ways to configure the Encryption SDK to be more restrictive about which CMKs it will try -- but for now you'll start with the simple case.)</p>
+<p>There's many reasons why using more than one CMK can be useful. And in this exercise, you're going to see how to set that up with KMS and the Encryption SDK.</p>
+<p>You already have another CMK waiting to be used. When you deployed the Faythe CMK, you also deployed a second CMK, nicknamed Walter. In this exercise, we're going to configure Walter, and then use some scripts in the repository to add and remove permission to use each of Faythe and Walter. Doing so will change how your document is encrypted -- if you remove permission to both Faythe and Walter, you won't be able to encrypt or decrypt anymore! -- and let you observe how the system behavior changes when keys are accessible or inaccessible.</p>
+<p>Each attempt to use a CMK is checked against that CMK's permissions. An audit trail entry is also written to CloudTrail.</p>
+<p>Decryption attempts will continue for each version of the encrypted data key until the Encryption SDK either succeds at decrypting an encrypted data key with its associated CMK, or runs out of encrypted data keys to try.</p>
+<p>For encryption, the Encryption SDK will attempt to use every CMK it is configured to attempt to produce another encryption of that data key.</p>
+<p>You'll get to see all of this in action in just a minute, after a couple small code changes.</p>
+<h2 id="lets-go">Let's Go!</h2>
+<h3 id="starting-directory">Starting Directory</h3>
+<p>If you just finished <a href="../adding-the-encryption-sdk/">Adding the Encryption SDK</a>, you are all set.</p>
+<p>If you aren't sure, or want to catch up, jump into the <code>multi-cmk-start</code> directory for the language of your choice.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label><label for="__tabbed_1_2">Typescript Node.JS</label><label for="__tabbed_1_3">JavaScript Node.JS</label><label for="__tabbed_1_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/java/multi-cmk-start
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-typescript/multi-cmk-start
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-javascript/multi-cmk-start
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/python/multi-cmk-start
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h3 id="step-1-configure-walter">Step 1: Configure Walter</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label><label for="__tabbed_2_2">JavaScript Node.JS</label><label for="__tabbed_2_3">Typescript Node.JS</label><label for="__tabbed_2_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/App.java</span><span class="w"></span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">faytheCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateConfig</span><span class="p">.</span><span class="na">contents</span><span class="p">.</span><span class="na">state</span><span class="p">.</span><span class="na">faytheCMK</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// MULTI-CMK-START: Configure Walter</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">walterCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateConfig</span><span class="p">.</span><span class="na">contents</span><span class="p">.</span><span class="na">state</span><span class="p">.</span><span class="na">WalterCMK</span><span class="p">;</span><span class="w"></span>
+</span></code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Configure Walter</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">walterCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getWalterCMK</span><span class="p">();</span><span class="w"></span>
+</span>
+<span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Configure Walter</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">walterCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getWalterCMK</span><span class="p">();</span><span class="w"></span>
+</span></code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Configure Walter</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">walterCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getWalterCMK</span><span class="p">();</span><span class="w"></span>
+</span>
+<span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Configure Walter</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">walterCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getWalterCMK</span><span class="p">();</span><span class="w"></span>
+</span></code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/__init__.py</span>
+
+<span class="c1"># MULTI-CMK-START: Configure Walter</span>
+<span class="hll"><span class="n">walter_cmk</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;WalterCMK&quot;</span><span class="p">]</span>
+</span></code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h4 id="what-happened">What Happened?</h4>
+<p>When you launched your workshop stacks in <a href="../getting-started/">Getting Started</a>, along with the Faythe CMK, you also launched a CMK called Walter. Walter's ARN was also plumbed through to the configuration state file that is set up for you by the workshop. Now that ARN is being pulled into a variable to use in the Encryption SDK configuration.</p>
+<h3 id="step-2-add-walter-to-the-cmks-to-use">Step 2: Add Walter to the CMKs to Use</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Java</label><label for="__tabbed_3_2">JavaScript Node.JS</label><label for="__tabbed_3_3">Typescript Node.JS</label><label for="__tabbed_3_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/App.java</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// MULTI-CMK-START: Add Walter to the CMKs to Use</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="n">KmsMasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">KmsMasterKeyProvider</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">withKeysForEncryption</span><span class="p">(</span><span class="n">faytheCMK</span><span class="p">,</span><span class="w"> </span><span class="n">walterCMK</span><span class="p">).</span><span class="na">build</span><span class="p">();</span><span class="w"></span>
+</span></code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Add Walter to the CMKs to Use</span><span class="w"></span>
+<span class="p">...</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="nx">faytheCMK</span><span class="p">,</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">walterCMK</span><span class="p">]</span><span class="w"></span>
+</span><span class="hll"><span class="p">});</span><span class="w"></span>
+</span>
+<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Add Walter to the CMKs to Use</span><span class="w"></span>
+<span class="p">...</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheCMK</span><span class="p">,</span><span class="w"> </span><span class="nx">walterCMK</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+</span>
+<span class="c1">// Save and exit</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Add Walter to the CMKs to Use</span><span class="w"></span>
+<span class="p">...</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="kt">faytheCMK</span><span class="p">,</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">walterCMK</span><span class="p">]</span><span class="w"></span>
+</span><span class="hll"><span class="p">});</span><span class="w"></span>
+</span>
+<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="c1">// MULTI-CMK-START: Add Walter to the CMKs to Use</span><span class="w"></span>
+<span class="p">...</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheCMK</span><span class="p">,</span><span class="w"> </span><span class="nx">walterCMK</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+</span>
+<span class="c1">// Save and exit</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/__init__.py</span>
+
+<span class="c1"># MULTI-CMK-START: Add Walter to the CMKs to Use</span>
+<span class="hll"><span class="n">cmk</span> <span class="o">=</span> <span class="p">[</span><span class="n">faythe_cmk</span><span class="p">,</span> <span class="n">walter_cmk</span><span class="p">]</span>
+</span>
+<span class="c1"># Save and exit</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h4 id="what-happened_1">What Happened?</h4>
+<p>In the previous exercise, you configured the Encryption SDK to use a list of CMKs that contained only Faythe. Configuring the Encryption SDK to also use Walter for encrypt, and to also try Walter for decrypt, required adding the ARN for Walter to the configuration list.</p>
+<h3 id="checking-your-work">Checking Your Work</h3>
+<p>If you want to check your progress, or compare what you've done versus a finished example, check out the code in one of the <code>-complete</code> folders to compare.</p>
+<p>There is a <code>-complete</code> folder for each language.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Java</label><label for="__tabbed_4_2">Typescript Node.JS</label><label for="__tabbed_4_3">JavaScript Node.JS</label><label for="__tabbed_4_4">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/java/multi-cmk-complete
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-typescript/multi-cmk-complete
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-javascript/multi-cmk-complete
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/python/multi-cmk-complete
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h2 id="try-it-out">Try it Out</h2>
+<p>Adding the Walter CMK to the list of CMKs that the application will (attempt) to use was a couple of lines of code, but has powerful implications.</p>
+<p>To help you explore the behavior of the system, there are some additional <code>make</code> targets to change the permissions configuration of Faythe and Walter.</p>
+<p>Using these targets, you can add and remove permission for the application to use Faythe and Walter to generate data keys, encrypt, and decrypt, and observe how the application behavior changes -- as well as what is logged to CloudTrail.</p>
+<p>In <code>~/environment/workshop/exercises</code>, you'll find a <code>Makefile</code> with several targets for you to experiment with:</p>
+<ul>
+<li><code>make list_grants</code> will show you the current state of grants on your CMKs</li>
+<li><code>make revoke_walter_grant</code> will remove the Grant providing permissions to use Walter in the application</li>
+<li><code>make revoke_faythe_grant</code> will remove the Grant providing permissions to use Faythe in the application</li>
+<li><code>make revoke_grants</code> will remove the Grants for both CMKs</li>
+<li><code>make create_grants</code> will add Grants to use either or both CMK, as needed</li>
+</ul>
+<p>The application behavior will change. <strong>Important</strong> when you revoke permissions to the first CMK in the list for a keyring (which is Faythe by default), you will need to change the keyring configuration to use Walter as your generator to resume operations. See <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/js-examples.html" target="_blank">documentation of Generator CMKs</a> for more.</p>
+<p>You can also observe the impact of changing Granted permissions by monitoring CloudTrail. Note that log entries take a few minutes to propagate to CloudTrail, and that Faythe and Walter are in different regions, so you will need to look at CloudTrail in the region for each one.</p>
+<ul>
+<li>Faythe is in <code>us-east-2</code>, so check CloudTrail in that region with these links:<ul>
+<li><a href="https://console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=GenerateDataKey" target="_blank">GenerateDataKey operations in CloudTrail in us-east-2</a></li>
+<li><a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=Decrypt" target="_blank">Decrypt operations in CloudTrail in us-east-2</a></li>
+<li><a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-east-2</a><ul>
+<li>Note: To observe Encrypt calls using Faythe, explore some of the configuration and permissions changes suggested below.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Walter is in <code>us-west-2</code>, so check CloudTrail in that region with these links:<ul>
+<li><a href="https://console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=GenerateDataKey" target="_blank">GenerateDataKey operations in CloudTrail in us-west-2</a></li>
+<li><a href="https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-west-2</a></li>
+<li><a href="https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=Decrypt" target="_blank">Decrypt operations in CloudTrail in us-west-2</a></li>
+</ul>
+</li>
+</ul>
+<p>Try out combinations of Grant permissions for your application and watch how the behavior changes:</p>
+<ul>
+<li>Revoke permission to use Faythe, and watch calls move to Walter in CloudTrail and in your application</li>
+<li>With permission to use Faythe revoked, try retrieving an older document protected by Faythe</li>
+<li>Revoke permissions to both Faythe and Walter -- now operations fail</li>
+<li>Encrypt some data with both Faythe and Walter active, and revoke permission to either one -- notice that application operations continue to work</li>
+<li>Change the configuration order of Faythe and Walter, and watch how call patterns change to use the two CMKs</li>
+<li>Revoke permission to Walter, and encrypt some data with Faythe. Then, add permission back to Walter, revoke permission to use Faythe, and try to decrypt that data</li>
+<li>What other interesting access patterns can you imagine?</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:6"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><input id="__tabbed_5_5" name="__tabbed_5" type="radio" /><input id="__tabbed_5_6" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Java</label><label for="__tabbed_5_2">JavaScript Node.JS</label><label for="__tabbed_5_3">JavaScript Node.JS CLI</label><label for="__tabbed_5_4">Typescript Node.JS</label><label for="__tabbed_5_5">Typescript Node.JS CLI</label><label for="__tabbed_5_6">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Compile your code</span><span class="w"></span>
+<span class="n">mvn</span><span class="w"> </span><span class="n">compile</span><span class="w"></span>
+
+<span class="c1">// To use the API programmatically, use this target to launch jshell</span><span class="w"></span>
+<span class="n">mvn</span><span class="w"> </span><span class="n">jshell</span><span class="p">:</span><span class="n">run</span><span class="w"></span>
+<span class="o">/</span><span class="n">open</span><span class="w"> </span><span class="n">startup</span><span class="p">.</span><span class="na">jsh</span><span class="w"></span>
+<span class="n">Api</span><span class="w"> </span><span class="n">documentBucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="p">.</span><span class="na">initializeDocumentBucket</span><span class="p">();</span><span class="w"></span>
+<span class="n">documentBucket</span><span class="p">.</span><span class="na">list</span><span class="p">();</span><span class="w"></span>
+<span class="n">documentBucket</span><span class="p">.</span><span class="na">store</span><span class="p">(</span><span class="s">&quot;Store me in the Document Bucket!&quot;</span><span class="p">.</span><span class="na">getBytes</span><span class="p">());</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">PointerItem</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">documentBucket</span><span class="p">.</span><span class="na">list</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">DocumentBundle</span><span class="w"> </span><span class="n">document</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">documentBucket</span><span class="p">.</span><span class="na">retrieve</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="na">partitionKey</span><span class="p">().</span><span class="na">getS</span><span class="p">());</span><span class="w"></span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">document</span><span class="p">.</span><span class="na">getPointer</span><span class="p">().</span><span class="na">partitionKey</span><span class="p">().</span><span class="na">getS</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; : &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">document</span><span class="p">.</span><span class="na">getData</span><span class="p">(),</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">nio</span><span class="p">.</span><span class="na">charset</span><span class="p">.</span><span class="na">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">));</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="c1">// Ctrl+D to exit jshell</span><span class="w"></span>
+
+<span class="c1">// Use the make targets to change the Grants and see what happens!</span><span class="w"></span>
+<span class="c1">// To run logic that you write in App.java, use this target after compile</span><span class="w"></span>
+<span class="n">mvn</span><span class="w"> </span><span class="n">exec</span><span class="p">:</span><span class="n">java</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span><span class="w"></span>
+<span class="nx">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./list.js&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="nx">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="nx">retrieve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./retrieve&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">)).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Just storing the s3 key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
+<span class="p">})</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)</span><span class="w"></span>
+<span class="c1">// Use the make targets to change the Grants and see what happens!</span><span class="w"></span>
+<span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.js list
+./cli.js store ./store.js
+<span class="c1"># Note the &quot;Key&quot; value</span>
+./cli.js list
+<span class="c1"># Note the &quot;reference&quot; value</span>
+./cli.js retrieve <span class="nv">$KeyOrReferenceValue</span>
+<span class="c1"># Use the make targets to change the grants and see what happens!</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="nx">ts</span><span class="o">-</span><span class="nx">node</span><span class="o">/</span><span class="nx">register</span><span class="w"></span>
+<span class="p">;({</span><span class="nx">list</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/list.ts&quot;</span><span class="p">))</span><span class="w"></span>
+<span class="p">;({</span><span class="nx">store</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">))</span><span class="w"></span>
+<span class="p">;({</span><span class="nx">retrieve</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/retrieve.ts&quot;</span><span class="p">))</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">)).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Just storing the s3 key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span><span class="w"></span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
+<span class="p">})</span><span class="w"></span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
+<span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)</span><span class="w"></span>
+<span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
+<span class="c1">// Use the make targets to change the Grants and see what happens!</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.ts list
+./cli.ts store ./store.js
+<span class="c1"># Note the &quot;Key&quot; value</span>
+./cli.ts list
+<span class="c1"># Note the &quot;reference&quot; value</span>
+./cli.ts retrieve <span class="nv">$KeyOrReferenceValue</span>
+<span class="c1"># Use the make targets to change the grants and see what happens!</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">repl</span>
+<span class="kn">import</span> <span class="nn">document_bucket</span>
+<span class="n">ops</span> <span class="o">=</span> <span class="n">document_bucket</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">partition_key</span><span class="p">))</span>
+<span class="c1"># Use the make targets to change the grants and see what happens!</span>
+<span class="c1"># Ctrl-D when finished to exit the REPL</span>
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h2 id="explore-further">Explore Further</h2>
+<p>Want to dive into more content related to this exercise? Try out these links.</p>
+<ul>
+<li><a href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html" target="_blank">AWS KMS: Key Grants</a></li>
+<li><a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html" target="_blank">AWS KMS: Key Policies</a></li>
+<li><a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html" target="_blank">AWS KMS: Cross-account CMK Usage</a></li>
+<li><a href="https://aws.amazon.com/blogs/security/how-to-decrypt-ciphertexts-multiple-regions-aws-encryption-sdk-in-c/" target="_blank">Blog Post: How to decrypt ciphertexts in multiple regions with the AWS Encryption SDK in C</a></li>
+</ul>
+<h1 id="next-exercise">Next exercise</h1>
+<p>Ready for more? Next you will work with <a href="../encryption-context/">Encryption Context</a>.</p>
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../adding-the-encryption-sdk/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Exercise 1" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Exercise 1
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../encryption-context/" class="md-footer__link md-footer__link--next" aria-label="Next: Exercise 3" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Exercise 3
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site terms</a> | &copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://awssecworkshops.com" target="_blank" rel="noopener" title="awssecworkshops.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.1c0 2.8-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40h-16c-1.1 0-2.2-.9-3.3-.1-1.4-.8-2.8.1-4.2.1H392c-22.1 0-40-17.9-40-40v-88c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32v88c0 22.1-17.9 40-40 40h-55.9c-1.5 0-3-.1-4.5-.2-1.2.1-2.4.2-3.6.2h-16c-22.09 0-40-17.9-40-40V360c0-.9.03-1.9.09-2.8v-69.6H32.05C14.02 287.6 0 273.5 0 255.5c0-9 3.004-17 10.01-24L266.4 8.016c7-7.014 15-8.016 22-8.016s15 2.004 21.1 7.014L564.8 231.5c8 7 12.1 15 11 24z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://aws.amazon.com/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M256-.008c4.7 0 9.2 1.016 13.4 2.921L457.7 82.79c22 9.33 38.5 31.01 38.3 56.31-.5 100.1-41.3 281.6-213.6 364.1-16.7 7.9-36.1 7.9-52.8 0-172.35-82.5-213.11-264-214.5-364.1.77-25.3 17.22-46.98 39.2-56.31L242.7 2.913c4.1-1.905 8.7-2.921 13.3-2.92z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/awssecurityinfo?lang=en" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://aws.amazon.com/blogs/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M384 32H64C28.65 32 0 60.66 0 96v320c0 35.34 28.65 64 64 64h320c35.35 0 64-28.66 64-64V96c0-35.34-28.7-64-64-64zM150.6 374.6c-6.2 6.3-14.4 9.4-22.6 9.4s-16.38-3.121-22.63-9.371c-12.5-12.5-12.5-32.76 0-45.26C111.6 323.1 119.8 320 128 320s16.38 3.121 22.63 9.371C163.1 341.9 163.1 362.1 150.6 374.6zm99 9.3c-.6-.8-1.1.1-2.5.1-12.53 0-23.09-9.75-23.92-22.44C220.5 306.9 173.1 259.5 118.4 255.9c-13.22-.844-23.25-12.28-22.39-25.5.86-13.25 12.41-22.81 25.52-22.38 77.86 5.062 145.3 72.5 150.4 150.4.87 13.28-9.13 24.68-22.33 25.48zm95.4-.8c-.3.9-.7.9-1.9.9-12.8 0-23.42-10.09-23.97-23C315.6 254.6 225.4 164.4 119 159.1c-13.2.3-23.53-10.8-22.98-24.1.56-13.2 11.88-23.8 24.98-23 130.7 5.469 241.5 116.3 246.1 246.1 1.4 14.2-8.8 25.3-22.1 25z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
+      
+    
+  </body>
+</html>
