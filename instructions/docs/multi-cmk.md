@@ -254,8 +254,8 @@ Try out combinations of Grant permissions for your application and watch how the
     /open startup.jsh
     Api documentBucket = App.initializeDocumentBucket();
     documentBucket.list();
-    PointerItem item = documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
-    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
+    PointerItem item = documentBucket.store("Store me in the Document Bucket!".getBytes());
+    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS());
     System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
     // Ctrl+D to exit jshell
 
