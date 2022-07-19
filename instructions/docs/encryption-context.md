@@ -309,8 +309,13 @@ Next you will add a mechanism for the application to test assertions made in enc
 
 === "Typescript Node.JS"
 
-    ```{.typescript hl_lines="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"}
+    ```{.typescript hl_lines="3 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"}
     // Edit ./src/retrieve.ts
+      import { EC } from "./store";
+      import { Writable } from "stream";
+      const Bucket = config.state.bucketName();
+
+      ...
       return (
         s3
           .getObject({ Bucket, Key })
@@ -508,7 +513,7 @@ There's a few simple suggestions to get you started in the snippets below.
 
     ```bash
     ./cli.ts list
-    ./cli.ts store ./store.js \
+    ./cli.ts store ./src/store.ts \
       -c "stage:demo" \
       -c "purpose:simple demonstration" \
       -c "origin:us-east-2"

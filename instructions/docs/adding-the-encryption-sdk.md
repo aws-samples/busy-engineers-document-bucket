@@ -495,7 +495,7 @@ For more things to try, check out [Explore Further](#explore-further), below.
     console.log(r)
     })
     list().then(console.log)
-    (() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
+    (() => {retrieve(key).pipe(process.stdout)})()
     // Ctrl-D when finished to exit the REPL
     ```
 
@@ -524,7 +524,7 @@ For more things to try, check out [Explore Further](#explore-further), below.
     console.log(r)
     })
     list().then(console.log)
-    (() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
+    (() => {retrieve(key).pipe(process.stdout)})()
     // Ctrl-D when finished to exit the REPL
     ```
 
@@ -532,7 +532,7 @@ For more things to try, check out [Explore Further](#explore-further), below.
 
     ```bash
     ./cli.ts list
-    ./cli.ts store ./store.js
+    ./cli.ts store ./src/store.ts
     # Note the "Key" value
     ./cli.ts list
     # Note the "reference" value

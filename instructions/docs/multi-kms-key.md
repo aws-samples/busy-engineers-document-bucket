@@ -318,7 +318,7 @@ Try out combinations of Grant permissions for your application and watch how the
 
     ```bash
     ./cli.ts list
-    ./cli.ts store ./store.js
+    ./cli.ts store ./src/store.ts
     # Note the "Key" value
     ./cli.ts list
     # Note the "reference" value
