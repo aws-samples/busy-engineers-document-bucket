@@ -34,8 +34,11 @@ If you have write permission in this repo, you can build and deploy the site to
 Once you have verified your changes, just run:
 
 ```
-mkdocs gh-deploy
+mkdocs gh-deploy --remote-name <remote-name>
 ````
+
+where `<remote-name>` is whatever you have named the remote for this repo.
+This is likely `upstream` if you have been working from a fork.
 
 ## License
 
