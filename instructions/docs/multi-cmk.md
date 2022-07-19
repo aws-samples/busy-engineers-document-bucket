@@ -112,11 +112,10 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 
 === "Java"
 
-    ```{.java hl_lines="3 4"}
+    ```{.java hl_lines="3"}
     // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
         // MULTI-CMK-START: Add Walter to the CMKs to Use
-        KmsMasterKeyProvider mkp =
-            KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK, walterCMK).build();
+        KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK, walterCMK);
     ```
 
 === "JavaScript Node.JS"
