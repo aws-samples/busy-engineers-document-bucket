@@ -148,12 +148,13 @@ If you aren't sure, or want to catch up, jump into the `encryption-context-start
     # Edit src/document_bucket/api.py
     # Find the store(...) function, and add context to the encrypt call
 
-        # ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
-        encrypted_data, header = self.encryption_client.encrypt(
-            source=data,
-            key_provider=self.master_key_provider,
-            encryption_context=context,
-        )
+            # ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
+            encrypted_data, header = self.encryption_client.encrypt(
+                source=data,
+                key_provider=self.master_key_provider,
+                encryption_context=context,
+            )
+
     # Save your changes
     ```
 
@@ -228,10 +229,10 @@ Next you will update `retrieve` to use the encryption context on decrypt.
     # Find the retrieve(...) function, and use the Encryption SDK header's encryption
     # context to construct the DocumentBundle to return
 
-        # ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt
-        return DocumentBundle.from_data_and_context(
-            plaintext, header.encryption_context
-        )
+            # ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt
+            return DocumentBundle.from_data_and_context(
+                plaintext, header.encryption_context
+            )
 
     # Save your changes
     ```
@@ -353,25 +354,25 @@ Next you will add a mechanism for the application to test assertions made in enc
     # Find the retrieve(...) function, and add some assertions about the contents
     # of the encryption context validated by the Encryption SDK
 
-        # ENCRYPTION-CONTEXT-START: Making Assertions
-        if not expected_context_keys <= header.encryption_context.keys():
-            error_msg = (
-                "Encryption context assertion failed! "
-                f"Expected all these keys: {expected_context_keys}, "
-                f"but got {header.encryption_context}!"
+            # ENCRYPTION-CONTEXT-START: Making Assertions
+            if not expected_context_keys <= header.encryption_context.keys():
+                error_msg = (
+                    "Encryption context assertion failed! "
+                    f"Expected all these keys: {expected_context_keys}, "
+                    f"but got {header.encryption_context}!"
+                )
+                raise AssertionError(error_msg)
+            if not expected_context.items() <= header.encryption_context.items():
+                error_msg = (
+                    "Encryption context assertion failed! "
+                    f"Expected {expected_context}, "
+                    f"but got {header.encryption_context}!"
+                )
+                raise AssertionError(error_msg)
+            # ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
+            return DocumentBundle.from_data_and_context(
+                plaintext, header.encryption_context
             )
-            raise AssertionError(error_msg)
-        if not expected_context.items() <= header.encryption_context.items():
-            error_msg = (
-                "Encryption context assertion failed! "
-                f"Expected {expected_context}, "
-                f"but got {header.encryption_context}!"
-            )
-            raise AssertionError(error_msg)
-        # ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
-        return DocumentBundle.from_data_and_context(
-            plaintext, header.encryption_context
-        )
     ```
 
 #### What Happened?
