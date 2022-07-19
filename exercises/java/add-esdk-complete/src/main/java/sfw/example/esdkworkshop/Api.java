@@ -41,37 +41,7 @@ public class Api {
   private final String bucketName;
 
   /**
-   * Construct a Document Bucket {@code Api} using a default {@link AwsCrypto} instance.
-   *
-   * @param ddbClient the {@link AmazonDynamoDB} to use to interact with Amazon DynamoDB.
-   * @param tableName the name of the Document Bucket table.
-   * @param s3Client the {@link AmazonS3} to use to interact with Amazon S3.
-   * @param bucketName the name of the Document Bucket, err, bucket.
-   * @param mkp the {@link MasterKeyProvider} to use for Encryption and Decryption operations with
-   *     {@link AwsCrypto}.
-   */
-  public Api(
-      AmazonDynamoDB ddbClient,
-      String tableName,
-      AmazonS3 s3Client,
-      String bucketName,
-      // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-      MasterKeyProvider mkp) {
-    // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-    this(
-        ddbClient,
-        tableName,
-        s3Client,
-        bucketName,
-        AwsCrypto.builder()
-            .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
-            .build(),
-        mkp);
-  }
-
-  /**
-   * Construct a Document Bucket {@code Api} using the provided {@link AwsCrypto} instance.
-   * (Included to facilitate unit testing.)
+   * Construct a Document Bucket {@code Api} using the provided configuration.
    *
    * @param ddbClient the {@link AmazonDynamoDB} to use to interact with Amazon DynamoDB.
    * @param tableName the name of the Document Bucket table.
@@ -82,20 +52,21 @@ public class Api {
    * @param mkp the {@link MasterKeyProvider} to use for Encryption and Decryption operations with
    *     {@link AwsCrypto}.
    */
-  protected Api(
+  public Api(
+      // ADD-ESDK-COMPLETE: Add the ESDK Dependency
       AmazonDynamoDB ddbClient,
       String tableName,
       AmazonS3 s3Client,
       String bucketName,
-      // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-      AwsCrypto awsEncryptionSdk,
       MasterKeyProvider<? extends MasterKey> mkp) {
     this.ddbClient = ddbClient;
     this.tableName = tableName;
     this.s3Client = s3Client;
     this.bucketName = bucketName;
     // ADD-ESDK-COMPLETE: Add the ESDK Dependency
-    this.awsEncryptionSdk = awsEncryptionSdk;
+    this.awsEncryptionSdk = AwsCrypto.builder()
+        .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
+        .build();
     this.mkp = mkp;
   }
 
@@ -157,11 +128,13 @@ public class Api {
    */
   protected void writeObject(DocumentBundle bundle) {
     ObjectMetadata metadata = new ObjectMetadata();
+    byte[] data = bundle.getData();
+    metadata.setContentLength(data.length);
     metadata.setUserMetadata(bundle.getPointer().getContext());
     s3Client.putObject(
         bucketName,
         bundle.getPointer().partitionKey().getS(),
-        new ByteArrayInputStream(bundle.getData()),
+        new ByteArrayInputStream(data),
         metadata);
   }
 

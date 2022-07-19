@@ -42,7 +42,10 @@ public class Api {
    */
   public Api(
       // ADD-ESDK-START: Add the ESDK Dependency
-      AmazonDynamoDB ddbClient, String tableName, AmazonS3 s3Client, String bucketName) {
+      AmazonDynamoDB ddbClient,
+      String tableName,
+      AmazonS3 s3Client,
+      String bucketName) {
     this.ddbClient = ddbClient;
     this.tableName = tableName;
     this.s3Client = s3Client;
@@ -66,7 +69,7 @@ public class Api {
   /**
    * Retrieves a {@link PointerItem} for the supplied key.
    *
-   * @param key the key for which to fetch the {@link PointerItem}.
+   * @param key the key to fetch the {@link PointerItem}.
    * @return the {@link PointerItem} found.
    */
   protected PointerItem getPointerItem(String key) {
@@ -88,7 +91,7 @@ public class Api {
   /**
    * Query DynamoDB for the records associated with the supplied context key.
    *
-   * @param contextKey the key for which to retrieve the list of matching records.
+   * @param contextKey the key to retrieve the list of matching records.
    * @return the {@link Set} of {@link PointerItem}s that have that context key.
    */
   protected Set<PointerItem> queryForContextKey(String contextKey) {
@@ -108,11 +111,13 @@ public class Api {
    */
   protected void writeObject(DocumentBundle bundle) {
     ObjectMetadata metadata = new ObjectMetadata();
+    byte[] data = bundle.getData();
+    metadata.setContentLength(data.length);
     metadata.setUserMetadata(bundle.getPointer().getContext());
     s3Client.putObject(
         bucketName,
         bundle.getPointer().partitionKey().getS(),
-        new ByteArrayInputStream(bundle.getData()),
+        new ByteArrayInputStream(data),
         metadata);
   }
 
@@ -225,7 +230,7 @@ public class Api {
   /**
    * Search the Document Bucket for any documents that have context with the supplied key.
    *
-   * @param contextKey the key for which to search for matching documents.
+   * @param contextKey the key to search for matching documents.
    * @return the {@link Set} of {@link PointerItem}s for matching documents.
    */
   public Set<PointerItem> searchByContextKey(String contextKey) {

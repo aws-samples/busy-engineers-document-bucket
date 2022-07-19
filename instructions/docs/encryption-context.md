@@ -99,8 +99,17 @@ If you aren't sure, or want to catch up, jump into the `encryption-context-start
 
 === "Java"
 
-    ```{.java hl_lines="4"}
-    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)
+    ```{.java hl_lines="5 12 13"}
+    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
+    ...
+
+    import java.util.Map;
+    import java.util.NoSuchElementException;
+    import java.util.Set;
+
+    ...
+
+      public PointerItem store(byte[] data, Map<String, String> context) {
         // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
         CryptoResult<byte[], KmsMasterKey> encryptedMessage =
             awsEncryptionSdk.encryptData(mkp, data, context);
@@ -236,7 +245,7 @@ Next you will add a mechanism for the application to test assertions made in enc
 
 === "Java"
 
-    ```{.java hl_lines="3 4 14 15 16"}
+    ```{.java hl_lines="3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25"}
     // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find retrieve(...)
         // ENCRYPTION-CONTEXT-START: Making Assertions
         boolean allExpectedContextKeysFound = actualContext.keySet().containsAll(expectedContextKeys);
@@ -261,7 +270,7 @@ Next you will add a mechanism for the application to test assertions made in enc
                     + "Missing pairs were: %s",
                     expectedContextEntries.toString());
             throw new DocumentBucketException(error, new NoSuchElementException());
-      }
+        }
     // Save your work
     ```
 
@@ -424,11 +433,9 @@ There's a few simple suggestions to get you started in the snippets below.
     context.put("app", "document-bucket");
     context.put("origin", "development");
     documentBucket.list();
-    documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
-    for (PointerItem item : documentBucket.list()) {
-        DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
-        System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
-    }
+    PointerItem item = documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
+    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
+    System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
     // Ctrl+D to exit jshell
 
     // Or, to run logic that you write in App.java, use this target after compile

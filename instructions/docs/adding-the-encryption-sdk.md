@@ -46,39 +46,42 @@ Start by adding the Encryption SDK dependency to the code.
 
 === "Java"
 
-    ```{.java hl_lines="5 6 7 8 9 15 16 26 31 32 40"}
+    ```{.java hl_lines="5 6 7 8 9 10 16 17 27 32 33 34 35 43"}
     // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
     package sfw.example.esdkworkshop;
 
     // ADD-ESDK-START: Add the ESDK Dependency
     import com.amazonaws.encryptionsdk.AwsCrypto;
+    import com.amazonaws.encryptionsdk.CommitmentPolicy;
     import com.amazonaws.encryptionsdk.CryptoResult;
     import com.amazonaws.encryptionsdk.MasterKey;
     import com.amazonaws.encryptionsdk.MasterKeyProvider;
     import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
 
     ...
-    private final String tableName;
-    private final String bucketName;
-    // ADD-ESDK-START: Add the ESDK Dependency
-    private final AwsCrypto awsEncryptionSdk;
-    private final MasterKeyProvider mkp;
+      private final String tableName;
+      private final String bucketName;
+      // ADD-ESDK-START: Add the ESDK Dependency
+      private final AwsCrypto awsEncryptionSdk;
+      private final MasterKeyProvider mkp;
 
     ...
 
     public Api(
+        // ADD-ESDK-START: Add the ESDK Dependency
         AmazonDynamoDB ddbClient,
         String tableName,
         AmazonS3 s3Client,
         String bucketName,
-        // ADD-ESDK-START: Add the ESDK Dependency
         MasterKeyProvider<? extends MasterKey> mkp) {
-    this.ddbClient = ddbClient;
-    this.tableName = tableName;
-    this.s3Client = s3Client
-    // ADD-ESDK-START: Add the ESDK Dependency
-    this.awsEncryptionSdk = new AwsCrypto();
-    this.mkp = mkp;
+      this.ddbClient = ddbClient;
+      this.tableName = tableName;
+      this.s3Client = s3Client
+      // ADD-ESDK-START: Add the ESDK Dependency
+      this.awsEncryptionSdk = AwsCrypto.builder()
+          .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
+          .build();
+      this.mkp = mkp;
     }
 
     // Save and close.
@@ -245,13 +248,14 @@ Now that the application encypts your data before storing it, it will need to de
 
 === "Java"
 
-    ```{.java hl_lines="5 7"}
+    ```{.java hl_lines="5 8"}
     // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
     // Find retrieve(...)
         byte[] data = getObjectData(key);
         // ADD-ESDK-START: Add Decryption to retrieve
         CryptoResult<byte[], KmsMasterKey> decryptedMessage = awsEncryptionSdk.decryptData(mkp, data);
-        ...
+        PointerItem pointer = getPointerItem(key);
+        // ADD-ESDK-START: Add Decryption to retrieve
         return DocumentBundle.fromDataAndPointer(decryptedMessage.getResult(), pointer);
     ```
 
@@ -323,7 +327,7 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
 === "Java"
 
-    ```{.java hl_lines="6 9 10 12"}
+    ```{.java hl_lines="6 9 11"}
     // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
         AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
@@ -332,8 +336,7 @@ Now that you have declared your dependencies and updated your code to encrypt an
         String faytheCMK = stateConfig.contents.state.FaytheCMK;
 
         // Set up the Master Key Provider to use KMS
-        KmsMasterKeyProvider mkp =
-            KmsMasterKeyProvider.builder().withKeysForEncryption(faytheCMK).build();
+        KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK);
 
         return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
     ```
@@ -450,7 +453,7 @@ Experiment using the API as much as you like.
 
 To get started, here are some things to try:
 
-* Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)
+* Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventSource=kms.amazonaws.com" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)
 * Take a look at the <a href="https://s3.console.aws.amazon.com/s3/home" target="_blank">contents of your S3 Document Bucket</a> to inspect the raw object
 
 
