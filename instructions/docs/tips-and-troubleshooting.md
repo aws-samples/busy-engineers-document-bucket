@@ -120,10 +120,10 @@ Cloud9 will open a new pane in your IDE with a web browser rendering your API do
 
 Cloud9 has lots of IDE features for you to leverage. Here's some links to help you make the most of your Cloud9 experience. (Links all open in a new window.)
 
-* <a href="https://docs.c9.io/docs/navigate" target="_blank">Cloud9 Code Navigation</a>
-* <a href="https://docs.c9.io/docs/keybindings" target="_blank">Cloud9 Keybindings Reference</a>
+* <a href="https://docs.aws.amazon.com/cloud9/latest/user-guide/menu-commands.html" target="_blank">Cloud9 Code Navigation</a>
+* <a href="https://docs.aws.amazon.com/cloud9/latest/user-guide/settings-keybindings.html" target="_blank">Cloud9 Keybindings</a>
 * <a href="https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial.html" target="_blank">Cloud9 Tutorial</a>
 
 ### Cryptographic Details
 
-The Busy Engineer's Document Bucket only scratches the surface of the features offered by AWS KMS. To dive deep on how KMS can be useful to your application, check out the <a href="https://d0.awsstatic.com/whitepapers/KMS-Cryptographic-Details.pdf" target="_blank">AWS Key Management Service Cryptographic Details whitepaper</a>, for more information on the details of encryption, decryption, random number generation procedures, and more within KMS.
+The Busy Engineer's Document Bucket only scratches the surface of the features offered by AWS KMS. To dive deep on how KMS can be useful to your application, check out the <a href="https://docs.aws.amazon.com/kms/latest/cryptographic-details/intro.html" target="_blank">AWS Key Management Service Cryptographic Details Docs</a>, for more information on the details of encryption, decryption, random number generation procedures, and more within KMS.
