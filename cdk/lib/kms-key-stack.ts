@@ -35,14 +35,14 @@ export class KmsKeyStack extends cdk.Stack {
     const keyPolicy = new iam.PolicyDocument();
     keyPolicy.addStatements(policyStatement);
 
-    const cmk = new kms.Key(this, config.cmk_id, {
+    const kms_key = new kms.Key(this, config.kms_key_id, {
       alias: config.alias,
       policy: keyPolicy
     });
 
     // Output
     new cdk.CfnOutput(this, config.output, {
-      value: cmk.keyArn,
+      value: kms_key.keyArn,
       exportName: config.export
     });
   }

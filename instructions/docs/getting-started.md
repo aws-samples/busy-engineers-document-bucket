@@ -34,8 +34,8 @@ To set up your environment, you will:
 * Launch the Cloud9 IDE that you will use for the rest of the workshop
 * Launch resource stacks using the AWS Cloud Development Kit (CDK), including:
     * The `BusyEngineersDocumentBucket` stack, with your DynamoDB table and S3 bucket
-    * One CMK in one region, called Faythe, that you will use in encryption and decryption operations
-    * One CMK in another region, called Walter, that you will use in encryption and decryption operations
+    * One KMS Key in one region, called Faythe, that you will use in encryption and decryption operations
+    * One KMS Key in another region, called Walter, that you will use in encryption and decryption operations
 * Bootstrap the development environment in Cloud9
 
 ## Let's Go!
