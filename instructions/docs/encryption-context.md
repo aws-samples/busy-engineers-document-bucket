@@ -148,12 +148,12 @@ If you aren't sure, or want to catch up, jump into the `encryption-context-start
     # Edit src/document_bucket/api.py
     # Find the store(...) function, and add context to the encrypt call
 
-    # ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
-    encrypted_data, header = aws_encryption_sdk.encrypt(
-        source=data,
-        key_provider=self.master_key_provider,
-        encryption_context=context,
-    )
+        # ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt
+        encrypted_data, header = self.encryption_client.encrypt(
+            source=data,
+            key_provider=self.master_key_provider,
+            encryption_context=context,
+        )
     # Save your changes
     ```
 

@@ -103,7 +103,7 @@ class DocumentBucketOperations:
 
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
         encrypted_data = self._get_object(item)
-        plaintext, header = self.aws_encryption_sdk.decrypt(
+        plaintext, header = self.encryption_client.decrypt(
             source=encrypted_data, key_provider=self.master_key_provider
         )
         # ENCRYPTION-CONTEXT-START: Making Assertions
@@ -122,7 +122,7 @@ class DocumentBucketOperations:
                   Bucket system
         """
         # ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
-        encrypted_data, header = self.aws_encryption_sdk.encrypt(
+        encrypted_data, header = self.encryption_client.encrypt(
             source=data,
             key_provider=self.master_key_provider,
         )
