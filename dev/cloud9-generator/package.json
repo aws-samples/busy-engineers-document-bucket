@@ -15,9 +15,9 @@
     "@types/jest": "^27.0.2",
     "aws-cdk": "^1.91.0",
     "jest": "^27.2.5",
-    "ts-jest": "^25.5.1",
+    "ts-jest": "^27.1.5",
     "ts-node": "^8.10.2",
-    "typescript": "~3.6.2"
+    "typescript": "~3.8.0"
   },
   "dependencies": {
     "@aws-cdk/aws-cloud9": "^1.91.0",
