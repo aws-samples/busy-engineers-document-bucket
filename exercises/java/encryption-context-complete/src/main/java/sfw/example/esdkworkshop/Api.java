@@ -152,11 +152,13 @@ public class Api {
    */
   protected void writeObject(DocumentBundle bundle) {
     ObjectMetadata metadata = new ObjectMetadata();
+    byte[] data = bundle.getData();
+    metadata.setContentLength(data.length);
     metadata.setUserMetadata(bundle.getPointer().getContext());
     s3Client.putObject(
         bucketName,
         bundle.getPointer().partitionKey().getS(),
-        new ByteArrayInputStream(bundle.getData()),
+        new ByteArrayInputStream(data),
         metadata);
   }
 
