@@ -34,30 +34,30 @@ You'll get to see all of this in action in just a minute, after a couple small c
 
 If you just finished [Adding the Encryption SDK](./adding-the-encryption-sdk.md), you are all set.
 
-If you aren't sure, or want to catch up, jump into the `MULTI-KMS-KEY-START` directory for the language of your choice.
+If you aren't sure, or want to catch up, jump into the `multi-kms-key-start` directory for the language of your choice.
 
 === "Java"
 
     ```bash 
-    cd ~/environment/workshop/exercises/java/MULTI-KMS-KEY-START
+    cd ~/environment/workshop/exercises/java/multi-kms-key-start
     ```
 
 === "Typescript Node.JS"
 
     ```bash
-    cd ~/environment/workshop/exercises/node-typescript/MULTI-KMS-KEY-START
+    cd ~/environment/workshop/exercises/node-typescript/multi-kms-key-start
     ```
 
 === "JavaScript Node.JS"
 
     ```bash
-    cd ~/environment/workshop/exercises/node-javascript/MULTI-KMS-KEY-START
+    cd ~/environment/workshop/exercises/node-javascript/multi-kms-key-start
     ```
 
 === "Python"
 
     ```bash
-    cd ~/environment/workshop/exercises/python/MULTI-KMS-KEY-START
+    cd ~/environment/workshop/exercises/python/multi-kms-key-start
     ```
 
 ### Step 1: Configure Walter
@@ -182,25 +182,25 @@ There is a `-complete` folder for each language.
 === "Java"
 
     ```bash 
-    cd ~/environment/workshop/exercises/java/MULTI-KMS-KEY-COMPLETE
+    cd ~/environment/workshop/exercises/java/multi-kms-key-complete
     ```
 
 === "Typescript Node.JS"
 
     ```bash
-    cd ~/environment/workshop/exercises/node-typescript/MULTI-KMS-KEY-COMPLETE
+    cd ~/environment/workshop/exercises/node-typescript/multi-kms-key-complete
     ```
 
 === "JavaScript Node.JS"
 
     ```bash
-    cd ~/environment/workshop/exercises/node-javascript/MULTI-KMS-KEY-COMPLETE
+    cd ~/environment/workshop/exercises/node-javascript/multi-kms-key-complete
     ```
 
 === "Python"
 
     ```bash
-    cd ~/environment/workshop/exercises/python/MULTI-KMS-KEY-COMPLETE
+    cd ~/environment/workshop/exercises/python/multi-kms-key-complete
     ```
 
 ## Try it Out
