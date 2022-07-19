@@ -730,16 +730,34 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Java</label><label for="__tabbed_2_2">JavaScript Node.JS</label><label for="__tabbed_2_3">Typescript Node.JS</label><label for="__tabbed_2_4">Python</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java and find store(...)</span><span class="w"></span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
+<span class="p">...</span><span class="w"></span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span><span class="w"></span>
+<span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.NoSuchElementException</span><span class="p">;</span><span class="w"></span>
+</span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Set</span><span class="p">;</span><span class="w"></span>
+
+<span class="p">...</span><span class="w"></span>
+
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">PointerItem</span><span class="w"> </span><span class="nf">store</span><span class="p">(</span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt</span><span class="w"></span>
-<span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
-<span class="hll"><span class="w">        </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">encryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">);</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">encryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">);</span><span class="w"></span>
 </span><span class="w">    </span><span class="n">DocumentBundle</span><span class="w"> </span><span class="n">bundle</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
 <span class="w">        </span><span class="n">DocumentBundle</span><span class="p">.</span><span class="na">fromDataAndContext</span><span class="p">(</span><span class="n">encryptedMessage</span><span class="p">.</span><span class="na">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">context</span><span class="p">);</span><span class="w"></span>
 <span class="c1">// Save your changes</span><span class="w"></span>
@@ -944,28 +962,28 @@
 <span class="w">    </span><span class="c1">// ENCRYPTION-CONTEXT-START: Making Assertions</span><span class="w"></span>
 <span class="hll"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">allExpectedContextKeysFound</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">actualContext</span><span class="p">.</span><span class="na">keySet</span><span class="p">().</span><span class="na">containsAll</span><span class="p">(</span><span class="n">expectedContextKeys</span><span class="p">);</span><span class="w"></span>
 </span><span class="hll"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">allExpectedContextKeysFound</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-</span><span class="w">        </span><span class="c1">// Remove all of the keys that were found</span><span class="w"></span>
-<span class="w">        </span><span class="n">expectedContextKeys</span><span class="p">.</span><span class="na">removeAll</span><span class="p">(</span><span class="n">actualContext</span><span class="p">.</span><span class="na">keySet</span><span class="p">());</span><span class="w"></span>
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
-<span class="w">        </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="w"></span>
-<span class="w">            </span><span class="s">&quot;Expected context keys were not found in the actual encryption context! &quot;</span><span class="w"></span>
-<span class="w">            </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;Missing keys were: %s&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">expectedContextKeys</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w"></span>
-<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DocumentBucketException</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NoSuchElementException</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">allExpectedContextFound</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="c1">// Remove all of the keys that were found</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">expectedContextKeys</span><span class="p">.</span><span class="na">removeAll</span><span class="p">(</span><span class="n">actualContext</span><span class="p">.</span><span class="na">keySet</span><span class="p">());</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="s">&quot;Expected context keys were not found in the actual encryption context! &quot;</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;Missing keys were: %s&quot;</span><span class="p">,</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="n">expectedContextKeys</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w"></span>
+</span><span class="hll"><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DocumentBucketException</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NoSuchElementException</span><span class="p">());</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="p">}</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">allExpectedContextFound</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
 </span><span class="hll"><span class="w">        </span><span class="n">actualContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">().</span><span class="na">containsAll</span><span class="p">(</span><span class="n">expectedContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">());</span><span class="w"></span>
 </span><span class="hll"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">allExpectedContextFound</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-</span><span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">expectedContextEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">expectedContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="n">expectedContextEntries</span><span class="p">.</span><span class="na">removeAll</span><span class="p">(</span><span class="n">actualContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">());</span><span class="w"></span>
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
-<span class="w">            </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="w"></span>
-<span class="w">                </span><span class="s">&quot;Expected context pairs were not found in the actual encryption context! &quot;</span><span class="w"></span>
-<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;Missing pairs were: %s&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">                </span><span class="n">expectedContextEntries</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DocumentBucketException</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NoSuchElementException</span><span class="p">());</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="c1">// Save your work</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">expectedContextEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">expectedContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">();</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">expectedContextEntries</span><span class="p">.</span><span class="na">removeAll</span><span class="p">(</span><span class="n">actualContext</span><span class="p">.</span><span class="na">entrySet</span><span class="p">());</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="w"></span>
+</span><span class="hll"><span class="w">                </span><span class="s">&quot;Expected context pairs were not found in the actual encryption context! &quot;</span><span class="w"></span>
+</span><span class="hll"><span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;Missing pairs were: %s&quot;</span><span class="p">,</span><span class="w"></span>
+</span><span class="hll"><span class="w">                </span><span class="n">expectedContextEntries</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DocumentBucketException</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NoSuchElementException</span><span class="p">());</span><span class="w"></span>
+</span><span class="hll"><span class="w">    </span><span class="p">}</span><span class="w"></span>
+</span><span class="c1">// Save your work</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1188,9 +1206,7 @@
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code>// Compile your code
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code>// Compile your code
 mvn compile
 
 // To use the API programmatically, use this target to launch jshell
@@ -1203,11 +1219,9 @@ context.put<span class="o">(</span><span class="s2">&quot;shard&quot;</span>, <s
 context.put<span class="o">(</span><span class="s2">&quot;app&quot;</span>, <span class="s2">&quot;document-bucket&quot;</span><span class="o">)</span><span class="p">;</span>
 context.put<span class="o">(</span><span class="s2">&quot;origin&quot;</span>, <span class="s2">&quot;development&quot;</span><span class="o">)</span><span class="p">;</span>
 documentBucket.list<span class="o">()</span><span class="p">;</span>
-documentBucket.store<span class="o">(</span><span class="s2">&quot;Store me in the Document Bucket!&quot;</span>.getBytes<span class="o">()</span>, context<span class="o">)</span><span class="p">;</span>
-<span class="k">for</span> <span class="o">(</span>PointerItem item : documentBucket.list<span class="o">())</span> <span class="o">{</span>
-    DocumentBundle <span class="nv">document</span> <span class="o">=</span> documentBucket.retrieve<span class="o">(</span>item.partitionKey<span class="o">()</span>.getS<span class="o">()</span>, context<span class="o">)</span><span class="p">;</span>
-    System.out.println<span class="o">(</span>document.getPointer<span class="o">()</span>.partitionKey<span class="o">()</span>.getS<span class="o">()</span> + <span class="s2">&quot; : &quot;</span> + new String<span class="o">(</span>document.getData<span class="o">()</span>, java.nio.charset.StandardCharsets.UTF_8<span class="o">))</span><span class="p">;</span>
-<span class="o">}</span>
+PointerItem <span class="nv">item</span> <span class="o">=</span> documentBucket.store<span class="o">(</span><span class="s2">&quot;Store me in the Document Bucket!&quot;</span>.getBytes<span class="o">()</span>, context<span class="o">)</span><span class="p">;</span>
+DocumentBundle <span class="nv">document</span> <span class="o">=</span> documentBucket.retrieve<span class="o">(</span>item.partitionKey<span class="o">()</span>.getS<span class="o">()</span>, context<span class="o">)</span><span class="p">;</span>
+System.out.println<span class="o">(</span>document.getPointer<span class="o">()</span>.partitionKey<span class="o">()</span>.getS<span class="o">()</span> + <span class="s2">&quot; : &quot;</span> + new String<span class="o">(</span>document.getData<span class="o">()</span>, java.nio.charset.StandardCharsets.UTF_8<span class="o">))</span><span class="p">;</span>
 // Ctrl+D to <span class="nb">exit</span> jshell
 
 // Or, to run logic that you write <span class="k">in</span> App.java, use this target after compile

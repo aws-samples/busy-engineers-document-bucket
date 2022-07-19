@@ -708,38 +708,44 @@
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
 <span class="kn">package</span><span class="w"> </span><span class="nn">sfw.example.esdkworkshop</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
 <span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.AwsCrypto</span><span class="p">;</span><span class="w"></span>
+</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.CommitmentPolicy</span><span class="p">;</span><span class="w"></span>
 </span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.CryptoResult</span><span class="p">;</span><span class="w"></span>
 </span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.MasterKey</span><span class="p">;</span><span class="w"></span>
 </span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.MasterKeyProvider</span><span class="p">;</span><span class="w"></span>
 </span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.kms.KmsMasterKey</span><span class="p">;</span><span class="w"></span>
 </span>
 <span class="p">...</span><span class="w"></span>
-<span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span><span class="w"></span>
-<span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">bucketName</span><span class="p">;</span><span class="w"></span>
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">bucketName</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
+<span class="hll"><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">;</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span><span class="w"></span>
 </span>
 <span class="p">...</span><span class="w"></span>
 
 <span class="kd">public</span><span class="w"> </span><span class="nf">Api</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
 <span class="w">    </span><span class="n">AmazonDynamoDB</span><span class="w"> </span><span class="n">ddbClient</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">tableName</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">bucketName</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
 <span class="hll"><span class="w">    </span><span class="n">MasterKeyProvider</span><span class="o">&lt;?</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">MasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mkp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-</span><span class="k">this</span><span class="p">.</span><span class="na">ddbClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ddbClient</span><span class="p">;</span><span class="w"></span>
-<span class="k">this</span><span class="p">.</span><span class="na">tableName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span><span class="w"></span>
-<span class="k">this</span><span class="p">.</span><span class="na">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s3Client</span><span class="w"></span>
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="k">this</span><span class="p">.</span><span class="na">awsEncryptionSdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="k">this</span><span class="p">.</span><span class="na">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span><span class="w"></span>
+</span><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">ddbClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ddbClient</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">tableName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s3Client</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
+<span class="hll"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">awsEncryptionSdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span><span class="w"></span>
+</span><span class="hll"><span class="w">      </span><span class="p">.</span><span class="na">withCommitmentPolicy</span><span class="p">(</span><span class="n">CommitmentPolicy</span><span class="p">.</span><span class="na">ForbidEncryptAllowDecrypt</span><span class="p">)</span><span class="w"></span>
+</span><span class="hll"><span class="w">      </span><span class="p">.</span><span class="na">build</span><span class="p">();</span><span class="w"></span>
+</span><span class="hll"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span><span class="w"></span>
 </span><span class="p">}</span><span class="w"></span>
 
 <span class="c1">// Save and close.</span><span class="w"></span>
@@ -984,12 +990,14 @@
 <span class="normal">4</span>
 <span class="normal">5</span>
 <span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
 <span class="c1">// Find retrieve(...)</span><span class="w"></span>
 <span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getObjectData</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span><span class="w"></span>
 <span class="hll"><span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">decryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">decryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span><span class="w"></span>
-</span><span class="w">    </span><span class="p">...</span><span class="w"></span>
+</span><span class="w">    </span><span class="n">PointerItem</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getPointerItem</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span><span class="w"></span>
 <span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">DocumentBundle</span><span class="p">.</span><span class="na">fromDataAndPointer</span><span class="p">(</span><span class="n">decryptedMessage</span><span class="p">.</span><span class="na">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">pointer</span><span class="p">);</span><span class="w"></span>
 </span></code></pre></div></td></tr></table></div>
 </div>
@@ -1095,8 +1103,7 @@
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
 <span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AmazonS3ClientBuilder</span><span class="p">.</span><span class="na">defaultClient</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK</span><span class="w"></span>
@@ -1104,8 +1111,7 @@
 <span class="hll"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">faytheCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateConfig</span><span class="p">.</span><span class="na">contents</span><span class="p">.</span><span class="na">state</span><span class="p">.</span><span class="na">FaytheCMK</span><span class="p">;</span><span class="w"></span>
 </span>
 <span class="w">    </span><span class="c1">// Set up the Master Key Provider to use KMS</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">KmsMasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
-</span><span class="hll"><span class="w">        </span><span class="n">KmsMasterKeyProvider</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">withKeysForEncryption</span><span class="p">(</span><span class="n">faytheCMK</span><span class="p">).</span><span class="na">build</span><span class="p">();</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="n">KmsMasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KmsMasterKeyProvider</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">buildStrict</span><span class="p">(</span><span class="n">faytheCMK</span><span class="p">);</span><span class="w"></span>
 </span>
 <span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Api</span><span class="p">(</span><span class="n">ddbClient</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">,</span><span class="w"> </span><span class="n">s3Client</span><span class="p">,</span><span class="w"> </span><span class="n">bucketName</span><span class="p">,</span><span class="w"> </span><span class="n">mkp</span><span class="p">);</span><span class="w"></span>
 </span></code></pre></div></td></tr></table></div>
@@ -1246,7 +1252,7 @@
 <p>Experiment using the API as much as you like. </p>
 <p>To get started, here are some things to try:</p>
 <ul>
-<li>Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)</li>
+<li>Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventSource=kms.amazonaws.com" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)</li>
 <li>Take a look at the <a href="https://s3.console.aws.amazon.com/s3/home" target="_blank">contents of your S3 Document Bucket</a> to inspect the raw object</li>
 </ul>
 <p>For more things to try, check out <a href="#explore-further">Explore Further</a>, below.</p>
