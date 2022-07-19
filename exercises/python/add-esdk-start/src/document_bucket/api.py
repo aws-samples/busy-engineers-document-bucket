@@ -94,8 +94,8 @@ class DocumentBucketOperations:
         :param expected_context: TODO do something with this parameter :)
         :returns: the document, its key, and associated context
         """
-        # ADD-ESDK-START: Add Decryption to retrieve
         item = self._get_pointer_item(PointerQuery.from_key(pointer_key))
+        # ADD-ESDK-START: Add Decryption to retrieve
         data = self._get_object(item)
         return DocumentBundle.from_data_and_context(data, item.context)
 

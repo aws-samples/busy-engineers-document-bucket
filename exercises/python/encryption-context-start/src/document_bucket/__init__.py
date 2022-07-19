@@ -29,8 +29,8 @@ def initialize() -> DocumentBucketOperations:
     walter_kms_key = state["WalterKmsKey"]
     # And the Master Key Provider configuring how to use KMS
     kms_key = [faythe_kms_key, walter_kms_key]
-    mkp = aws_encryption_sdk.KMSMasterKeyProvider(key_ids=kms_key)
 
+    mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=kms_key)
     # Set up the API to interact with the Document Bucket using all these resources
     operations = DocumentBucketOperations(bucket, table, mkp)
 

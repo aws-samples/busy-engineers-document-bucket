@@ -228,10 +228,11 @@ Next you will update `retrieve` to use the encryption context on decrypt.
     # Find the retrieve(...) function, and use the Encryption SDK header's encryption
     # context to construct the DocumentBundle to return
 
-    # ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt
-    return DocumentBundle.from_data_and_context(
-        plaintext, header.encryption_context
-    )
+        # ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt
+        return DocumentBundle.from_data_and_context(
+            plaintext, header.encryption_context
+        )
+
     # Save your changes
     ```
 
@@ -347,26 +348,30 @@ Next you will add a mechanism for the application to test assertions made in enc
 
 === "Python"
 
-    ```{.python hl_lines="6 13"}
+    ```{.python hl_lines="6 7 8 9 10 11 12 13 14 15 16 17 18 19"}
     # Edit src/document_bucket/api.py
     # Find the retrieve(...) function, and add some assertions about the contents
     # of the encryption context validated by the Encryption SDK
 
-    # ENCRYPTION-CONTEXT-START: Making Assertions
-    if not expected_context_keys <= header.encryption_context.keys():
-        error_msg = (
-            "Encryption context assertion failed! "
-            f"Expected all these keys: {expected_context_keys}, "
-            f"but got {header.encryption_context}!"
+        # ENCRYPTION-CONTEXT-START: Making Assertions
+        if not expected_context_keys <= header.encryption_context.keys():
+            error_msg = (
+                "Encryption context assertion failed! "
+                f"Expected all these keys: {expected_context_keys}, "
+                f"but got {header.encryption_context}!"
+            )
+            raise AssertionError(error_msg)
+        if not expected_context.items() <= header.encryption_context.items():
+            error_msg = (
+                "Encryption context assertion failed! "
+                f"Expected {expected_context}, "
+                f"but got {header.encryption_context}!"
+            )
+            raise AssertionError(error_msg)
+        # ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
+        return DocumentBundle.from_data_and_context(
+            plaintext, header.encryption_context
         )
-        raise AssertionError(error_msg)
-    if not expected_context.items() <= header.encryption_context.items():
-        error_msg = (
-            "Encryption context assertion failed! "
-            f"Expected {expected_context}, "
-            f"but got {header.encryption_context}!"
-        )
-        raise AssertionError(error_msg)
     ```
 
 #### What Happened?
@@ -533,9 +538,8 @@ There's a few simple suggestions to get you started in the snippets below.
     ops = document_bucket.initialize()
     context = {"host": "cloud9", "shard": "development", "purpose": "experimental"}
     ops.list()
-    ops.store(b'some data', context)
-    for item in ops.list():
-        ops.retrieve(item.partition_key, expected_context=context)
+    item = ops.store(b'some data', context)
+    print(ops.retrieve(item.partition_key, expected_context=context))
     # Ctrl-D when finished to exit the REPL
     ```
 
