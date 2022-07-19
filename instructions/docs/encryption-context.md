@@ -433,11 +433,9 @@ There's a few simple suggestions to get you started in the snippets below.
     context.put("app", "document-bucket");
     context.put("origin", "development");
     documentBucket.list();
-    documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
-    for (PointerItem item : documentBucket.list()) {
-        DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
-        System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
-    }
+    PointerItem item = documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
+    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
+    System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
     // Ctrl+D to exit jshell
 
     // Or, to run logic that you write in App.java, use this target after compile

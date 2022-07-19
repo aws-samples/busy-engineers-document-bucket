@@ -254,11 +254,9 @@ Try out combinations of Grant permissions for your application and watch how the
     /open startup.jsh
     Api documentBucket = App.initializeDocumentBucket();
     documentBucket.list();
-    documentBucket.store("Store me in the Document Bucket!".getBytes());
-    for (PointerItem item : documentBucket.list()) {
-        DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS());
-        System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
-    }
+    PointerItem item = documentBucket.store("Store me in the Document Bucket!".getBytes(), context);
+    DocumentBundle document = documentBucket.retrieve(item.partitionKey().getS(), context);
+    System.out.println(document.getPointer().partitionKey().getS() + " : " + new String(document.getData(), java.nio.charset.StandardCharsets.UTF_8));
     // Ctrl+D to exit jshell
 
     // Use the make targets to change the Grants and see what happens!
