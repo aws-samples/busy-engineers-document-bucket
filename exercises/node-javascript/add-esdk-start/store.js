@@ -19,7 +19,7 @@ const {
 const TableName = config.state.tableName();
 const Bucket = config.state.bucketName();
 
-// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
 
 const contextPrefix = ctx_prefix.toUpperCase();
 

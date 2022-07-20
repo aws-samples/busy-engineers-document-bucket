@@ -5,7 +5,7 @@
 
 import "source-map-support/register";
 import cdk = require("@aws-cdk/core");
-import { CMKStack } from "../lib/kms-cmk-stack";
+import { KmsKeyStack } from "../lib/kms-key-stack";
 import { DocumentBucketStack } from "../lib/document-bucket-stack";
 import { WebappStack } from "../lib/webapp-stack";
 import { config } from "../lib/config";
@@ -19,8 +19,8 @@ const WALTER_CONFIG = config.walter;
 
 const app = new cdk.App();
 
-// Initialize CMK Stacks
-new CMKStack(
+// Initialize KMS Key Stacks
+new KmsKeyStack(
   app,
   FAYTHE_CONFIG.stack_id,
   {
@@ -29,7 +29,7 @@ new CMKStack(
   FAYTHE_CONFIG
 );
 
-new CMKStack(
+new KmsKeyStack(
   app,
   WALTER_CONFIG.stack_id,
   {

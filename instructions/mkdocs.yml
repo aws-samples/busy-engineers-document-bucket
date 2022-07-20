@@ -50,7 +50,7 @@ nav:
   - Home: 'index.md'
   - Getting Started: 'getting-started.md'
   - 'Exercise 1': 'adding-the-encryption-sdk.md'
-  - 'Exercise 2': 'multi-cmk.md'
+  - 'Exercise 2': 'multi-kms-key.md'
   - 'Exercise 3': 'encryption-context.md'
   - 'Clean Up and Closing': 'clean-up-and-closing.md'
   - 'Tips and Troubleshooting': 'tips-and-troubleshooting.md'

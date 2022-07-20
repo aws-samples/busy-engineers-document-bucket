@@ -20,11 +20,11 @@ const {
 const TableName = config.state.tableName();
 const Bucket = config.state.bucketName();
 
-const faytheCMK = config.state.getFaytheCMK();
-const walterCMK = config.state.getWalterCMK();
+const faytheKmsKey = config.state.getFaytheKmsKey();
+const walterKmsKey = config.state.getWalterKmsKey();
 const encryptKeyring = new KmsKeyringNode({
-  generatorKeyId: faytheCMK,
-  keyIds: [walterCMK]
+  generatorKeyId: faytheKmsKey,
+  keyIds: [walterKmsKey]
 });
 
 const contextPrefix = ctx_prefix.toUpperCase();

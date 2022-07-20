@@ -38,12 +38,12 @@ public class App {
     String bucketName = stateConfig.contents.state.DocumentBucket;
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
-    // ADD-ESDK-COMPLETE: Configure the Faythe CMK in the Encryption SDK
+    // ADD-ESDK-COMPLETE: Configure the Faythe KMS Key in the Encryption SDK
     // Load configuration of KMS resources
-    String faytheCMK = stateConfig.contents.state.FaytheCMK;
+    String faytheKmsKey = stateConfig.contents.state.FaytheKmsKey;
 
     // Set up the Master Key Provider to use KMS
-    KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK);
+    KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheKmsKey);
 
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
   }

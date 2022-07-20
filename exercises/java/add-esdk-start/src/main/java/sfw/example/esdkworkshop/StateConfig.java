@@ -43,16 +43,16 @@ public class StateConfig {
     public final String DocumentBucket;
     /** The name of the Document Bucket DynamoDB table. */
     public final String DocumentTable;
-    /** The ARN of Faythe's CMK. */
-    public final String FaytheCMK;
-    /** The ARN of Walter's CMK. */
-    public final String WalterCMK;
+    /** The ARN of Faythe's KMS Key. */
+    public final String FaytheKmsKey;
+    /** The ARN of Walter's KMS Key. */
+    public final String WalterKmsKey;
 
-    State(String DocumentBucket, String DocumentTable, String FaytheCMK, String WalterCMK) {
+    State(String DocumentBucket, String DocumentTable, String FaytheKmsKey, String WalterKmsKey) {
       this.DocumentBucket = DocumentBucket;
       this.DocumentTable = DocumentTable;
-      this.FaytheCMK = FaytheCMK;
-      this.WalterCMK = WalterCMK;
+      this.FaytheKmsKey = FaytheKmsKey;
+      this.WalterKmsKey = WalterKmsKey;
     }
   }
 }

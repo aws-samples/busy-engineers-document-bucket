@@ -25,12 +25,12 @@ def initialize() -> DocumentBucketOperations:
     bucket = boto3.resource("s3").Bucket(state["DocumentBucket"])
     # Set up your DynamoDB Table for the Document Bucket
     table = boto3.resource("dynamodb").Table(state["DocumentTable"])
-    # ADD-ESDK-COMPLETE: Configure the Faythe CMK in the Encryption SDK
+    # ADD-ESDK-COMPLETE: Configure the Faythe KMS Key in the Encryption SDK
     # Pull configuration of KMS resources
-    faythe_cmk = state["FaytheCMK"]
+    faythe_kms_key = state["FaytheKmsKey"]
     # And the Master Key Provider configuring how to use KMS
-    cmk = [faythe_cmk]
-    mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=cmk)
+    kms_key = [faythe_kms_key]
+    mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=kms_key)
 
     # Set up the API to interact with the Document Bucket using all these resources
     # ADD-ESDK-COMPLETE

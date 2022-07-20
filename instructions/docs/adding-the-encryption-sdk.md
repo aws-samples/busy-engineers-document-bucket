@@ -6,7 +6,7 @@ In this section, you will add client-side encryption to the Busy Engineer's Docu
 
 In [Getting Started](./getting-started.md), you set up your Busy Engineer's Document Bucket environment and selected a workshop language. 
 
-Now you will add the AWS Encryption SDK to encrypt objects on the client, before they are transmitted off of the host machine to the internet. You will use AWS KMS to provide a `data key` for each object, using a CMK that you set up in [Getting Started](./getting-started.md).
+Now you will add the AWS Encryption SDK to encrypt objects on the client, before they are transmitted off of the host machine to the internet. You will use AWS KMS to provide a `data key` for each object, using a KMS Key that you set up in [Getting Started](./getting-started.md).
 
 ## Let's Go!
 
@@ -234,7 +234,7 @@ Now that you have the AWS Encryption SDK imported, start encrypting your data be
 
 #### What Happened?
 
-The application will use the AWS Encryption SDK to encrypt your data client-side under a CMK before storing it by:
+The application will use the AWS Encryption SDK to encrypt your data client-side under a KMS Key before storing it by:
 
 1. Requesting a new data key using your Keyring or Master Key Provider
 1. Encrypting your data with the returned data key
@@ -316,14 +316,14 @@ The application now decrypts data client-side, as well.
 The data returned from S3 for `retrieve` is encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK is:
 
 1. Reading the AWS Encryption SDK formatted encrypted message
-1. Calling KMS to request to decrypt your message's encrypted data key using the Faythe CMK
+1. Calling KMS to request to decrypt your message's encrypted data key using the Faythe KMS Key
 1. Using the decrypted data key to decrypt the message
 1. Returning the message plaintext and Encryption SDK headers to you
 
 
-### Step 4: Configure the Faythe CMK in the Encryption SDK
+### Step 4: Configure the Faythe KMS Key in the Encryption SDK
 
-Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.
+Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS Keys to protect your data.
 
 === "Java"
 
@@ -331,12 +331,12 @@ Now that you have declared your dependencies and updated your code to encrypt an
     // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
         AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
-        // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+        // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
         // Load configuration of KMS resources
-        String faytheCMK = stateConfig.contents.state.FaytheCMK;
+        String faytheKmsKey = stateConfig.contents.state.FaytheKmsKey;
 
         // Set up the Master Key Provider to use KMS
-        KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK);
+        KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheKmsKey);
 
         return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
     ```
@@ -347,19 +347,19 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
     // Edit ./src/store.ts
 
-    // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
-    const faytheCMK = config.state.getFaytheCMK();
+    // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
+    const faytheKmsKey = config.state.getFaytheKmsKey();
     const encryptKeyring = new KmsKeyringNode({
-    generatorKeyId: faytheCMK
+    generatorKeyId: faytheKmsKey
     });
 
     // Save and exit
 
     // Edit ./src/retrieve.ts
 
-    // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
-    const faytheCMK = config.state.getFaytheCMK();
-    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
+    // ADD-ESDK-START: Set up a keyring to use Faythe's KMS Key for decrypting.
+    const faytheKmsKey = config.state.getFaytheKmsKey();
+    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheKmsKey] });
 
     // Save and exit
     ```
@@ -370,19 +370,19 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
     // Edit ./store.js
 
-    // ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
-    const faytheCMK = config.state.getFaytheCMK();
+    // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
+    const faytheKmsKey = config.state.getFaytheKmsKey();
     const encryptKeyring = new KmsKeyringNode({
-    generatorKeyId: faytheCMK
+    generatorKeyId: faytheKmsKey
     });
 
     // Save and exit
 
     // Edit ./retrieve.js
 
-    // ADD-ESDK-START: Set up a keyring to use Faythe's CMK for decrypting.
-    const faytheCMK = config.state.getFaytheCMK();
-    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheCMK] });
+    // ADD-ESDK-START: Set up a keyring to use Faythe's KMS Key for decrypting.
+    const faytheKmsKey = config.state.getFaytheKmsKey();
+    const decryptKeyring = new KmsKeyringNode({ keyIds: [faytheKmsKey] });
 
     // Save and exit
     ```
@@ -395,12 +395,12 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
     ...
 
-    # ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+    # ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
     # Pull configuration of KMS resources
-    faythe_cmk = state["FaytheCMK"]
+    faythe_kms_key = state["FaytheKmsKey"]
     # And the Master Key Provider configuring how to use KMS
-    cmk = [faythe_cmk]
-    mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=cmk)
+    kms_key = [faythe_kms_key]
+    mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=kms_key)
 
     operations = DocumentBucketOperations(bucket, table, mkp)
 
@@ -409,9 +409,9 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
 #### What Happened?
 
-In [Getting Started](./getting-started.md), you launched CloudFormation stacks for CMKs. One of these CMKs was nicknamed Faythe. As part of launching these templates, the CMK's Amazon Resource Name (ARN) was written to a configuration file on disk, the `state` variable that is loaded and parsed.
+In [Getting Started](./getting-started.md), you launched CloudFormation stacks for KMS Keys. One of these KMS Keys was nicknamed Faythe. As part of launching these templates, the KMS Key's Amazon Resource Name (ARN) was written to a configuration file on disk, the `state` variable that is loaded and parsed.
 
-Now Faythe's ARN is pulled into a variable, and used to initialize a Keyring or Master Key Provider that will use the Faythe CMK. That new Keyring/Master Key Provider is passed into your API, and you are set to start encrypting and decrypting with KMS and the Encryption SDK.
+Now Faythe's ARN is pulled into a variable, and used to initialize a Keyring or Master Key Provider that will use the Faythe KMS Key. That new Keyring/Master Key Provider is passed into your API, and you are set to start encrypting and decrypting with KMS and the Encryption SDK.
 
 ### Checking Your Work
 
@@ -562,4 +562,4 @@ For more things to try, check out [Explore Further](#explore-further), below.
 
 # Next exercise
 
-Now that you are encrypting and decrypting, how about [adding Multiple CMKs](./multi-cmk.md)?
+Now that you are encrypting and decrypting, how about [adding Multiple KMS Keys](./multi-kms-key.md)?

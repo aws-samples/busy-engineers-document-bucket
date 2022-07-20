@@ -38,11 +38,11 @@ public class App {
     AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
     // Load configuration of KMS resources
-    String faytheCMK = stateConfig.contents.state.FaytheCMK;
-    String walterCMK = stateConfig.contents.state.WalterCMK;
+    String faytheKmsKey = stateConfig.contents.state.FaytheKmsKey;
+    String walterKmsKey = stateConfig.contents.state.WalterKmsKey;
 
     // Set up the Master Key Provider to use KMS
-    KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheCMK, walterCMK);
+    KmsMasterKeyProvider mkp = KmsMasterKeyProvider.builder().buildStrict(faytheKmsKey, walterKmsKey);
 
     return new Api(ddbClient, tableName, s3Client, bucketName, mkp);
   }

@@ -8,7 +8,7 @@ const s3 = new S3();
 const config = require("./config");
 const Bucket = config.state.bucketName();
 
-// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK
+// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
 
 module.exports = retrieve;
 
