@@ -393,16 +393,16 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
     # Edit src/document_bucket/__init__.py
 
-    ...
+        ...
 
-    # ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
-    # Pull configuration of KMS resources
-    faythe_kms_key = state["FaytheKmsKey"]
-    # And the Master Key Provider configuring how to use KMS
-    kms_key = [faythe_kms_key]
-    mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=kms_key)
+        # ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
+        # Pull configuration of KMS resources
+        faythe_kms_key = state["FaytheKmsKey"]
+        # And the Master Key Provider configuring how to use KMS
+        kms_key = [faythe_kms_key]
+        mkp = aws_encryption_sdk.StrictAwsKmsMasterKeyProvider(key_ids=kms_key)
 
-    operations = DocumentBucketOperations(bucket, table, mkp)
+        operations = DocumentBucketOperations(bucket, table, mkp)
 
     # Save and exit
     ```
@@ -495,7 +495,7 @@ For more things to try, check out [Explore Further](#explore-further), below.
     console.log(r)
     })
     list().then(console.log)
-    (() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
+    (() => {retrieve(key).pipe(process.stdout)})()
     // Ctrl-D when finished to exit the REPL
     ```
 
@@ -524,7 +524,7 @@ For more things to try, check out [Explore Further](#explore-further), below.
     console.log(r)
     })
     list().then(console.log)
-    (() => {retrieve("PutYourKeyValue").pipe(process.stdout)})()
+    (() => {retrieve(key).pipe(process.stdout)})()
     // Ctrl-D when finished to exit the REPL
     ```
 
@@ -532,7 +532,7 @@ For more things to try, check out [Explore Further](#explore-further), below.
 
     ```bash
     ./cli.ts list
-    ./cli.ts store ./store.js
+    ./cli.ts store ./src/store.ts
     # Note the "Key" value
     ./cli.ts list
     # Note the "reference" value

@@ -100,8 +100,8 @@ If you aren't sure, or want to catch up, jump into the `multi-kms-key-start` dir
     ```{.python hl_lines="4"}
     # Edit src/document_bucket/__init__.py
 
-    # MULTI-KMS-KEY-START: Configure Walter
-    walter_kms_key = state["WalterKmsKey"]
+        # MULTI-KMS-KEY-START: Configure Walter
+        walter_kms_key = state["WalterKmsKey"]
     ```
 
 #### What Happened?
@@ -163,8 +163,8 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
     ```{.python hl_lines="4"}
     # Edit src/document_bucket/__init__.py
 
-    # MULTI-KMS-KEY-START: Add Walter to the KMS Keys to Use
-    kms_key = [faythe_kms_key, walter_kms_key]
+        # MULTI-KMS-KEY-START: Add Walter to the KMS Keys to Use
+        kms_key = [faythe_kms_key, walter_kms_key]
 
     # Save and exit
     ```
@@ -318,7 +318,7 @@ Try out combinations of Grant permissions for your application and watch how the
 
     ```bash
     ./cli.ts list
-    ./cli.ts store ./store.js
+    ./cli.ts store ./src/store.ts
     # Note the "Key" value
     ./cli.ts list
     # Note the "reference" value
@@ -333,9 +333,8 @@ Try out combinations of Grant permissions for your application and watch how the
     import document_bucket
     ops = document_bucket.initialize()
     ops.list()
-    ops.store(b'some data')
-    for item in ops.list():
-        print(ops.retrieve(item.partition_key))
+    item = ops.store(b'some data')
+    print(ops.retrieve(item.partition_key))
     # Use the make targets to change the grants and see what happens!
     # Ctrl-D when finished to exit the REPL
     ```

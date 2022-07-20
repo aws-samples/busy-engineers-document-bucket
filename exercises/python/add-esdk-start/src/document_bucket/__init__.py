@@ -3,7 +3,7 @@
 
 import os
 
-# ADD-ESDK-START
+# ADD-ESDK-START Add the ESDK Dependency
 import boto3  # type: ignore
 import toml
 
@@ -25,7 +25,8 @@ def initialize() -> DocumentBucketOperations:
     # Set up your DynamoDB Table for the Document Bucket
     table = boto3.resource("dynamodb").Table(state["DocumentTable"])
 
-    # ADD-ESDK-START
+    # ADD-ESDK-START Configure the Faythe KMS Key in the Encryption SDK
+
     # Set up the API to interact with the Document Bucket using all these resources
     operations = DocumentBucketOperations(bucket, table)
 
