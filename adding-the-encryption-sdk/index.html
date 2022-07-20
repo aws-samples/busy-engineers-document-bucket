@@ -349,11 +349,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-configure-the-faythe-cmk-in-the-encryption-sdk" class="md-nav__link">
-    Step 4: Configure the Faythe CMK in the Encryption SDK
+  <a href="#step-4-configure-the-faythe-kms-key-in-the-encryption-sdk" class="md-nav__link">
+    Step 4: Configure the Faythe KMS Key in the Encryption SDK
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Configure the Faythe CMK in the Encryption SDK">
+    <nav class="md-nav" aria-label="Step 4: Configure the Faythe KMS Key in the Encryption SDK">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -410,7 +410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../multi-cmk/" class="md-nav__link">
+      <a href="../multi-kms-key/" class="md-nav__link">
         Exercise 2
       </a>
     </li>
@@ -571,11 +571,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-configure-the-faythe-cmk-in-the-encryption-sdk" class="md-nav__link">
-    Step 4: Configure the Faythe CMK in the Encryption SDK
+  <a href="#step-4-configure-the-faythe-kms-key-in-the-encryption-sdk" class="md-nav__link">
+    Step 4: Configure the Faythe KMS Key in the Encryption SDK
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Configure the Faythe CMK in the Encryption SDK">
+    <nav class="md-nav" aria-label="Step 4: Configure the Faythe KMS Key in the Encryption SDK">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -638,7 +638,7 @@
 <p>In this section, you will add client-side encryption to the Busy Engineer's Document Bucket using the AWS Encryption SDK and AWS KMS.</p>
 <h2 id="background">Background</h2>
 <p>In <a href="../getting-started/">Getting Started</a>, you set up your Busy Engineer's Document Bucket environment and selected a workshop language. </p>
-<p>Now you will add the AWS Encryption SDK to encrypt objects on the client, before they are transmitted off of the host machine to the internet. You will use AWS KMS to provide a <code>data key</code> for each object, using a CMK that you set up in <a href="../getting-started/">Getting Started</a>.</p>
+<p>Now you will add the AWS Encryption SDK to encrypt objects on the client, before they are transmitted off of the host machine to the internet. You will use AWS KMS to provide a <code>data key</code> for each object, using a KMS Key that you set up in <a href="../getting-started/">Getting Started</a>.</p>
 <h2 id="lets-go">Let's Go!</h2>
 <h3 id="starting-directory">Starting Directory</h3>
 <p>Make sure you are in the <code>exercises</code> directory for the language of your choice:</p>
@@ -971,7 +971,7 @@
 </div>
 </div>
 <h4 id="what-happened_1">What Happened?</h4>
-<p>The application will use the AWS Encryption SDK to encrypt your data client-side under a CMK before storing it by:</p>
+<p>The application will use the AWS Encryption SDK to encrypt your data client-side under a KMS Key before storing it by:</p>
 <ol>
 <li>Requesting a new data key using your Keyring or Master Key Provider</li>
 <li>Encrypting your data with the returned data key</li>
@@ -1084,12 +1084,12 @@
 <p>The data returned from S3 for <code>retrieve</code> is encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK is:</p>
 <ol>
 <li>Reading the AWS Encryption SDK formatted encrypted message</li>
-<li>Calling KMS to request to decrypt your message's encrypted data key using the Faythe CMK</li>
+<li>Calling KMS to request to decrypt your message's encrypted data key using the Faythe KMS Key</li>
 <li>Using the decrypted data key to decrypt the message</li>
 <li>Returning the message plaintext and Encryption SDK headers to you</li>
 </ol>
-<h3 id="step-4-configure-the-faythe-cmk-in-the-encryption-sdk">Step 4: Configure the Faythe CMK in the Encryption SDK</h3>
-<p>Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS CMKs to protect your data.</p>
+<h3 id="step-4-configure-the-faythe-kms-key-in-the-encryption-sdk">Step 4: Configure the Faythe KMS Key in the Encryption SDK</h3>
+<p>Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS Keys to protect your data.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="5:4"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Java</label><label for="__tabbed_5_2">Typescript Node.JS</label><label for="__tabbed_5_3">JavaScript Node.JS</label><label for="__tabbed_5_4">Python</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -1106,12 +1106,12 @@
 <span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
 <span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AmazonS3ClientBuilder</span><span class="p">.</span><span class="na">defaultClient</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="c1">// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// Load configuration of KMS resources</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">faytheCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateConfig</span><span class="p">.</span><span class="na">contents</span><span class="p">.</span><span class="na">state</span><span class="p">.</span><span class="na">FaytheCMK</span><span class="p">;</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateConfig</span><span class="p">.</span><span class="na">contents</span><span class="p">.</span><span class="na">state</span><span class="p">.</span><span class="na">FaytheKmsKey</span><span class="p">;</span><span class="w"></span>
 </span>
 <span class="w">    </span><span class="c1">// Set up the Master Key Provider to use KMS</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">KmsMasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KmsMasterKeyProvider</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">buildStrict</span><span class="p">(</span><span class="n">faytheCMK</span><span class="p">);</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="n">KmsMasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KmsMasterKeyProvider</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">buildStrict</span><span class="p">(</span><span class="n">faytheKmsKey</span><span class="p">);</span><span class="w"></span>
 </span>
 <span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Api</span><span class="p">(</span><span class="n">ddbClient</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">,</span><span class="w"> </span><span class="n">s3Client</span><span class="p">,</span><span class="w"> </span><span class="n">bucketName</span><span class="p">,</span><span class="w"> </span><span class="n">mkp</span><span class="p">);</span><span class="w"></span>
 </span></code></pre></div></td></tr></table></div>
@@ -1135,19 +1135,19 @@
 <span class="normal">16</span>
 <span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span><span class="w"></span>
 
-<span class="c1">// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheCMK</span><span class="p">();</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
 </span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"></span>
-</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="kt">faytheCMK</span><span class="w"></span>
+</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="kt">faytheKmsKey</span><span class="w"></span>
 </span><span class="hll"><span class="p">});</span><span class="w"></span>
 </span>
 <span class="c1">// Save and exit</span><span class="w"></span>
 
 <span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
 
-<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s CMK for decrypting.</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheCMK</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheCMK</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s KMS Key for decrypting.</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheKmsKey</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
 </span>
 <span class="c1">// Save and exit</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
@@ -1171,19 +1171,19 @@
 <span class="normal">16</span>
 <span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span><span class="w"></span>
 
-<span class="c1">// ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheCMK</span><span class="p">();</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
 </span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"></span>
-</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="nx">faytheCMK</span><span class="w"></span>
+</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"></span>
 </span><span class="hll"><span class="p">});</span><span class="w"></span>
 </span>
 <span class="c1">// Save and exit</span><span class="w"></span>
 
 <span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
 
-<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s CMK for decrypting.</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheCMK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheCMK</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheCMK</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s KMS Key for decrypting.</span><span class="w"></span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheKmsKey</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
 </span>
 <span class="c1">// Save and exit</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
@@ -1204,16 +1204,16 @@
 <span class="normal">13</span>
 <span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/__init__.py</span>
 
-<span class="o">...</span>
+    <span class="o">...</span>
 
-<span class="c1"># ADD-ESDK-START: Configure the Faythe CMK in the Encryption SDK</span>
-<span class="c1"># Pull configuration of KMS resources</span>
-<span class="hll"><span class="n">faythe_cmk</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;FaytheCMK&quot;</span><span class="p">]</span>
-</span><span class="c1"># And the Master Key Provider configuring how to use KMS</span>
-<span class="hll"><span class="n">cmk</span> <span class="o">=</span> <span class="p">[</span><span class="n">faythe_cmk</span><span class="p">]</span>
-</span><span class="hll"><span class="n">mkp</span> <span class="o">=</span> <span class="n">aws_encryption_sdk</span><span class="o">.</span><span class="n">StrictAwsKmsMasterKeyProvider</span><span class="p">(</span><span class="n">key_ids</span><span class="o">=</span><span class="n">cmk</span><span class="p">)</span>
+    <span class="c1"># ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span>
+    <span class="c1"># Pull configuration of KMS resources</span>
+<span class="hll">    <span class="n">faythe_kms_key</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;FaytheKmsKey&quot;</span><span class="p">]</span>
+</span>    <span class="c1"># And the Master Key Provider configuring how to use KMS</span>
+<span class="hll">    <span class="n">kms_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">faythe_kms_key</span><span class="p">]</span>
+</span><span class="hll">    <span class="n">mkp</span> <span class="o">=</span> <span class="n">aws_encryption_sdk</span><span class="o">.</span><span class="n">StrictAwsKmsMasterKeyProvider</span><span class="p">(</span><span class="n">key_ids</span><span class="o">=</span><span class="n">kms_key</span><span class="p">)</span>
 </span>
-<span class="hll"><span class="n">operations</span> <span class="o">=</span> <span class="n">DocumentBucketOperations</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">mkp</span><span class="p">)</span>
+<span class="hll">    <span class="n">operations</span> <span class="o">=</span> <span class="n">DocumentBucketOperations</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">mkp</span><span class="p">)</span>
 </span>
 <span class="c1"># Save and exit</span>
 </code></pre></div></td></tr></table></div>
@@ -1221,8 +1221,8 @@
 </div>
 </div>
 <h4 id="what-happened_3">What Happened?</h4>
-<p>In <a href="../getting-started/">Getting Started</a>, you launched CloudFormation stacks for CMKs. One of these CMKs was nicknamed Faythe. As part of launching these templates, the CMK's Amazon Resource Name (ARN) was written to a configuration file on disk, the <code>state</code> variable that is loaded and parsed.</p>
-<p>Now Faythe's ARN is pulled into a variable, and used to initialize a Keyring or Master Key Provider that will use the Faythe CMK. That new Keyring/Master Key Provider is passed into your API, and you are set to start encrypting and decrypting with KMS and the Encryption SDK.</p>
+<p>In <a href="../getting-started/">Getting Started</a>, you launched CloudFormation stacks for KMS Keys. One of these KMS Keys was nicknamed Faythe. As part of launching these templates, the KMS Key's Amazon Resource Name (ARN) was written to a configuration file on disk, the <code>state</code> variable that is loaded and parsed.</p>
+<p>Now Faythe's ARN is pulled into a variable, and used to initialize a Keyring or Master Key Provider that will use the Faythe KMS Key. That new Keyring/Master Key Provider is passed into your API, and you are set to start encrypting and decrypting with KMS and the Encryption SDK.</p>
 <h3 id="checking-your-work">Checking Your Work</h3>
 <p>Want to check your progress, or compare what you've done versus a finished example?</p>
 <p>Check out the code in one of the <code>-complete</code> folders to compare.</p>
@@ -1318,7 +1318,7 @@
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
 <span class="p">})</span><span class="w"></span>
 <span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
-<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="s2">&quot;PutYourKeyValue&quot;</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span><span class="w"></span>
+<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span><span class="w"></span>
 <span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
 </div>
@@ -1360,7 +1360,7 @@
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
 <span class="p">})</span><span class="w"></span>
 <span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
-<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="s2">&quot;PutYourKeyValue&quot;</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span><span class="w"></span>
+<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span><span class="w"></span>
 <span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
 </div>
@@ -1371,7 +1371,7 @@
 <span class="normal">4</span>
 <span class="normal">5</span>
 <span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.ts list
-./cli.ts store ./store.js
+./cli.ts store ./src/store.ts
 <span class="c1"># Note the &quot;Key&quot; value</span>
 ./cli.ts list
 <span class="c1"># Note the &quot;reference&quot; value</span>
@@ -1407,7 +1407,7 @@
 <li><strong>Configuration Glue</strong> - If you are curious how the Document Bucket is configured, take a peek at <code>~/environment/workshop/cdk/Makefile</code> and the <code>make state</code> target, as well as <code>config.toml</code> in the exercises root <code>~/environment/workshop/exercises/config.toml</code>. The Busy Engineer's Document Bucket uses a base <a href="https://github.com/toml-lang/toml" target="_blank">TOML</a> file to set standard names for all CloudFormation resources and a common place to discover the real deployed set. Then it uses the AWS Cloud Development Kit (CDK) to deploy the resources and write out their identifiers to the state file. Applications use the base TOML file <code>config.toml</code> to locate the state file and pull the expected resource names. And that's how the system bootstraps all the resources it needs!</li>
 </ul>
 <h1 id="next-exercise">Next exercise</h1>
-<p>Now that you are encrypting and decrypting, how about <a href="../multi-cmk/">adding Multiple CMKs</a>?</p>
+<p>Now that you are encrypting and decrypting, how about <a href="../multi-kms-key/">adding Multiple KMS Keys</a>?</p>
 
               
             </article>
@@ -1439,7 +1439,7 @@
       
       
         
-        <a href="../multi-cmk/" class="md-footer__link md-footer__link--next" aria-label="Next: Exercise 2" rel="next">
+        <a href="../multi-kms-key/" class="md-footer__link md-footer__link--next" aria-label="Next: Exercise 2" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">

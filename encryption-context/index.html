@@ -248,7 +248,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../multi-cmk/" class="md-nav__link">
+      <a href="../multi-kms-key/" class="md-nav__link">
         Exercise 2
       </a>
     </li>
@@ -681,7 +681,7 @@
 <p>This feature defends against risks from ciphertexts being tampered with, modified, or replaced -- intentionally or unintentionally. It both defends against an attacker replacing one ciphertext with another as well as problems like operational events.</p>
 <p>For example, if a bad deployment swaps <code>us-west-2.cfg</code> with <code>eu-central-1.cfg</code> on your fleets, having <code>{ fleet: us-west-2 }</code> asserted in <code>us-west-2.cfg</code>'s encryption context will prevent it from accidentally being loaded by <code>eu-central-1</code>.</p>
 <h3 id="aws-kms-policy-and-audit-hooks">AWS KMS: Policy and Audit Hooks</h3>
-<p>KMS also makes the encryption context available to use in Key Policies and Grants. This means that you can use assertions you make about your data to control usage of your CMKs. Perhaps your <code>eu-central-1</code> fleet should only ever be permitted to access encrypted data for <code>{ shard: europe }</code>. You can write CMK policies that require <code>{ shard: europe }</code> to be asserted about all cryptographic operations, so that KMS refuses to authorize an attempt to decrypt, say, <code>{ shard: north-america }</code>. These options can help you secure your application and defend against both operational and security-related risks.</p>
+<p>KMS also makes the encryption context available to use in Key Policies and Grants. This means that you can use assertions you make about your data to control usage of your KMS Keys. Perhaps your <code>eu-central-1</code> fleet should only ever be permitted to access encrypted data for <code>{ shard: europe }</code>. You can write KMS Key policies that require <code>{ shard: europe }</code> to be asserted about all cryptographic operations, so that KMS refuses to authorize an attempt to decrypt, say, <code>{ shard: north-america }</code>. These options can help you secure your application and defend against both operational and security-related risks.</p>
 <p>Additionally, as part of the audit features that KMS provides, it logs the encryption context that was supplied with every operation. You can use this information to audit who was accessing what data and when, to detect anomalous call patterns, or to identify unexpected system states.</p>
 <p>What questions would you like to answer with CloudTrail Logs for your KMS operations? encryption context can help.</p>
 <h3 id="the-aws-encryption-sdk">The AWS Encryption SDK</h3>
@@ -704,7 +704,7 @@
 <p>Remember, encryption context is not secret!</p>
 <h2 id="lets-go">Let's Go!</h2>
 <h3 id="starting-directory">Starting Directory</h3>
-<p>If you just finished <a href="../multi-cmk/">Using Multiple CMKs</a>, you are all set.</p>
+<p>If you just finished <a href="../multi-kms-key/">Using Multiple KMS Keys</a>, you are all set.</p>
 <p>If you aren't sure, or want to catch up, jump into the <code>encryption-context-start</code> directory for the language of your choice.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label><label for="__tabbed_1_2">JavaScript Node.JS</label><label for="__tabbed_1_3">Typescript Node.JS</label><label for="__tabbed_1_4">Python</label></div>
 <div class="tabbed-content">
@@ -805,15 +805,17 @@
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
 <span class="c1"># Find the store(...) function, and add context to the encrypt call</span>
 
-<span class="c1"># ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt</span>
-<span class="n">encrypted_data</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">aws_encryption_sdk</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
-    <span class="n">source</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-    <span class="n">key_provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">master_key_provider</span><span class="p">,</span>
-<span class="hll">    <span class="n">encryption_context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
-</span><span class="p">)</span>
+        <span class="c1"># ENCRYPTION-CONTEXT-START: Set encryption context on Encrypt</span>
+        <span class="n">encrypted_data</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encryption_client</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">key_provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">master_key_provider</span><span class="p">,</span>
+<span class="hll">            <span class="n">encryption_context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+</span>        <span class="p">)</span>
+
 <span class="c1"># Save your changes</span>
 </code></pre></div></td></tr></table></div>
 </div>
@@ -905,22 +907,24 @@
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
 <span class="c1"># Find the retrieve(...) function, and use the Encryption SDK header&#39;s encryption</span>
 <span class="c1"># context to construct the DocumentBundle to return</span>
 
-<span class="c1"># ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt</span>
-<span class="k">return</span> <span class="n">DocumentBundle</span><span class="o">.</span><span class="n">from_data_and_context</span><span class="p">(</span>
-<span class="hll">    <span class="n">plaintext</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span>
-</span><span class="p">)</span>
+        <span class="c1"># ENCRYPTION-CONTEXT-START: Use encryption context on Decrypt</span>
+        <span class="k">return</span> <span class="n">DocumentBundle</span><span class="o">.</span><span class="n">from_data_and_context</span><span class="p">(</span>
+<span class="hll">            <span class="n">plaintext</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span>
+</span>        <span class="p">)</span>
+
 <span class="c1"># Save your changes</span>
 </code></pre></div></td></tr></table></div>
 </div>
@@ -1072,7 +1076,17 @@
 <span class="normal">25</span>
 <span class="normal">26</span>
 <span class="normal">27</span>
-<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">EC</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./store&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="hll"><span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Writable</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;stream&quot;</span><span class="p">;</span><span class="w"></span>
+</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">Bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">bucketName</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">  </span><span class="p">...</span><span class="w"></span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
 <span class="w">    </span><span class="nx">s3</span><span class="w"></span>
 <span class="w">      </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
@@ -1121,25 +1135,33 @@
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/api.py</span>
 <span class="c1"># Find the retrieve(...) function, and add some assertions about the contents</span>
 <span class="c1"># of the encryption context validated by the Encryption SDK</span>
 
-<span class="c1"># ENCRYPTION-CONTEXT-START: Making Assertions</span>
-<span class="hll"><span class="k">if</span> <span class="ow">not</span> <span class="n">expected_context_keys</span> <span class="o">&lt;=</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span>    <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;Encryption context assertion failed! &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;Expected all these keys: </span><span class="si">{</span><span class="n">expected_context_keys</span><span class="si">}</span><span class="s2">, &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="si">}</span><span class="s2">!&quot;</span>
-    <span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-<span class="hll"><span class="k">if</span> <span class="ow">not</span> <span class="n">expected_context</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span>    <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;Encryption context assertion failed! &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_context</span><span class="si">}</span><span class="s2">, &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="si">}</span><span class="s2">!&quot;</span>
-    <span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="c1"># ENCRYPTION-CONTEXT-START: Making Assertions</span>
+<span class="hll">        <span class="k">if</span> <span class="ow">not</span> <span class="n">expected_context_keys</span> <span class="o">&lt;=</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span class="hll">            <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class="hll">                <span class="s2">&quot;Encryption context assertion failed! &quot;</span>
+</span><span class="hll">                <span class="sa">f</span><span class="s2">&quot;Expected all these keys: </span><span class="si">{</span><span class="n">expected_context_keys</span><span class="si">}</span><span class="s2">, &quot;</span>
+</span><span class="hll">                <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="si">}</span><span class="s2">!&quot;</span>
+</span><span class="hll">            <span class="p">)</span>
+</span><span class="hll">            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+</span><span class="hll">        <span class="k">if</span> <span class="ow">not</span> <span class="n">expected_context</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span class="hll">            <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class="hll">                <span class="s2">&quot;Encryption context assertion failed! &quot;</span>
+</span><span class="hll">                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_context</span><span class="si">}</span><span class="s2">, &quot;</span>
+</span><span class="hll">                <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span><span class="si">}</span><span class="s2">!&quot;</span>
+</span><span class="hll">            <span class="p">)</span>
+</span><span class="hll">            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+</span>        <span class="c1"># ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt</span>
+        <span class="k">return</span> <span class="n">DocumentBundle</span><span class="o">.</span><span class="n">from_data_and_context</span><span class="p">(</span>
+            <span class="n">plaintext</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">encryption_context</span>
+        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
 </div>
 </div>
@@ -1340,7 +1362,7 @@ mvn exec:java
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.ts list
-./cli.ts store ./store.js <span class="se">\</span>
+./cli.ts store ./src/store.ts <span class="se">\</span>
   -c <span class="s2">&quot;stage:demo&quot;</span> <span class="se">\</span>
   -c <span class="s2">&quot;purpose:simple demonstration&quot;</span> <span class="se">\</span>
   -c <span class="s2">&quot;origin:us-east-2&quot;</span>
@@ -1360,15 +1382,13 @@ mvn exec:java
 <span class="normal">5</span>
 <span class="normal">6</span>
 <span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">repl</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">repl</span>
 <span class="kn">import</span> <span class="nn">document_bucket</span>
 <span class="n">ops</span> <span class="o">=</span> <span class="n">document_bucket</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;cloud9&quot;</span><span class="p">,</span> <span class="s2">&quot;shard&quot;</span><span class="p">:</span> <span class="s2">&quot;development&quot;</span><span class="p">,</span> <span class="s2">&quot;purpose&quot;</span><span class="p">:</span> <span class="s2">&quot;experimental&quot;</span><span class="p">}</span>
 <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-<span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">():</span>
-    <span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">partition_key</span><span class="p">,</span> <span class="n">expected_context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+<span class="n">item</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">partition_key</span><span class="p">,</span> <span class="n">expected_context</span><span class="o">=</span><span class="n">context</span><span class="p">))</span>
 <span class="c1"># Ctrl-D when finished to exit the REPL</span>
 </code></pre></div></td></tr></table></div>
 </div>
@@ -1400,7 +1420,7 @@ mvn exec:java
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../multi-cmk/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Exercise 2" rel="prev">
+        <a href="../multi-kms-key/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Exercise 2" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>

@@ -323,7 +323,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../multi-cmk/" class="md-nav__link">
+      <a href="../multi-kms-key/" class="md-nav__link">
         Exercise 2
       </a>
     </li>
@@ -462,7 +462,7 @@
 
 <h1 id="getting-started">Getting Started</h1>
 <h2 id="workshop-details">Workshop Details</h2>
-<p>In this workshop, you will add encryption and decryption features to the Busy Engineer's Document Bucket to learn about some real world AWS patterns for integrating client-side encryption using AWS Key Management Service (AWS KMS) and the AWS Encryption software development kit (ESDK) in application code. You will learn how to leverage features like multiple AWS KMS Customer Master Key (CMK) support and Encryption Context to secure your application.</p>
+<p>In this workshop, you will add encryption and decryption features to the Busy Engineer's Document Bucket to learn about some real world AWS patterns for integrating client-side encryption using AWS Key Management Service (AWS KMS) and the AWS Encryption software development kit (ESDK) in application code. You will learn how to leverage features like multiple AWS KMS Key support and Encryption Context to secure your application.</p>
 <p>To begin, the Document Bucket supports storing objects (documents or files or other blobs of data) in a private Amazon S3 bucket, and indexing them in Amazon DynamoDB. This allows Document Bucket users to share objects with other users, and store them for retrieval later. The DynamoDB entries provide metadata context for each Document Bucket object, as well as fast lookups to the provided context.</p>
 <p>This context allows users to store additional information about the S3 object like the origin user, the destination fleet, the project, or any other tag that would be useful to know without having to download and examine the object.</p>
 <p>DynamoDB is configured to allow you to index on the keys associated with the S3 objects. So, for example, it's a quick query to find out which objects have been tagged with metadata context that includes "configuration".</p>
@@ -488,8 +488,8 @@
 <li>Launch the Cloud9 IDE that you will use for the rest of the workshop</li>
 <li>Launch resource stacks using the AWS Cloud Development Kit (CDK), including:<ul>
 <li>The <code>BusyEngineersDocumentBucket</code> stack, with your DynamoDB table and S3 bucket</li>
-<li>One CMK in one region, called Faythe, that you will use in encryption and decryption operations</li>
-<li>One CMK in another region, called Walter, that you will use in encryption and decryption operations</li>
+<li>One KMS Key in one region, called Faythe, that you will use in encryption and decryption operations</li>
+<li>One KMS Key in another region, called Walter, that you will use in encryption and decryption operations</li>
 </ul>
 </li>
 <li>Bootstrap the development environment in Cloud9</li>
