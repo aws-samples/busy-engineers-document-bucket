@@ -18,6 +18,7 @@ theme:
   logo: 'assets/images/aws_smile_logo.png'
   favicon: 'assets/images/aws-favicon.ico'
   features:
+    - content.tabs.link
     - tabs
   font: false
 
