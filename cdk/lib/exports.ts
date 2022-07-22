@@ -6,7 +6,7 @@ import aws = require("aws-sdk");
 export async function cfnExports() {
   const stuff = await Promise.all([
     cfnExportsForRegion("us-east-2"),
-    cfnExportsForRegion("us-west-2")
+    cfnExportsForRegion("us-east-1")
   ]);
 
   return Object.assign({}, ...stuff);
