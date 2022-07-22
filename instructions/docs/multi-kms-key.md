@@ -219,7 +219,9 @@ In `~/environment/workshop/exercises`, you'll find a `Makefile` with several tar
 * `make revoke_grants` will remove the Grants for both KMS Keys
 * `make create_grants` will add Grants to use either or both KMS Key, as needed
 
-The application behavior will change. **Important** when you revoke permissions to the first KMS Key in the list for a keyring (which is Faythe by default), you will need to change the keyring configuration to use Walter as your generator to resume operations. See <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/js-examples.html" target="_blank">documentation of Generator KMS Keys</a> for more.
+Note: When you create or revoke a grant there might be a brief delay, usually less than five minutes, until the grant is available throughout AWS KMS.
+
+**Important** when you revoke permissions to the first KMS Key in the list for a keyring (which is Faythe by default), you will need to change the keyring configuration to use Walter as your generator to resume operations. See <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/js-examples.html" target="_blank">documentation of Generator KMS Keys</a> for more.
 
 You can also observe the impact of changing Granted permissions by monitoring CloudTrail. Note that log entries take a few minutes to propagate to CloudTrail, and that Faythe and Walter are in different regions, so you will need to look at CloudTrail in the region for each one.
 
@@ -334,7 +336,7 @@ Try out combinations of Grant permissions for your application and watch how the
     ops = document_bucket.initialize()
     ops.list()
     item = ops.store(b'some data')
-    print(ops.retrieve(item.partition_key))
+    ops.retrieve(item.partition_key)
     # Use the make targets to change the grants and see what happens!
     # Ctrl-D when finished to exit the REPL
     ```

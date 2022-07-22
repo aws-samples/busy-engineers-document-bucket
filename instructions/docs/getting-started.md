@@ -1,7 +1,7 @@
 # Getting Started
 
 ## Workshop Details
-In this workshop, you will add encryption and decryption features to the Busy Engineer's Document Bucket to learn about some real world AWS patterns for integrating client-side encryption using AWS Key Management Service (AWS KMS) and the AWS Encryption software development kit (ESDK) in application code. You will learn how to leverage features like multiple AWS KMS Key support and Encryption Context to secure your application.
+In this workshop, you will add encryption and decryption features to the Busy Engineer's Document Bucket to learn about some real world AWS patterns for integrating client-side encryption using AWS Key Management Service (AWS KMS) and the AWS Encryption SDK (ESDK) in application code. You will learn how to leverage features like multiple AWS KMS Key support and Encryption Context to secure your application.
 
 To begin, the Document Bucket supports storing objects (documents or files or other blobs of data) in a private Amazon S3 bucket, and indexing them in Amazon DynamoDB. This allows Document Bucket users to share objects with other users, and store them for retrieval later. The DynamoDB entries provide metadata context for each Document Bucket object, as well as fast lookups to the provided context.
 
@@ -53,18 +53,22 @@ If you are working through these exercises in an AWS classroom environment, AWS 
 
 1. Sign in to your AWS Account for the workshop
 1. Click this link to <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment" target="_blank">load the CloudFormation template for your Cloud9 IDE</a>
+    * The above link should put you in the US East (Ohio) region
+    * Do not change your region settings from the default and do not switch regions in the console
 1. Click **Create Stack** to launch the stack
-   * Do not change your region settings from the default and do not switch regions in the console
-   * It will take about three minutes to launch your Cloud9 IDE
+    * It will take about three minutes to launch your Cloud9 IDE
 1. Click this link to <a href="https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2#" target="_blank">Open the Cloud9 Console and find your Cloud9 IDE</a>
-   * You may need to wait a minute and refresh while CloudFormation spins up the resources
-   * There will be a blue tile with your workshop IDE when it's ready
+    * You may need to wait a minute and refresh while CloudFormation spins up the resources
+    * There will be a blue tile titled ***BusyEngineersCloud9IDE*** when it's ready
 1. At the bottom of the tile, click **Open IDE** to launch Cloud9
 1. Type `cd ~/environment/workshop` and hit `Enter`
 1. Type `make bootstrap` and hit `Enter` to set up your workshop environment
-1. Wait until you see `*** BOOTSTRAP COMPLETE ***`
-   * `make bootstrap` will take approximately 5 minutes. If you are in a live workshop, you can run this step during the presentation. If you are working on your own, grab a cup of your favorite beverage while you wait.
-   * At this point you have deployed your workshop stacks using CDK and set up language environments for all of the workshop languages
+    * `make bootstrap` will take approximately 10 minutes to complete
+    * While you wait, you may get started reading the first exercise, [Adding the Encryption SDK](./adding-the-encryption-sdk.md)
+    * You can even go ahead and start making code changes as per the exercise instructions, but you'll need to wait for the bootstrap to complete before running any code
+    * Keep an eye on the terminal running the bootstrap, and once it completes come back to these steps.
+1. Once the bootstrap completes you will see `*** BOOTSTRAP COMPLETE ***`
+    * At this point you have deployed your workshop stacks using CDK and set up language environments for all of the workshop languages
 1. In Cloud9, close your Terminal window and open a new one (`Window -> New Terminal`) to pick up the changes `make bootstrap` installed
 1. Choose your workshop language, and `cd` to its folder under `exercises`
 

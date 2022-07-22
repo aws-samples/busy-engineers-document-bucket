@@ -171,7 +171,7 @@ Start by adding the Encryption SDK dependency to the code.
 #### What Happened?
 
 1. You added a dependency on the AWS Encryption SDK library in your code
-1. You changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in `store` and `retrieve` operations
+1. (Java and Python) You changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in `store` and `retrieve` operations
 
 ### Step 2: Add Encryption to `store`
 
@@ -238,9 +238,8 @@ The application will use the AWS Encryption SDK to encrypt your data client-side
 
 1. Requesting a new data key using your Keyring or Master Key Provider
 1. Encrypting your data with the returned data key
-1. Returning your encrypted data in the AWS Encryption SDK message format
-1. Extracting the ciphertext from the AWS Encryption SDK message
-1. Passing the ciphertext to the AWS S3 SDK for storage in S3
+1. Returning the AWS Encryption SDK formatted encrypted message.
+1. Passing the encrypted message to the AWS S3 SDK for storage in S3
 
 ### Step 3: Add Decryption to `retrieve`
 
@@ -316,9 +315,9 @@ The application now decrypts data client-side, as well.
 The data returned from S3 for `retrieve` is encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK is:
 
 1. Reading the AWS Encryption SDK formatted encrypted message
-1. Calling KMS to request to decrypt your message's encrypted data key using the Faythe KMS Key
-1. Using the decrypted data key to decrypt the message
-1. Returning the message plaintext and Encryption SDK headers to you
+1. Calling KMS to request to decrypt your encrypted message's encrypted data key using the Faythe KMS Key
+1. Using the decrypted data key to decrypt the encrypted message
+1. Returning the plaintext and Encryption SDK headers to you
 
 
 ### Step 4: Configure the Faythe KMS Key in the Encryption SDK
@@ -328,7 +327,7 @@ Now that you have declared your dependencies and updated your code to encrypt an
 === "Java"
 
     ```{.java hl_lines="6 9 11"}
-    // Edit ./src/main/java/sfw/example/esdkworkshop/Api.java
+    // Edit ./src/main/java/sfw/example/esdkworkshop/App.java
         AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
         // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
@@ -454,6 +453,7 @@ Experiment using the API as much as you like.
 To get started, here are some things to try:
 
 * Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventSource=kms.amazonaws.com" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)
+    * Note: Cloudtrail logs may take a couple minutes to appear in the console
 * Take a look at the <a href="https://s3.console.aws.amazon.com/s3/home" target="_blank">contents of your S3 Document Bucket</a> to inspect the raw object
 
 
@@ -546,9 +546,9 @@ For more things to try, check out [Explore Further](#explore-further), below.
     import document_bucket
     ops = document_bucket.initialize()
     ops.list()
-    ops.store(b'some data')
+    item = ops.store(b'some data')
     ops.list()
-    ops.retrieve("PutYourKeyHere").data
+    ops.retrieve(item.partition_key)
     # Ctrl-D when finished to exit the REPL
     ```
 
