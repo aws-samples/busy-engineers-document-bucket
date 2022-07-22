@@ -24,7 +24,7 @@ Behind the scenes, KMS is cryptographically binding the encryption context to th
 
 This feature defends against risks from ciphertexts being tampered with, modified, or replaced -- intentionally or unintentionally. It both defends against an attacker replacing one ciphertext with another as well as problems like operational events.
 
-For example, if a bad deployment swaps `us-west-2.cfg` with `eu-central-1.cfg` on your fleets, having `{ fleet: us-west-2 }` asserted in `us-west-2.cfg`'s encryption context will prevent it from accidentally being loaded by `eu-central-1`.
+For example, if a bad deployment swaps `us-east-1.cfg` with `eu-central-1.cfg` on your fleets, having `{ fleet: us-east-1 }` asserted in `us-east-1.cfg`'s encryption context will prevent it from accidentally being loaded by `eu-central-1`.
 
 ### AWS KMS: Policy and Audit Hooks
 

@@ -230,10 +230,10 @@ You can also observe the impact of changing Granted permissions by monitoring Cl
     * <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=Decrypt" target="_blank">Decrypt operations in CloudTrail in us-east-2</a>
     * <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-east-2</a>
         * Note: To observe Encrypt calls using Faythe, explore some of the configuration and permissions changes suggested below.
-* Walter is in `us-west-2`, so check CloudTrail in that region with these links:
-    * <a href="https://console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=GenerateDataKey" target="_blank">GenerateDataKey operations in CloudTrail in us-west-2</a>
-    * <a href="https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-west-2</a>
-    * <a href="https://us-west-2.console.aws.amazon.com/cloudtrail/home?region=us-west-2#/events?EventName=Decrypt" target="_blank">Decrypt operations in CloudTrail in us-west-2</a>
+* Walter is in `us-east-1`, so check CloudTrail in that region with these links:
+    * <a href="https://console.aws.amazon.com/cloudtrail/home?region=us-east-1#/events?EventName=GenerateDataKey" target="_blank">GenerateDataKey operations in CloudTrail in us-east-1</a>
+    * <a href="https://us-east-1.console.aws.amazon.com/cloudtrail/home?region=us-east-1#/events?EventName=Encrypt" target="_blank">Encrypt operations in CloudTrail in us-east-1</a>
+    * <a href="https://us-east-1.console.aws.amazon.com/cloudtrail/home?region=us-east-1#/events?EventName=Decrypt" target="_blank">Decrypt operations in CloudTrail in us-east-1</a>
 
 Try out combinations of Grant permissions for your application and watch how the behavior changes:
 

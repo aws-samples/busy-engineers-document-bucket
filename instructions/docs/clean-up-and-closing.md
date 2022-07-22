@@ -37,7 +37,7 @@ Use the CloudFormation console to delete your Cloud9 stack.
 That's it! Your workshop resources have been torn down. Use the CloudFormation console in both regions to confirm your resources are all successfully cleaned up.
 
 * <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#" target="_blank">CloudFormation in us-east-2 (Cloud9, Document Bucket resources, Faythe)</a>
-* <a href="https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#" target="_blank">CloudFormation in us-west-2 (Walter)</a>
+* <a href="https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#" target="_blank">CloudFormation in us-east-1 (Walter)</a>
 
 # Feedback
 

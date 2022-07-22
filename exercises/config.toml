@@ -50,7 +50,7 @@ export = "FaytheKmsKey"
 [walter]
 stack_id = "BusyEngineersWalterKmsKeyStack"
 kms_key_id = "BusyEngineersWalterKmsKey"
-region = "us-west-2"
+region = "us-east-1"
 alias = "WalterKmsKey"
 output = "WalterKmsKeyOutput"
 export = "WalterKmsKey"
