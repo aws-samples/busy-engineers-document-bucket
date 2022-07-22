@@ -462,7 +462,7 @@
 
 <h1 id="getting-started">Getting Started</h1>
 <h2 id="workshop-details">Workshop Details</h2>
-<p>In this workshop, you will add encryption and decryption features to the Busy Engineer's Document Bucket to learn about some real world AWS patterns for integrating client-side encryption using AWS Key Management Service (AWS KMS) and the AWS Encryption software development kit (ESDK) in application code. You will learn how to leverage features like multiple AWS KMS Key support and Encryption Context to secure your application.</p>
+<p>In this workshop, you will add encryption and decryption features to the Busy Engineer's Document Bucket to learn about some real world AWS patterns for integrating client-side encryption using AWS Key Management Service (AWS KMS) and the AWS Encryption SDK (ESDK) in application code. You will learn how to leverage features like multiple AWS KMS Key support and Encryption Context to secure your application.</p>
 <p>To begin, the Document Bucket supports storing objects (documents or files or other blobs of data) in a private Amazon S3 bucket, and indexing them in Amazon DynamoDB. This allows Document Bucket users to share objects with other users, and store them for retrieval later. The DynamoDB entries provide metadata context for each Document Bucket object, as well as fast lookups to the provided context.</p>
 <p>This context allows users to store additional information about the S3 object like the origin user, the destination fleet, the project, or any other tag that would be useful to know without having to download and examine the object.</p>
 <p>DynamoDB is configured to allow you to index on the keys associated with the S3 objects. So, for example, it's a quick query to find out which objects have been tagged with metadata context that includes "configuration".</p>
@@ -505,19 +505,33 @@
 <h3 id="procedure">Procedure</h3>
 <ol>
 <li>Sign in to your AWS Account for the workshop</li>
-<li>Click this link to <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment" target="_blank">load the CloudFormation template for your Cloud9 IDE</a></li>
-<li>Click <strong>Create Stack</strong> to launch the stack</li>
+<li>Click this link to <a href="https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/quickcreate?templateUrl=https%3A%2F%2Fbusy-engineers-cfn.s3.us-east-2.amazonaws.com%2Fdocument-bucket-cloud9-bootstrap.yaml&stackName=BusyEngineersDocumentBucketEnvironment" target="_blank">load the CloudFormation template for your Cloud9 IDE</a><ul>
+<li>The above link should put you in the US East (Ohio) region</li>
 <li>Do not change your region settings from the default and do not switch regions in the console</li>
+</ul>
+</li>
+<li>Click <strong>Create Stack</strong> to launch the stack<ul>
 <li>It will take about three minutes to launch your Cloud9 IDE</li>
-<li>Click this link to <a href="https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2#" target="_blank">Open the Cloud9 Console and find your Cloud9 IDE</a></li>
+</ul>
+</li>
+<li>Click this link to <a href="https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2#" target="_blank">Open the Cloud9 Console and find your Cloud9 IDE</a><ul>
 <li>You may need to wait a minute and refresh while CloudFormation spins up the resources</li>
-<li>There will be a blue tile with your workshop IDE when it's ready</li>
+<li>There will be a blue tile titled <strong><em>BusyEngineersCloud9IDE</em></strong> when it's ready</li>
+</ul>
+</li>
 <li>At the bottom of the tile, click <strong>Open IDE</strong> to launch Cloud9</li>
 <li>Type <code>cd ~/environment/workshop</code> and hit <code>Enter</code></li>
-<li>Type <code>make bootstrap</code> and hit <code>Enter</code> to set up your workshop environment</li>
-<li>Wait until you see <code>*** BOOTSTRAP COMPLETE ***</code></li>
-<li><code>make bootstrap</code> will take approximately 5 minutes. If you are in a live workshop, you can run this step during the presentation. If you are working on your own, grab a cup of your favorite beverage while you wait.</li>
+<li>Type <code>make bootstrap</code> and hit <code>Enter</code> to set up your workshop environment<ul>
+<li><code>make bootstrap</code> will take approximately 10 minutes to complete</li>
+<li>While you wait, you may get started reading the first exercise, <a href="../adding-the-encryption-sdk/">Adding the Encryption SDK</a></li>
+<li>You can even go ahead and start making code changes as per the exercise instructions, but you'll need to wait for the bootstrap to complete before running any code</li>
+<li>Keep an eye on the terminal running the bootstrap, and once it completes come back to these steps.</li>
+</ul>
+</li>
+<li>Once the bootstrap completes you will see <code>*** BOOTSTRAP COMPLETE ***</code><ul>
 <li>At this point you have deployed your workshop stacks using CDK and set up language environments for all of the workshop languages</li>
+</ul>
+</li>
 <li>In Cloud9, close your Terminal window and open a new one (<code>Window -&gt; New Terminal</code>) to pick up the changes <code>make bootstrap</code> installed</li>
 <li>Choose your workshop language, and <code>cd</code> to its folder under <code>exercises</code></li>
 </ol>
@@ -548,6 +562,8 @@
               
             </article>
             
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
           </div>
         </div>
         
@@ -655,7 +671,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>

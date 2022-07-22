@@ -780,7 +780,8 @@
 <li><code>make revoke_grants</code> will remove the Grants for both KMS Keys</li>
 <li><code>make create_grants</code> will add Grants to use either or both KMS Key, as needed</li>
 </ul>
-<p>The application behavior will change. <strong>Important</strong> when you revoke permissions to the first KMS Key in the list for a keyring (which is Faythe by default), you will need to change the keyring configuration to use Walter as your generator to resume operations. See <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/js-examples.html" target="_blank">documentation of Generator KMS Keys</a> for more.</p>
+<p>Note: When you create or revoke a grant there might be a brief delay, usually less than five minutes, until the grant is available throughout AWS KMS.</p>
+<p><strong>Important</strong> when you revoke permissions to the first KMS Key in the list for a keyring (which is Faythe by default), you will need to change the keyring configuration to use Walter as your generator to resume operations. See <a href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/js-examples.html" target="_blank">documentation of Generator KMS Keys</a> for more.</p>
 <p>You can also observe the impact of changing Granted permissions by monitoring CloudTrail. Note that log entries take a few minutes to propagate to CloudTrail, and that Faythe and Walter are in different regions, so you will need to look at CloudTrail in the region for each one.</p>
 <ul>
 <li>Faythe is in <code>us-east-2</code>, so check CloudTrail in that region with these links:<ul>
@@ -950,7 +951,7 @@
 <span class="n">ops</span> <span class="o">=</span> <span class="n">document_bucket</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 <span class="n">item</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">partition_key</span><span class="p">))</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">partition_key</span><span class="p">)</span>
 <span class="c1"># Use the make targets to change the grants and see what happens!</span>
 <span class="c1"># Ctrl-D when finished to exit the REPL</span>
 </code></pre></div></td></tr></table></div>
@@ -971,6 +972,8 @@
               
             </article>
             
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
           </div>
         </div>
         
@@ -1078,7 +1081,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>

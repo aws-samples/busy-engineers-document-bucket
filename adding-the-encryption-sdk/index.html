@@ -888,7 +888,7 @@
 <h4 id="what-happened">What Happened?</h4>
 <ol>
 <li>You added a dependency on the AWS Encryption SDK library in your code</li>
-<li>You changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in <code>store</code> and <code>retrieve</code> operations</li>
+<li>(Java and Python) You changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in <code>store</code> and <code>retrieve</code> operations</li>
 </ol>
 <h3 id="step-2-add-encryption-to-store">Step 2: Add Encryption to <code>store</code></h3>
 <p>Now that you have the AWS Encryption SDK imported, start encrypting your data before storing it.</p>
@@ -975,9 +975,8 @@
 <ol>
 <li>Requesting a new data key using your Keyring or Master Key Provider</li>
 <li>Encrypting your data with the returned data key</li>
-<li>Returning your encrypted data in the AWS Encryption SDK message format</li>
-<li>Extracting the ciphertext from the AWS Encryption SDK message</li>
-<li>Passing the ciphertext to the AWS S3 SDK for storage in S3</li>
+<li>Returning the AWS Encryption SDK formatted encrypted message.</li>
+<li>Passing the encrypted message to the AWS S3 SDK for storage in S3</li>
 </ol>
 <h3 id="step-3-add-decryption-to-retrieve">Step 3: Add Decryption to <code>retrieve</code></h3>
 <p>Now that the application encypts your data before storing it, it will need to decrypt your data before returning it to the caller (at least for the data to be useful, anyway).</p>
@@ -1084,9 +1083,9 @@
 <p>The data returned from S3 for <code>retrieve</code> is encrypted. Before returning that data to the user, you added a call to the AWS Encryption SDK to decrypt the data. Under the hood, the Encryption SDK is:</p>
 <ol>
 <li>Reading the AWS Encryption SDK formatted encrypted message</li>
-<li>Calling KMS to request to decrypt your message's encrypted data key using the Faythe KMS Key</li>
-<li>Using the decrypted data key to decrypt the message</li>
-<li>Returning the message plaintext and Encryption SDK headers to you</li>
+<li>Calling KMS to request to decrypt your encrypted message's encrypted data key using the Faythe KMS Key</li>
+<li>Using the decrypted data key to decrypt the encrypted message</li>
+<li>Returning the plaintext and Encryption SDK headers to you</li>
 </ol>
 <h3 id="step-4-configure-the-faythe-kms-key-in-the-encryption-sdk">Step 4: Configure the Faythe KMS Key in the Encryption SDK</h3>
 <p>Now that you have declared your dependencies and updated your code to encrypt and decrypt data, the final step is to pass through the configuration to the AWS Encryption SDK to start using your KMS Keys to protect your data.</p>
@@ -1103,7 +1102,7 @@
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/App.java</span><span class="w"></span>
 <span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AmazonS3ClientBuilder</span><span class="p">.</span><span class="na">defaultClient</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span><span class="w"></span>
@@ -1252,7 +1251,10 @@
 <p>Experiment using the API as much as you like. </p>
 <p>To get started, here are some things to try:</p>
 <ul>
-<li>Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventSource=kms.amazonaws.com" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)</li>
+<li>Compare <a href="https://us-east-2.console.aws.amazon.com/cloudtrail/home?region=us-east-2#/events?EventSource=kms.amazonaws.com" target="_blank">CloudTrail Logs for usages of Faythe</a> when you encrypt messages of different sizes (small, medium, large)<ul>
+<li>Note: Cloudtrail logs may take a couple minutes to appear in the console</li>
+</ul>
+</li>
 <li>Take a look at the <a href="https://s3.console.aws.amazon.com/s3/home" target="_blank">contents of your S3 Document Bucket</a> to inspect the raw object</li>
 </ul>
 <p>For more things to try, check out <a href="#explore-further">Explore Further</a>, below.</p>
@@ -1390,9 +1392,9 @@
 <span class="kn">import</span> <span class="nn">document_bucket</span>
 <span class="n">ops</span> <span class="o">=</span> <span class="n">document_bucket</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-<span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">)</span>
+<span class="n">item</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">)</span>
 <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-<span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;PutYourKeyHere&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">partition_key</span><span class="p">)</span>
 <span class="c1"># Ctrl-D when finished to exit the REPL</span>
 </code></pre></div></td></tr></table></div>
 </div>
@@ -1412,6 +1414,8 @@
               
             </article>
             
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
           </div>
         </div>
         
@@ -1519,7 +1523,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
