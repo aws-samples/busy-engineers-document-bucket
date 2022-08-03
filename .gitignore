@@ -3,3 +3,5 @@
 .idea/
 *.iml
 .DS_Store
+exercises/csharp/add-esdk-complete/obj
+exercises/csharp/add-esdk-complete/bin
