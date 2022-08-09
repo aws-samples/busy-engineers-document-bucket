@@ -96,6 +96,12 @@ If you are working through these exercises in an AWS classroom environment, AWS 
     cd ~/environment/workshop/exercises/python
     ```
 
+=== "C#"
+
+    ```bash
+    cd ~/environment/workshop/exercises/dotnet
+    ```
+
 **Your environment is ready!** 
 
 

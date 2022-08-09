@@ -38,6 +38,12 @@ Make sure you are in the `exercises` directory for the language of your choice:
     cd ~/environment/workshop/exercises/python/add-esdk-start
     ```
 
+=== "C#"
+    
+    ```bash
+    cd ~/environment/workshop/exercises/dotnet/add-esdk-start
+    ```
+
 ### Step 1: Add the ESDK Dependency
 
 Look for `ADD-ESDK-START` comments in the code to help orient yourself.
@@ -168,10 +174,62 @@ Start by adding the Encryption SDK dependency to the code.
     # Save and exit
     ```
 
+=== "C#"
+
+    ```{.csharp hl_lines="6 9 10 21 22 25 26 31 32 33 34 35 36 37 38 45 46"}
+    // Edit src/Api.cs
+
+    // ADD-ESDK-START: Add the ESDK Dependency
+    using Amazon.DynamoDBv2;
+    using Amazon.DynamoDBv2.Model;
+    using Amazon.KeyManagementService;
+    using Amazon.S3;
+    using Amazon.S3.Model;
+    using AWS.EncryptionSDK;
+    using AWS.EncryptionSDK.Core;
+    
+    namespace DocumentBucket
+    {
+        public class Api
+        {
+            // ADD-ESDK-START: Add the ESDK Dependency
+            private readonly AmazonDynamoDBClient amazonDynamoDBClient;
+            private readonly string tableName;
+            private readonly AmazonS3Client amazonS3Client;
+            private readonly string bucketName;
+            private readonly IKeyring keyring;
+            private readonly IAwsEncryptionSdk awsEncryptionSdk;
+    
+            // ADD-ESDK-START: Add the ESDK Dependency
+            public Api(AmazonDynamoDBClient amazonDynamoDBClient, string tableName, AmazonS3Client amazonS3Client, string bucketName,
+                IKeyring keyring)
+            {
+                this.amazonDynamoDBClient = amazonDynamoDBClient;
+                this.tableName = tableName;
+                this.amazonS3Client = amazonS3Client;
+                this.bucketName = bucketName;
+                this.keyring = keyring;
+    
+                var esdkConfig = new AwsEncryptionSdkConfig
+                {
+                    CommitmentPolicy = CommitmentPolicy.REQUIRE_ENCRYPT_ALLOW_DECRYPT,
+                };
+                awsEncryptionSdk = AwsEncryptionSdkFactory.CreateAwsEncryptionSdk(esdkConfig);
+            }
+
+    // Save and close.
+    // Edit src/App.cs
+
+    // ADD-ESDK-START: Add the ESDK Dependency
+    using Amazon.KeyManagementService;
+    using AWS.EncryptionSDK.Core;
+    // Save and close.
+    ```
+
 #### What Happened?
 
 1. You added a dependency on the AWS Encryption SDK library in your code
-1. (Java and Python) You changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in `store` and `retrieve` operations
+1. (Java, Python, C#) You changed the API to expect that a Keyring or Master Key Provider will be passed to your code to use in `store` and `retrieve` operations
 
 ### Step 2: Add Encryption to `store`
 
@@ -230,6 +288,25 @@ Now that you have the AWS Encryption SDK imported, start encrypting your data be
         )
         ...
         self._write_object(encrypted_data, item)
+    ```
+
+=== "C#"
+
+    ```{.csharp hl_lines="6 7 8 9 10 12"}
+    // Edit src/Api.cs
+
+    public async Task<PointerItem> Store(byte[] data, Dictionary<string, string> context)
+    {
+        // ADD-ESDK-START: Add Encryption to store
+        var encryptedMessage = awsEncryptionSdk.Encrypt(new EncryptInput
+        {
+            Plaintext = new MemoryStream(data),
+            Keyring = keyring
+        });
+
+        DocumentBundle bundle = DocumentBundle.FromDataAndContext(encryptedMessage.Ciphertext.ToArray(), context);
+        await WriteItem(bundle.Pointer);
+        ...
     ```
 
 #### What Happened?
@@ -306,6 +383,24 @@ Now that the application encypts your data before storing it, it will need to de
             )
 
     # Save and exit
+    ```
+
+=== "C#"
+
+    ```{.csharp hl_lines="5 6 7 8 9 11"}
+    // Edit src/Api.cs
+    // Find Retrieve(...)
+        byte[] data = await GetObjectData(key);
+        // ADD-ESDK-START: Add Decryption to retrieve
+        var decryptedMessage = awsEncryptionSdk.Decrypt(new DecryptInput
+        {
+            Ciphertext = new MemoryStream(data),
+            Keyring = keyring
+        });
+        PointerItem pointer = await GetPointerItem(key);
+        return DocumentBundle.FromDataAndPointer(decryptedMessage.Plaintext.ToArray(), pointer);
+
+    // Save and close.
     ```
 
 #### What Happened?
@@ -406,6 +501,26 @@ Now that you have declared your dependencies and updated your code to encrypt an
     # Save and exit
     ```
 
+=== "C#"
+
+    ```{.csharp hl_lines="6 7 8 9 10 11 12"}
+    // Edit src/App.cs
+
+    AmazonS3Client amazonS3Client = new(amazonS3Config);
+
+    // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
+    var materialProviders = AwsCryptographicMaterialProvidersFactory.CreateDefaultAwsCryptographicMaterialProviders();
+    var keyring = materialProviders.CreateAwsKmsKeyring(new CreateAwsKmsKeyringInput
+    {
+        KmsKeyId = Config.FaytheKmsKeyId,
+        KmsClient = new AmazonKeyManagementServiceClient()
+    });
+
+    Api api = new(amazonDynamoDBClient, tableName, amazonS3Client, bucketName, keyring);
+
+    // Save and close.
+    ```
+
 #### What Happened?
 
 In [Getting Started](./getting-started.md), you launched CloudFormation stacks for KMS Keys. One of these KMS Keys was nicknamed Faythe. As part of launching these templates, the KMS Key's Amazon Resource Name (ARN) was written to a configuration file on disk, the `state` variable that is loaded and parsed.
@@ -440,6 +555,12 @@ Check out the code in one of the `-complete` folders to compare.
 
     ```bash
     cd ~/environment/workshop/exercises/python/add-esdk-complete
+    ```
+
+=== "C#"
+
+    ```bash
+    cd ~/environment/workshop/exercises/dotnet/add-esdk-complete
     ```
 
 ## Try it Out
@@ -550,6 +671,19 @@ For more things to try, check out [Explore Further](#explore-further), below.
     ops.list()
     ops.retrieve(item.partition_key)
     # Ctrl-D when finished to exit the REPL
+    ```
+
+=== "C#"
+
+    ```csharp
+    // Run your code
+    dotnet run
+
+    // Follow the menu prompts to interact with the document bucket
+    // You can close the program at any time with Ctrl+c
+
+    // Alternatively, you can edit the Main method in App.cs 
+    // to interact with the Api class directly. 
     ```
 
 ## Explore Further

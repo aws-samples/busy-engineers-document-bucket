@@ -47,6 +47,12 @@ These commands will check your code for missing imports, syntax issues, and othe
     tox -e check
     ```
 
+=== "C#"
+
+    ```bash
+    dotnet build
+    ```
+
 ### Missing CloudFormation resources
 
 Make sure you take the defaults for which region to launch in (us-east-2). If you've changed the region for any part of the workshop, tear your stack down and start fresh.

@@ -29,13 +29,13 @@ namespace DocumentBucket
 
         private static readonly string s_tableName = (string)s_stateTable["DocumentTable"];
         private static readonly string s_bucketName = (string)s_stateTable["DocumentBucket"];
-        private static readonly string s_faytheCmkId = (string)s_stateTable["FaytheKmsKey"];
-        private static readonly string s_walterCmkId = (string)s_stateTable["WalterKmsKey"];
+        private static readonly string s_faytheKmsKeyId = (string)s_stateTable["FaytheKmsKey"];
+        private static readonly string s_walterKmsKeyId = (string)s_stateTable["WalterKmsKey"];
 
         public static string TableName => s_tableName;
         public static string BucketName => s_bucketName;
-        public static string FaytheCmkId => s_faytheCmkId;
-        public static string WalterCmkId => s_walterCmkId;
+        public static string FaytheKmsKeyId => s_faytheKmsKeyId;
+        public static string WalterKmsKeyId => s_walterKmsKeyId;
     }
 }
 

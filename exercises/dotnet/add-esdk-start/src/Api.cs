@@ -1,7 +1,6 @@
 ﻿// ADD-ESDK-START: Add the ESDK Dependency
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Amazon.KeyManagementService;
 using Amazon.S3;
 using Amazon.S3.Model;
 
@@ -28,16 +27,15 @@ namespace DocumentBucket
 
         protected async Task<Dictionary<string, AttributeValue>> WriteItem<T>(T modeledItem) where T : BaseItem
         {
-            Dictionary<string, AttributeValue> ddbItem = modeledItem.ToItem();
+            var ddbItem = modeledItem.ToItem();
             await amazonDynamoDBClient.PutItemAsync(tableName, ddbItem);
             return ddbItem;
         }
 
         protected async Task<PointerItem> GetPointerItem(string key)
         {
-            GetItemResponse response = await amazonDynamoDBClient.GetItemAsync(tableName, PointerItem.AtKey(key));
-            PointerItem pointerItem = PointerItem.FromItem(response.Item);
-            return pointerItem;
+            var response = await amazonDynamoDBClient.GetItemAsync(tableName, PointerItem.AtKey(key));
+            return PointerItem.FromItem(response.Item);
         }
 
         protected async Task<PointerItem> GetPointerItem(ContextItem contextItem)
@@ -47,9 +45,9 @@ namespace DocumentBucket
 
         protected async Task<HashSet<PointerItem>> QueryForContextKey(string contextKey)
         {
-            QueryRequest request = ContextItem.QueryFor(contextKey);
+            var request = ContextItem.QueryFor(contextKey);
             request.TableName = tableName;
-            QueryResponse response = await amazonDynamoDBClient.QueryAsync(request);
+            var response = await amazonDynamoDBClient.QueryAsync(request);
             HashSet<ContextItem> contextItems = new(response.Items.Select(i => ContextItem.FromItem(i)));
             var pointerItems = await Task.WhenAll(contextItems.Select(async i => await GetPointerItem(i)));
             return new HashSet<PointerItem>(pointerItems);
@@ -75,7 +73,7 @@ namespace DocumentBucket
 
         protected async Task<byte[]> GetObjectData(string key)
         {
-            using (GetObjectResponse response = await amazonS3Client.GetObjectAsync(bucketName, key))
+            using (var response = await amazonS3Client.GetObjectAsync(bucketName, key))
             {
 
                 using (var memoryStream = new MemoryStream())
@@ -88,7 +86,7 @@ namespace DocumentBucket
 
         public async Task<HashSet<PointerItem>> List()
         {
-            ScanResponse response = await amazonDynamoDBClient.ScanAsync(tableName, PointerItem.FilterFor());
+            var response = await amazonDynamoDBClient.ScanAsync(tableName, PointerItem.FilterFor());
             return new HashSet<PointerItem>(response.Items.Select(i => PointerItem.FromItem(i)));
         }
 
@@ -100,9 +98,8 @@ namespace DocumentBucket
         public async Task<PointerItem> Store(byte[] data, Dictionary<string, string> context)
         {
             // ADD-ESDK-START: Add Encryption to store
-            DocumentBundle bundle = DocumentBundle.FromDataAndContext(data, context);
-            await WriteItem(bundle.Pointer);
-            await WriteObject(bundle);
+            var bundle = DocumentBundle.FromDataAndContext(data, context);
+            await Task.WhenAll(WriteItem(bundle.Pointer), WriteObject(bundle));
             return bundle.Pointer;
         }
 
@@ -125,7 +122,7 @@ namespace DocumentBucket
         {
             byte[] data = await GetObjectData(key);
             // ADD-ESDK-START: Add Decryption to retrieve
-            PointerItem pointer = await GetPointerItem(key);
+            var pointer = await GetPointerItem(key);
             // ADD-ESDK-START: Add Decryption to retrieve
             return DocumentBundle.FromDataAndPointer(data, pointer);
         }

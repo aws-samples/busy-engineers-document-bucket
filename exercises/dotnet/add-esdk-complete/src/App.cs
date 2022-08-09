@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using Amazon.DynamoDBv2;
 using Amazon.S3;
+// ADD-ESDK-START: Add the ESDK Dependency
+using Amazon.KeyManagementService;
 using AWS.EncryptionSDK.Core;
 
 namespace DocumentBucket
@@ -24,9 +26,15 @@ namespace DocumentBucket
             amazonS3Config.RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(region);
             AmazonS3Client amazonS3Client = new(amazonS3Config);
 
+            // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
             var materialProviders = AwsCryptographicMaterialProvidersFactory.CreateDefaultAwsCryptographicMaterialProviders();
+            var keyring = materialProviders.CreateAwsKmsKeyring(new CreateAwsKmsKeyringInput
+            {
+                KmsKeyId = Config.FaytheKmsKeyId,
+                KmsClient = new AmazonKeyManagementServiceClient()
+            });
 
-            Api api = new(amazonDynamoDBClient, tableName, amazonS3Client, bucketName, materialProviders);
+            Api api = new(amazonDynamoDBClient, tableName, amazonS3Client, bucketName, keyring);
 
             Console.CancelKeyPress += new ConsoleCancelEventHandler(CancelHandler);
             while (_continue)
@@ -40,12 +48,12 @@ namespace DocumentBucket
                     switch (Console.ReadLine())
                     {
                         case "1":
-                            HashSet<PointerItem> items = await api.List();
+                            var items = await api.List();
                             await ListToConsole(api, items);
                             break;
                         case "2":
                             Console.WriteLine("Enter data to store:");
-                            string? data = Console.ReadLine();
+                            var data = Console.ReadLine();
                             if (data is null || data == "")
                             {
                                 Console.WriteLine("You must enter a valid input!");
@@ -56,7 +64,7 @@ namespace DocumentBucket
                             break;
                         case "3":
                             Console.WriteLine("Enter key of item to retrieve:");
-                            string? key = Console.ReadLine();
+                            var key = Console.ReadLine();
                             if (key is null || key == "")
                             {
                                 Console.WriteLine("You must enter a valid input!");
@@ -84,7 +92,7 @@ namespace DocumentBucket
         {
             foreach (PointerItem item in items)
             {
-                DocumentBundle document = await api.Retrieve(item.PartitionKey.S);
+                var document = await api.Retrieve(item.PartitionKey.S);
                 Console.WriteLine(document.ToString());
             }
             Console.WriteLine("All done.");

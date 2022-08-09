@@ -155,8 +155,8 @@ namespace DocumentBucket
 
         public static ContextItem FromItem(Dictionary<string, AttributeValue> item)
         {
-            string contextKey = item[PartitionKeyName].S;
-            string objectTarget = item[SortKeyName].S;
+            var contextKey = item[PartitionKeyName].S;
+            var objectTarget = item[SortKeyName].S;
             return FromContext(contextKey, objectTarget);
         }
     }
@@ -203,7 +203,7 @@ namespace DocumentBucket
 
         public static PointerItem FromKeyAndContext(string key, Dictionary<string, string> context)
         {
-            Dictionary<string, AttributeValue> attributeContext = new Dictionary<string, AttributeValue>(context.Count);
+            Dictionary<string, AttributeValue> attributeContext = new(context.Count);
 
             foreach (KeyValuePair<string, string> entry in context)
             {
@@ -215,7 +215,7 @@ namespace DocumentBucket
 
         public Dictionary<string, string> GetContext()
         {
-            Dictionary<string, string> result = new Dictionary<string, string>(_context.Count);
+            Dictionary<string, string> result = new(_context.Count);
 
             foreach (KeyValuePair<string, AttributeValue> keyValuePair in _context)
             {
@@ -227,7 +227,7 @@ namespace DocumentBucket
 
         public override Dictionary<string, AttributeValue> ToItem()
         {
-            Dictionary<string, AttributeValue> result = base.ToItem();
+            var result = base.ToItem();
             foreach (KeyValuePair<string, AttributeValue> keyValuePair in _context)
             {
                 result.Add(keyValuePair.Key, keyValuePair.Value);
@@ -256,7 +256,7 @@ namespace DocumentBucket
         {
             GuidKey partitionKey = new(item[PartitionKeyName].S);
             item.Remove(PartitionKeyName);
-            string sortKey = item[SortKeyName].S;
+            var sortKey = item[SortKeyName].S;
             item.Remove(SortKeyName);
             if (sortKey != s_target)
             {
@@ -267,7 +267,7 @@ namespace DocumentBucket
 
         public HashSet<ContextItem> ContextItems()
         {
-            HashSet<ContextItem> contextItems = new HashSet<ContextItem>(_context.Count);
+            HashSet<ContextItem> contextItems = new(_context.Count);
             foreach (KeyValuePair<string, AttributeValue> keyValuePair in _context)
             {
                 contextItems.Add(ContextItem.FromContext(keyValuePair.Key, PartitionKey));

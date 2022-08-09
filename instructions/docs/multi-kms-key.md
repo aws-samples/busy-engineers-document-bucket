@@ -60,6 +60,12 @@ If you aren't sure, or want to catch up, jump into the `multi-kms-key-start` dir
     cd ~/environment/workshop/exercises/python/multi-kms-key-start
     ```
 
+=== "C#"
+
+    ```bash
+    cd ~/environment/workshop/exercises/dotnet/multi-kms-key-start
+    ```
+
 ### Step 1: Configure Walter
 
 === "Java"
@@ -103,6 +109,24 @@ If you aren't sure, or want to catch up, jump into the `multi-kms-key-start` dir
         # MULTI-KMS-KEY-START: Configure Walter
         walter_kms_key = state["WalterKmsKey"]
     ```
+
+=== "C#"
+
+    ```{.csharp hl_lines="4 10"}
+    // Edit src/Config.cs
+
+    // MULTI-KMS-KEY-START: Configure Walter
+    private static readonly string s_walterKmsKeyId = (string)s_stateTable["WalterKmsKey"];
+
+    public static string TableName => s_tableName;
+    public static string BucketName => s_bucketName;
+    public static string FaytheKmsKeyId => s_faytheKmsKeyId;
+    // MULTI-KMS-KEY-START: Configure Walter
+    public static string WalterKmsKeyId => s_walterKmsKeyId;
+
+    // Save and close.
+    ```
+
 
 #### What Happened?
 
@@ -169,6 +193,20 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
     # Save and exit
     ```
 
+=== "C#"
+
+    ```{.csharp hl_lines="5 6 7 8 9"}
+    // Edit src/App.cs
+    // You will need to replace the existing keyring
+
+    // MULTI-KMS-KEY-START: Configure Walter
+    var keyring = materialProviders.CreateAwsKmsMultiKeyring(new CreateAwsKmsMultiKeyringInput
+    {
+        Generator = Config.FaytheKmsKeyId,
+        KmsKeyIds = new List<string>() {Config.WalterKmsKeyId}
+    });
+    ```
+
 #### What Happened?
 
 In the previous exercise, you configured the Encryption SDK to use a list of KMS Keys that contained only Faythe. Configuring the Encryption SDK to also use Walter for encrypt, and to also try Walter for decrypt, required adding the ARN for Walter to the configuration list.
@@ -201,6 +239,12 @@ There is a `-complete` folder for each language.
 
     ```bash
     cd ~/environment/workshop/exercises/python/multi-kms-key-complete
+    ```
+
+=== "C#"
+
+    ```bash
+    cd ~/environment/workshop/exercises/dotnet/multi-kms-key-complete
     ```
 
 ## Try it Out
@@ -339,6 +383,22 @@ Try out combinations of Grant permissions for your application and watch how the
     ops.retrieve(item.partition_key)
     # Use the make targets to change the grants and see what happens!
     # Ctrl-D when finished to exit the REPL
+    ```
+
+=== "C#"
+
+    ```csharp
+    // Run your code
+    dotnet run
+
+    // Follow the menu prompts to interact with the document bucket
+    // You can close the program at any time with Ctrl+c
+
+    // Use the make targets to change the grants and see what happens!
+
+    // Alternatively, you can edit the Main method in App.cs
+    // to interact with the Api class directly.
+
     ```
 
 ## Explore Further
