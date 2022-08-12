@@ -64,7 +64,7 @@ namespace DocumentBucket
                                 Console.WriteLine("Adding Encryption Context:");
                                 Console.WriteLine(string.Join(Environment.NewLine, context));
                             }
-                            await api.Store(Encoding.ASCII.GetBytes(data), context);
+                            await api.Store(Encoding.UTF8.GetBytes(data), context);
                             Console.WriteLine("Data stored successfully!");
                             break;
                         case "3":
@@ -128,22 +128,26 @@ namespace DocumentBucket
 
                 Console.WriteLine("Enter encryption context key: ");
                 var key = Console.ReadLine();
-                if (key is null || key == "")
+                if (key is null || key == "" || !IsValidASCII(key))
                 {
-                    Console.WriteLine("You must enter a valid input!");
+                    Console.WriteLine("You must enter valid ASCII text!");
                     break;
                 }
-
-                Console.WriteLine("Enter encryption context ecValue: ");
+                Console.WriteLine("Enter encryption context value: ");
                 var ecValue = Console.ReadLine();
-                if (ecValue is null || ecValue == "")
+                if (ecValue is null || ecValue == "" || !IsValidASCII(ecValue))
                 {
-                    Console.WriteLine("You must enter a valid input!");
+                    Console.WriteLine("You must enter valid ASCII text!");
                     break;
                 }
                 context.Add(key, ecValue);
             }
             return context;
+        }
+
+        private static bool IsValidASCII(string data)
+        {
+            return Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(data)) == data;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace DocumentBucket
 
         public override string ToString()
         {
-            return $"{pointer}: {Encoding.ASCII.GetString(data)}";
+            return $"{pointer}: {Encoding.UTF8.GetString(data)}";
         }
     }
 
@@ -114,7 +114,7 @@ namespace DocumentBucket
 
         public static string Canonicalize(string key)
         {
-            if (!key.StartsWith(_prefix))
+            if (key.StartsWith(_prefix))
             {
                 return key;
             }

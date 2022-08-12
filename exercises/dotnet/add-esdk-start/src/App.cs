@@ -51,7 +51,7 @@ namespace DocumentBucket
                                 break;
                             }
                             Console.WriteLine($"Storing: {data}");
-                            await api.Store(Encoding.ASCII.GetBytes(data));
+                            await api.Store(Encoding.UTF8.GetBytes(data));
                             break;
                         case "3":
                             Console.WriteLine("Enter key of item to retrieve:");
