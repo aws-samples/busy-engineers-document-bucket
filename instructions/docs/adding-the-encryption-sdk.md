@@ -176,13 +176,12 @@ Start by adding the Encryption SDK dependency to the code.
 
 === "C#"
 
-    ```{.csharp hl_lines="6 9 10 21 22 25 26 31 32 33 34 35 36 37 38 45 46"}
+    ```{.csharp hl_lines="8 9 20 21 25 31 32 33 40"}
     // Edit src/Api.cs
 
     // ADD-ESDK-START: Add the ESDK Dependency
     using Amazon.DynamoDBv2;
     using Amazon.DynamoDBv2.Model;
-    using Amazon.KeyManagementService;
     using Amazon.S3;
     using Amazon.S3.Model;
     using AWS.EncryptionSDK;
@@ -210,19 +209,15 @@ Start by adding the Encryption SDK dependency to the code.
                 this.bucketName = bucketName;
                 this.keyring = keyring;
     
-                var esdkConfig = new AwsEncryptionSdkConfig
-                {
-                    CommitmentPolicy = CommitmentPolicy.REQUIRE_ENCRYPT_ALLOW_DECRYPT,
-                };
-                awsEncryptionSdk = AwsEncryptionSdkFactory.CreateAwsEncryptionSdk(esdkConfig);
+                awsEncryptionSdk = AwsEncryptionSdkFactory.CreateDefaultAwsEncryptionSdk();
             }
 
     // Save and close.
     // Edit src/App.cs
 
     // ADD-ESDK-START: Add the ESDK Dependency
-    using Amazon.KeyManagementService;
     using AWS.EncryptionSDK.Core;
+
     // Save and close.
     ```
 
@@ -510,10 +505,9 @@ Now that you have declared your dependencies and updated your code to encrypt an
 
     // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
     var materialProviders = AwsCryptographicMaterialProvidersFactory.CreateDefaultAwsCryptographicMaterialProviders();
-    var keyring = materialProviders.CreateAwsKmsKeyring(new CreateAwsKmsKeyringInput
+    var keyring = materialProviders.CreateAwsKmsMrkMultiKeyring(new CreateAwsKmsMrkMultiKeyringInput
     {
-        KmsKeyId = Config.FaytheKmsKeyId,
-        KmsClient = new AmazonKeyManagementServiceClient()
+        Generator = Config.FaytheKmsKeyId
     });
 
     Api api = new(amazonDynamoDBClient, tableName, amazonS3Client, bucketName, keyring);
@@ -680,9 +674,12 @@ For more things to try, check out [Explore Further](#explore-further), below.
     dotnet run
 
     // Follow the menu prompts to interact with the document bucket
+    // Try storing an item then try to retrieve later.
+    // Try using list to see the items which have been stored.
+
     // You can close the program at any time with Ctrl+c
 
-    // Alternatively, you can edit the Main method in App.cs 
+    // Alternatively, you can edit the Main method in App.cs
     // to interact with the Api class directly. 
     ```
 

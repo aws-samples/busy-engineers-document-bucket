@@ -1,6 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Amazon.KeyManagementService;
 using Amazon.S3;
 using Amazon.S3.Model;
 using AWS.EncryptionSDK;
@@ -26,11 +25,7 @@ namespace DocumentBucket
             this.bucketName = bucketName;
             this.keyring = keyring;
 
-            var esdkConfig = new AwsEncryptionSdkConfig
-            {
-                CommitmentPolicy = CommitmentPolicy.REQUIRE_ENCRYPT_ALLOW_DECRYPT,
-            };
-            awsEncryptionSdk = AwsEncryptionSdkFactory.CreateAwsEncryptionSdk(esdkConfig);
+            awsEncryptionSdk = AwsEncryptionSdkFactory.CreateDefaultAwsEncryptionSdk();
         }
 
         protected async Task<Dictionary<string, AttributeValue>> WriteItem<T>(T modeledItem) where T : BaseItem
@@ -146,14 +141,14 @@ namespace DocumentBucket
             var pointer = PointerItem.FromKeyAndContext(key, actualContext);
 
             // ENCRYPTION-CONTEXT-START: Making Assertions
-	    foreach (var expectedPair in expectedContext)
-	    {
-		if (!actualContext.TryGetValue(expectedPair.Key, out var decryptedValue)
-		    || !decryptedValue.Equals(expectedPair.Value))
-		{
-		    throw new Exception("Encryption context does not match expected values!");
-		}
-	    }
+            foreach (var expectedPair in expectedContext)
+            {
+                if (!actualContext.TryGetValue(expectedPair.Key, out var decryptedValue)
+                    || !decryptedValue.Equals(expectedPair.Value))
+                {
+                    throw new Exception("Encryption context does not match expected values!");
+                }
+            }
 
             return DocumentBundle.FromDataAndPointer(decryptedMessage.Plaintext.ToArray(), pointer);
         }

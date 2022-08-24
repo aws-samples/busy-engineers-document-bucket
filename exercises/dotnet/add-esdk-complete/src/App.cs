@@ -2,7 +2,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.S3;
 // ADD-ESDK-START: Add the ESDK Dependency
-using Amazon.KeyManagementService;
 using AWS.EncryptionSDK.Core;
 
 namespace DocumentBucket
@@ -28,10 +27,9 @@ namespace DocumentBucket
 
             // ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK
             var materialProviders = AwsCryptographicMaterialProvidersFactory.CreateDefaultAwsCryptographicMaterialProviders();
-            var keyring = materialProviders.CreateAwsKmsKeyring(new CreateAwsKmsKeyringInput
+            var keyring = materialProviders.CreateAwsKmsMrkMultiKeyring(new CreateAwsKmsMrkMultiKeyringInput
             {
-                KmsKeyId = Config.FaytheKmsKeyId,
-                KmsClient = new AmazonKeyManagementServiceClient()
+                Generator = Config.FaytheKmsKeyId
             });
 
             Api api = new(amazonDynamoDBClient, tableName, amazonS3Client, bucketName, keyring);

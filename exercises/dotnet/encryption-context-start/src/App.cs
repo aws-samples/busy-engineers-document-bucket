@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Amazon.DynamoDBv2;
-using Amazon.KeyManagementService;
 using Amazon.S3;
 using AWS.EncryptionSDK.Core;
 
@@ -26,7 +25,7 @@ namespace DocumentBucket
             AmazonS3Client amazonS3Client = new(amazonS3Config);
 
             var materialProviders = AwsCryptographicMaterialProvidersFactory.CreateDefaultAwsCryptographicMaterialProviders();
-            var keyring = materialProviders.CreateAwsKmsMultiKeyring(new CreateAwsKmsMultiKeyringInput
+            var keyring = materialProviders.CreateAwsKmsMrkMultiKeyring(new CreateAwsKmsMrkMultiKeyringInput
             {
                 Generator = Config.FaytheKmsKeyId,
                 KmsKeyIds = new List<string>() {Config.WalterKmsKeyId}
@@ -75,7 +74,10 @@ namespace DocumentBucket
                                 Console.WriteLine("You must enter a valid input!");
                                 break;
                             }
-                            Console.WriteLine($"Retrieving: {key}");
+                            Console.WriteLine("Enter the Encryption Context for this object. The Encryption Context must match what was provided when the object was stored.");
+                            var retrievalContext = ReadEncryptionContext();
+                            Console.WriteLine($"Retrieving with Encryption Context: {key}");
+                            Console.WriteLine(string.Join(Environment.NewLine, retrievalContext));
                             var documentBundle = await api.Retrieve(key);
                             Console.WriteLine("Contents: " + documentBundle.ToString());
                             break;
@@ -114,7 +116,7 @@ namespace DocumentBucket
             Dictionary<string, string> context = new();
             while (true)
             {
-                Console.WriteLine("Add Encryption Context? y/n?");
+                Console.WriteLine("Add Encryption Context to request? y/n?");
                 var data = Console.ReadLine();
                 if (data is null || data == "")
                 {

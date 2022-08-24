@@ -1,7 +1,6 @@
 ﻿// ADD-ESDK-START: Add the ESDK Dependency
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Amazon.KeyManagementService;
 using Amazon.S3;
 using Amazon.S3.Model;
 using AWS.EncryptionSDK;
@@ -29,11 +28,7 @@ namespace DocumentBucket
             this.bucketName = bucketName;
             this.keyring = keyring;
 
-            var esdkConfig = new AwsEncryptionSdkConfig
-            {
-                CommitmentPolicy = CommitmentPolicy.REQUIRE_ENCRYPT_ALLOW_DECRYPT,
-            };
-            awsEncryptionSdk = AwsEncryptionSdkFactory.CreateAwsEncryptionSdk(esdkConfig);
+            awsEncryptionSdk = AwsEncryptionSdkFactory.CreateDefaultAwsEncryptionSdk();
         }
 
         protected async Task<Dictionary<string, AttributeValue>> WriteItem<T>(T modeledItem) where T : BaseItem

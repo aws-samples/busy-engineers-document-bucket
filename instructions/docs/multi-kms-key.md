@@ -197,10 +197,9 @@ When you launched your workshop stacks in [Getting Started](./getting-started.md
 
     ```{.csharp hl_lines="5 6 7 8 9"}
     // Edit src/App.cs
-    // You will need to replace the existing keyring
 
-    // MULTI-KMS-KEY-START: Configure Walter
-    var keyring = materialProviders.CreateAwsKmsMultiKeyring(new CreateAwsKmsMultiKeyringInput
+    // MULTI-KMS-KEY-START: Add Walter to the KMS Keys to Use
+    var keyring = materialProviders.CreateAwsKmsMrkMultiKeyring(new CreateAwsKmsMrkMultiKeyringInput
     {
         Generator = Config.FaytheKmsKeyId,
         KmsKeyIds = new List<string>() {Config.WalterKmsKeyId}

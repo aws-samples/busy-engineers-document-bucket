@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Amazon.DynamoDBv2;
-using Amazon.KeyManagementService;
 using Amazon.S3;
 using AWS.EncryptionSDK.Core;
 
@@ -26,11 +25,10 @@ namespace DocumentBucket
             AmazonS3Client amazonS3Client = new(amazonS3Config);
 
             var materialProviders = AwsCryptographicMaterialProvidersFactory.CreateDefaultAwsCryptographicMaterialProviders();
-            // MULTI-KMS-KEY-START: Configure Walter
-            var keyring = materialProviders.CreateAwsKmsMultiKeyring(new CreateAwsKmsMultiKeyringInput
+            // MULTI-KMS-KEY-START: Add Walter to the KMS Keys to Use
+            var keyring = materialProviders.CreateAwsKmsMrkMultiKeyring(new CreateAwsKmsMrkMultiKeyringInput
             {
-                Generator = Config.FaytheKmsKeyId,
-                KmsKeyIds = new List<string>() {Config.WalterKmsKeyId}
+                Generator = Config.FaytheKmsKeyId
             });
 
             Api api = new(amazonDynamoDBClient, tableName, amazonS3Client, bucketName, keyring);
