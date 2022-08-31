@@ -607,8 +607,8 @@ There's a few simple suggestions to get you started in the snippets below.
     dotnet run
     
     // Follow the menu prompts to interact with the document bucket
-    // Now you will need to provide an Encryption Context when storing and retrieving items
-
+    // Now you may provide an Encryption Context when storing and retrieving items
+    
     // You can close the program at any time with Ctrl+c
     
     // Alternatively, you can edit the Main method in App.cs
