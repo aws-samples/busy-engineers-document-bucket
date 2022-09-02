@@ -21,7 +21,6 @@ namespace DocumentBucket
             this.tableName = tableName;
             this.amazonS3Client = amazonS3Client;
             this.bucketName = bucketName;
-
             // ADD-ESDK-START: Add the ESDK Dependency
         }
 

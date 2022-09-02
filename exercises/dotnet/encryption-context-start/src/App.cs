@@ -78,7 +78,7 @@ namespace DocumentBucket
                             var retrievalContext = ReadEncryptionContext();
                             Console.WriteLine($"Retrieving with Encryption Context: {key}");
                             Console.WriteLine(string.Join(Environment.NewLine, retrievalContext));
-                            var documentBundle = await api.Retrieve(key);
+                            var documentBundle = await api.Retrieve(key, retrievalContext);
                             Console.WriteLine("Contents: " + documentBundle.ToString());
                             break;
                         default:

@@ -176,7 +176,7 @@ Start by adding the Encryption SDK dependency to the code.
 
 === "C#"
 
-    ```{.csharp hl_lines="8 9 20 21 25 31 32 33 40"}
+    ```{.csharp hl_lines="8 9 20 21 25 32 33 34 41"}
     // Edit src/Api.cs
 
     // ADD-ESDK-START: Add the ESDK Dependency
@@ -207,6 +207,7 @@ Start by adding the Encryption SDK dependency to the code.
                 this.tableName = tableName;
                 this.amazonS3Client = amazonS3Client;
                 this.bucketName = bucketName;
+                // ADD-ESDK-START: Add the ESDK Dependency
                 this.keyring = keyring;
     
                 awsEncryptionSdk = AwsEncryptionSdkFactory.CreateDefaultAwsEncryptionSdk();
@@ -299,8 +300,8 @@ Now that you have the AWS Encryption SDK imported, start encrypting your data be
             Keyring = keyring
         });
 
-        DocumentBundle bundle = DocumentBundle.FromDataAndContext(encryptedMessage.Ciphertext.ToArray(), context);
-        await WriteItem(bundle.Pointer);
+        var bundle = DocumentBundle.FromDataAndContext(encryptedMessage.Ciphertext.ToArray(), context);
+        await Task.WhenAll(WriteItem(bundle.Pointer), WriteObject(bundle));
         ...
     ```
 
@@ -382,7 +383,7 @@ Now that the application encypts your data before storing it, it will need to de
 
 === "C#"
 
-    ```{.csharp hl_lines="5 6 7 8 9 11"}
+    ```{.csharp hl_lines="5 6 7 8 9 12"}
     // Edit src/Api.cs
     // Find Retrieve(...)
         byte[] data = await GetObjectData(key);
@@ -392,7 +393,8 @@ Now that the application encypts your data before storing it, it will need to de
             Ciphertext = new MemoryStream(data),
             Keyring = keyring
         });
-        PointerItem pointer = await GetPointerItem(key);
+        var pointer = await GetPointerItem(key);
+        // ADD-ESDK-START: Add Decryption to retrieve
         return DocumentBundle.FromDataAndPointer(decryptedMessage.Plaintext.ToArray(), pointer);
 
     // Save and close.

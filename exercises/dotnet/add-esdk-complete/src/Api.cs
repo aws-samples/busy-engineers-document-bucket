@@ -26,6 +26,7 @@ namespace DocumentBucket
             this.tableName = tableName;
             this.amazonS3Client = amazonS3Client;
             this.bucketName = bucketName;
+            // ADD-ESDK-START: Add the ESDK Dependency
             this.keyring = keyring;
 
             awsEncryptionSdk = AwsEncryptionSdkFactory.CreateDefaultAwsEncryptionSdk();
@@ -140,6 +141,7 @@ namespace DocumentBucket
                 Keyring = keyring
             });
             var pointer = await GetPointerItem(key);
+            // ADD-ESDK-START: Add Decryption to retrieve
             return DocumentBundle.FromDataAndPointer(decryptedMessage.Plaintext.ToArray(), pointer);
         }
 
