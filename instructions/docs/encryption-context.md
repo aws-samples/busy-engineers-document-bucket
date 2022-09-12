@@ -95,6 +95,12 @@ If you aren't sure, or want to catch up, jump into the `encryption-context-start
     cd ~/environment/workshop/exercises/python/encryption-context-start
     ```
 
+=== "C#"
+
+    ```csharp
+    cd ~/environment/workshop/exercises/dotnet/encryption-context-start
+    ```
+
 ### Step 1: Set Encryption Context on Encrypt
 
 === "Java"
@@ -156,6 +162,24 @@ If you aren't sure, or want to catch up, jump into the `encryption-context-start
             )
 
     # Save your changes
+    ```
+
+=== "C#"
+
+    ```{.csharp hl_lines="9 10"}
+    // Edit src/Api.cs 
+
+    public async Task<PointerItem> Store(byte[] data, Dictionary<string, string> context)
+    {
+        // ENCRYPTION-CONTEXT-START: Set Encryption Context on Encrypt
+        var encryptedMessage = awsEncryptionSdk.Encrypt(new EncryptInput
+        {
+            Plaintext = new MemoryStream(data),
+            Keyring = keyring,
+            EncryptionContext = context
+        });
+    
+    // Save and close.
     ```
 
 #### What Happened?
@@ -235,6 +259,16 @@ Next you will update `retrieve` to use the encryption context on decrypt.
             )
 
     # Save your changes
+    ```
+
+=== "C#"
+
+    ```{.csharp hl_lines="4 5"}
+    // Edit src/Api.cs
+
+    // ENCRYPTION-CONTEXT-START: Use Encryption Context on Decrypt
+    var actualContext = decryptedMessage.EncryptionContext;
+    var pointer = PointerItem.FromKeyAndContext(key, actualContext);
     ```
 
 #### What Happened?
@@ -375,6 +409,22 @@ Next you will add a mechanism for the application to test assertions made in enc
             )
     ```
 
+=== "C#"
+
+    ```{.csharp hl_lines="4 5 6 7 8 9 10 11"}
+    // Edit src/Api.cs
+
+    // ENCRYPTION-CONTEXT-START: Making Assertions
+    foreach (var expectedPair in expectedContext)
+    {
+        if (!actualContext.TryGetValue(expectedPair.Key, out var decryptedValue)
+            || !decryptedValue.Equals(expectedPair.Value))
+        {
+            throw new Exception("Encryption context does not match expected values!");
+        }
+    }
+    ```
+
 #### What Happened?
 
 `retrieve` will use its "expected context keys" argument to validate that all of those keys (with any associated values) are present in the encryption context. `retrieve` will also use its "expected context" argument to validate that the exact key-value pairs specified in expected context are present in the actual encryption context. If either of those assumptions is invalid, `retrieve` will raise an exception before returning the data. These assertions safeguard against accidentally returning unintended, corrupted, or tampered data to the application.
@@ -409,6 +459,12 @@ There is a `-complete` folder for each language.
 
     ```bash
     cd ~/environment/workshop/exercises/python/encryption-context-complete
+    ```
+
+=== "C#"
+
+    ```bash
+    cd ~/environment/workshop/exercises/dotnet/encryption-context-complete
     ```
 
 ## Try it Out
@@ -542,6 +598,21 @@ There's a few simple suggestions to get you started in the snippets below.
     item = ops.store(b'some data', context)
     print(ops.retrieve(item.partition_key, expected_context=context))
     # Ctrl-D when finished to exit the REPL
+    ```
+
+=== "C#"
+
+    ```bash
+    // Run your code
+    dotnet run
+    
+    // Follow the menu prompts to interact with the document bucket
+    // Now you may provide an Encryption Context when storing and retrieving items
+    
+    // You can close the program at any time with Ctrl+c
+    
+    // Alternatively, you can edit the Main method in App.cs
+    // to interact with the Api class directly.
     ```
 
 ## Explore Further
