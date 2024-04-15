@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import "source-map-support/register";
-import cdk = require("@aws-cdk/core");
+import * as cdk from 'aws-cdk-lib';
 import { Cloud9Stack } from "../lib/cloud9-stack";
 import toml = require("@iarna/toml");
 import fs = require("fs");
