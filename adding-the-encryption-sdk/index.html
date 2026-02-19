@@ -14,8 +14,18 @@
       
         <link rel="canonical" href="https://awssecworkshops.com/adding-the-encryption-sdk/">
       
+      
+        <link rel="prev" href="../getting-started/">
+      
+      
+        <link rel="next" href="../multi-kms-key/">
+      
+      
+        
+      
+      
       <link rel="icon" href="../assets/images/aws-favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -23,14 +33,14 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
-      
-        
-        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
-        
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
       
+
+
     
+    
+      
     
     
       
@@ -38,7 +48,7 @@
     
       <link rel="stylesheet" href="../stylesheets/custom.css">
     
-    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -47,14 +57,8 @@
   </head>
   
   
-    
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr">
   
-    
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -74,7 +78,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="Busy Engineer&#39;s Document Bucket Workshop" class="md-header__button md-logo" aria-label="Busy Engineer's Document Bucket Workshop" data-md-component="logo">
       
@@ -82,7 +88,8 @@
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -102,46 +109,56 @@
     </div>
     
     
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
-      <label class="md-header__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
       </div>
     </div>
   </div>
 </div>
+      
     
     
       <div class="md-header__source">
         <a href="https://github.com/aws-samples/busy-engineers-document-bucket" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     aws-samples/busy-engineers-document-bucket
@@ -171,6 +188,7 @@
                     
 
 
+
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="Busy Engineer&#39;s Document Bucket Workshop" class="md-nav__button md-logo" aria-label="Busy Engineer's Document Bucket Workshop" data-md-component="logo">
@@ -185,7 +203,7 @@
       <a href="https://github.com/aws-samples/busy-engineers-document-bucket" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     aws-samples/busy-engineers-document-bucket
@@ -197,14 +215,26 @@
     
       
       
-      
-
+  
   
   
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        Home
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -212,14 +242,26 @@
     
       
       
-      
-
+  
   
   
   
     <li class="md-nav__item">
       <a href="../getting-started/" class="md-nav__link">
-        Getting Started
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -227,28 +269,53 @@
     
       
       
-      
-
   
   
     
   
   
+  
     <li class="md-nav__item md-nav__item--active">
       
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
         
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Exercise 1
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercise 1
+  
+
+    
+  </span>
+  
+  
+
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Exercise 1
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercise 1
+  
+
+    
+  </span>
+  
+  
+
       </a>
       
         
@@ -268,29 +335,45 @@
       
         <li class="md-nav__item">
   <a href="#background" class="md-nav__link">
-    Background
+    <span class="md-ellipsis">
+      
+        Background
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#lets-go" class="md-nav__link">
-    Let's Go!
+    <span class="md-ellipsis">
+      
+        Let's Go!
+      
+    </span>
   </a>
   
-    <nav class="md-nav" aria-label="Let's Go!">
+    <nav class="md-nav" aria-label="Let&#39;s Go!">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#starting-directory" class="md-nav__link">
-    Starting Directory
+    <span class="md-ellipsis">
+      
+        Starting Directory
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#step-1-add-the-esdk-dependency" class="md-nav__link">
-    Step 1: Add the ESDK Dependency
+    <span class="md-ellipsis">
+      
+        Step 1: Add the ESDK Dependency
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 1: Add the ESDK Dependency">
@@ -298,7 +381,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -310,7 +397,11 @@
         
           <li class="md-nav__item">
   <a href="#step-2-add-encryption-to-store" class="md-nav__link">
-    Step 2: Add Encryption to store
+    <span class="md-ellipsis">
+      
+        Step 2: Add Encryption to store
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 2: Add Encryption to store">
@@ -318,7 +409,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened_1" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -330,7 +425,11 @@
         
           <li class="md-nav__item">
   <a href="#step-3-add-decryption-to-retrieve" class="md-nav__link">
-    Step 3: Add Decryption to retrieve
+    <span class="md-ellipsis">
+      
+        Step 3: Add Decryption to retrieve
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 3: Add Decryption to retrieve">
@@ -338,7 +437,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened_2" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -350,7 +453,11 @@
         
           <li class="md-nav__item">
   <a href="#step-4-configure-the-faythe-kms-key-in-the-encryption-sdk" class="md-nav__link">
-    Step 4: Configure the Faythe KMS Key in the Encryption SDK
+    <span class="md-ellipsis">
+      
+        Step 4: Configure the Faythe KMS Key in the Encryption SDK
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 4: Configure the Faythe KMS Key in the Encryption SDK">
@@ -358,7 +465,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened_3" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -370,7 +481,11 @@
         
           <li class="md-nav__item">
   <a href="#checking-your-work" class="md-nav__link">
-    Checking Your Work
+    <span class="md-ellipsis">
+      
+        Checking Your Work
+      
+    </span>
   </a>
   
 </li>
@@ -382,14 +497,22 @@
       
         <li class="md-nav__item">
   <a href="#try-it-out" class="md-nav__link">
-    Try it Out
+    <span class="md-ellipsis">
+      
+        Try it Out
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#explore-further" class="md-nav__link">
-    Explore Further
+    <span class="md-ellipsis">
+      
+        Explore Further
+      
+    </span>
   </a>
   
 </li>
@@ -404,14 +527,26 @@
     
       
       
-      
-
+  
   
   
   
     <li class="md-nav__item">
       <a href="../multi-kms-key/" class="md-nav__link">
-        Exercise 2
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercise 2
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -419,14 +554,26 @@
     
       
       
-      
-
+  
   
   
   
     <li class="md-nav__item">
       <a href="../encryption-context/" class="md-nav__link">
-        Exercise 3
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercise 3
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -434,14 +581,26 @@
     
       
       
-      
-
+  
   
   
   
     <li class="md-nav__item">
       <a href="../clean-up-and-closing/" class="md-nav__link">
-        Clean Up and Closing
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clean Up and Closing
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -449,14 +608,26 @@
     
       
       
-      
-
+  
   
   
   
     <li class="md-nav__item">
       <a href="../tips-and-troubleshooting/" class="md-nav__link">
-        Tips and Troubleshooting
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips and Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -490,29 +661,45 @@
       
         <li class="md-nav__item">
   <a href="#background" class="md-nav__link">
-    Background
+    <span class="md-ellipsis">
+      
+        Background
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#lets-go" class="md-nav__link">
-    Let's Go!
+    <span class="md-ellipsis">
+      
+        Let's Go!
+      
+    </span>
   </a>
   
-    <nav class="md-nav" aria-label="Let's Go!">
+    <nav class="md-nav" aria-label="Let&#39;s Go!">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#starting-directory" class="md-nav__link">
-    Starting Directory
+    <span class="md-ellipsis">
+      
+        Starting Directory
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#step-1-add-the-esdk-dependency" class="md-nav__link">
-    Step 1: Add the ESDK Dependency
+    <span class="md-ellipsis">
+      
+        Step 1: Add the ESDK Dependency
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 1: Add the ESDK Dependency">
@@ -520,7 +707,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -532,7 +723,11 @@
         
           <li class="md-nav__item">
   <a href="#step-2-add-encryption-to-store" class="md-nav__link">
-    Step 2: Add Encryption to store
+    <span class="md-ellipsis">
+      
+        Step 2: Add Encryption to store
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 2: Add Encryption to store">
@@ -540,7 +735,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened_1" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -552,7 +751,11 @@
         
           <li class="md-nav__item">
   <a href="#step-3-add-decryption-to-retrieve" class="md-nav__link">
-    Step 3: Add Decryption to retrieve
+    <span class="md-ellipsis">
+      
+        Step 3: Add Decryption to retrieve
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 3: Add Decryption to retrieve">
@@ -560,7 +763,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened_2" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -572,7 +779,11 @@
         
           <li class="md-nav__item">
   <a href="#step-4-configure-the-faythe-kms-key-in-the-encryption-sdk" class="md-nav__link">
-    Step 4: Configure the Faythe KMS Key in the Encryption SDK
+    <span class="md-ellipsis">
+      
+        Step 4: Configure the Faythe KMS Key in the Encryption SDK
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Step 4: Configure the Faythe KMS Key in the Encryption SDK">
@@ -580,7 +791,11 @@
         
           <li class="md-nav__item">
   <a href="#what-happened_3" class="md-nav__link">
-    What Happened?
+    <span class="md-ellipsis">
+      
+        What Happened?
+      
+    </span>
   </a>
   
 </li>
@@ -592,7 +807,11 @@
         
           <li class="md-nav__item">
   <a href="#checking-your-work" class="md-nav__link">
-    Checking Your Work
+    <span class="md-ellipsis">
+      
+        Checking Your Work
+      
+    </span>
   </a>
   
 </li>
@@ -604,14 +823,22 @@
       
         <li class="md-nav__item">
   <a href="#try-it-out" class="md-nav__link">
-    Try it Out
+    <span class="md-ellipsis">
+      
+        Try it Out
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#explore-further" class="md-nav__link">
-    Explore Further
+    <span class="md-ellipsis">
+      
+        Explore Further
+      
+    </span>
   </a>
   
 </li>
@@ -624,14 +851,16 @@
               </div>
             
           
-          <div class="md-content" data-md-component="content">
-            <article class="md-content__inner md-typeset">
+          
+            <div class="md-content" data-md-component="content">
               
+              <article class="md-content__inner md-typeset">
                 
-  <a href="https://github.com/aws-samples/busy-engineers-document-bucket/edit/master/docs/adding-the-encryption-sdk.md" title="Edit this page" class="md-content__button md-icon">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
-  </a>
+                  
 
+
+  
+  
 
 
 <h1 id="exercise-1-add-the-aws-encryption-sdk">Exercise 1: Add the AWS Encryption SDK</h1>
@@ -645,19 +874,19 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Java</label><label for="__tabbed_1_2">Typescript Node.JS</label><label for="__tabbed_1_3">JavaScript Node.JS</label><label for="__tabbed_1_4">Python</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/java/add-esdk-start
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/java/add-esdk-start
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-typescript/add-esdk-start
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/node-typescript/add-esdk-start
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-javascript/add-esdk-start
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/node-javascript/add-esdk-start
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/python/add-esdk-start
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/python/add-esdk-start
 </code></pre></div></td></tr></table></div>
 </div>
 </div>
@@ -711,50 +940,50 @@
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
-<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
-<span class="kn">package</span><span class="w"> </span><span class="nn">sfw.example.esdkworkshop</span><span class="p">;</span><span class="w"></span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span>
+<span class="kn">package</span><span class="w"> </span><span class="nn">sfw.example.esdkworkshop</span><span class="p">;</span>
 
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.AwsCrypto</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.CommitmentPolicy</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.CryptoResult</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.MasterKey</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.MasterKeyProvider</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.kms.KmsMasterKey</span><span class="p">;</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.AwsCrypto</span><span class="p">;</span>
+</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.CommitmentPolicy</span><span class="p">;</span>
+</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.CryptoResult</span><span class="p">;</span>
+</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.MasterKey</span><span class="p">;</span>
+</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.MasterKeyProvider</span><span class="p">;</span>
+</span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.kms.KmsMasterKey</span><span class="p">;</span>
 </span>
-<span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">bucketName</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span><span class="w"></span>
+<span class="p">...</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">bucketName</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">;</span>
+</span><span class="hll"><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span>
 </span>
-<span class="p">...</span><span class="w"></span>
+<span class="p">...</span>
 
-<span class="kd">public</span><span class="w"> </span><span class="nf">Api</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="w">    </span><span class="n">AmazonDynamoDB</span><span class="w"> </span><span class="n">ddbClient</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">tableName</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">bucketName</span><span class="p">,</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">MasterKeyProvider</span><span class="o">&lt;?</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">MasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mkp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-</span><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">ddbClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ddbClient</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">tableName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s3Client</span><span class="w"></span>
-<span class="w">  </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">awsEncryptionSdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="p">.</span><span class="na">withCommitmentPolicy</span><span class="p">(</span><span class="n">CommitmentPolicy</span><span class="p">.</span><span class="na">ForbidEncryptAllowDecrypt</span><span class="p">)</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="p">.</span><span class="na">build</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span><span class="w"></span>
-</span><span class="p">}</span><span class="w"></span>
+<span class="kd">public</span><span class="w"> </span><span class="nf">Api</span><span class="p">(</span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="w">    </span><span class="n">AmazonDynamoDB</span><span class="w"> </span><span class="n">ddbClient</span><span class="p">,</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">tableName</span><span class="p">,</span>
+<span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="p">,</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">bucketName</span><span class="p">,</span>
+<span class="hll"><span class="w">    </span><span class="n">MasterKeyProvider</span><span class="o">&lt;?</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">MasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mkp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">ddbClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ddbClient</span><span class="p">;</span>
+<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">tableName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tableName</span><span class="p">;</span>
+<span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s3Client</span>
+<span class="w">  </span><span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">awsEncryptionSdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AwsCrypto</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span class="hll"><span class="w">      </span><span class="p">.</span><span class="na">withCommitmentPolicy</span><span class="p">(</span><span class="n">CommitmentPolicy</span><span class="p">.</span><span class="na">ForbidEncryptAllowDecrypt</span><span class="p">)</span>
+</span><span class="hll"><span class="w">      </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</span><span class="hll"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mkp</span><span class="p">;</span>
+</span><span class="p">}</span>
 
-<span class="c1">// Save and close.</span><span class="w"></span>
-<span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/App.java</span><span class="w"></span>
-<span class="kn">package</span><span class="w"> </span><span class="nn">sfw.example.esdkworkshop</span><span class="p">;</span><span class="w"></span>
+<span class="c1">// Save and close.</span>
+<span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/App.java</span>
+<span class="kn">package</span><span class="w"> </span><span class="nn">sfw.example.esdkworkshop</span><span class="p">;</span>
 
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider</span><span class="p">;</span><span class="w"></span>
-</span><span class="c1">// Save and close.</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider</span><span class="p">;</span>
+</span><span class="c1">// Save and close.</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -776,25 +1005,25 @@
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span><span class="w"></span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span>
 
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span><span class="w"></span>
-</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span><span class="w"></span>
-</span><span class="hll"><span class="p">)</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">;</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span>
+</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span>
+</span><span class="hll"><span class="p">)</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 
-<span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="c1">// Edit ./src/retrieve.ts</span>
 
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">;</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">decryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span><span class="w"></span>
-</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span><span class="w"></span>
-</span><span class="hll"><span class="p">)</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">;</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">decryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span>
+</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span>
+</span><span class="hll"><span class="p">)</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -816,25 +1045,25 @@
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span><span class="w"></span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span>
 
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">);</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span><span class="w"></span>
-</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span><span class="w"></span>
-</span><span class="hll"><span class="p">)</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">);</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">encryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span>
+</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span>
+</span><span class="hll"><span class="p">)</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 
-<span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
+<span class="c1">// Edit ./retrieve.js</span>
 
-<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">);</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">decryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span><span class="w"></span>
-</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span><span class="w"></span>
-</span><span class="hll"><span class="p">)</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add the ESDK Dependency</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">,</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">,</span><span class="w"> </span><span class="nx">CommitmentPolicy</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@aws-crypto/client-node&quot;</span><span class="p">);</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">decryptStream</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">buildClient</span><span class="p">(</span>
+</span><span class="hll"><span class="w">    </span><span class="nx">CommitmentPolicy</span><span class="p">.</span><span class="nx">REQUIRE_ENCRYPT_REQUIRE_DECRYPT</span>
+</span><span class="hll"><span class="p">)</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -862,19 +1091,19 @@
 <span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Edit src/document_bucket/__init__.py</span>
 
 <span class="c1"># ADD-ESDK-START: Add the ESDK Dependency</span>
-<span class="hll"><span class="kn">import</span> <span class="nn">aws_encryption_sdk</span>
+<span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">aws_encryption_sdk</span>
 </span>
 <span class="c1"># Save and exit</span>
 <span class="c1"># Edit src/document_bucket/api.py</span>
 
 <span class="c1"># ADD-ESDK-START: Add the ESDK Dependency</span>
-<span class="hll"><span class="kn">import</span> <span class="nn">aws_encryption_sdk</span>
-</span><span class="hll"><span class="kn">from</span> <span class="nn">aws_encryption_sdk</span> <span class="kn">import</span> <span class="n">StrictAwsKmsMasterKeyProvider</span>  <span class="c1"># type: ignore</span>
-</span><span class="hll"><span class="kn">from</span> <span class="nn">aws_encryption_sdk.identifiers</span> <span class="kn">import</span> <span class="n">CommitmentPolicy</span>
+<span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">aws_encryption_sdk</span>
+</span><span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">aws_encryption_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrictAwsKmsMasterKeyProvider</span>  <span class="c1"># type: ignore</span>
+</span><span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">aws_encryption_sdk.identifiers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommitmentPolicy</span>
 </span>
 <span class="c1"># Add a Master Key Provider to your __init__</span>
 <span class="c1"># ADD-ESDK-START: Add the ESDK Dependency</span>
-<span class="hll"><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">master_key_provider</span><span class="p">:</span> <span class="n">StrictAwsKmsMasterKeyProvider</span><span class="p">):</span>
+<span class="hll"><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">master_key_provider</span><span class="p">:</span> <span class="n">StrictAwsKmsMasterKeyProvider</span><span class="p">):</span>
 </span>    <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span>
     <span class="c1"># ADD-ESDK-START: Add the ESDK Dependency</span>
@@ -902,14 +1131,14 @@
 <span class="normal">5</span>
 <span class="normal">6</span>
 <span class="normal">7</span>
-<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
-<span class="kd">public</span><span class="w"> </span><span class="n">PointerItem</span><span class="w"> </span><span class="nf">store</span><span class="p">(</span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Encryption to store</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">encryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span><span class="w"></span>
-</span><span class="hll"><span class="w">    </span><span class="n">DocumentBundle</span><span class="w"> </span><span class="n">bundle</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
-</span><span class="hll"><span class="w">        </span><span class="n">DocumentBundle</span><span class="p">.</span><span class="na">fromDataAndContext</span><span class="p">(</span><span class="n">encryptedMessage</span><span class="p">.</span><span class="na">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">context</span><span class="p">);</span><span class="w"></span>
-</span><span class="w">    </span><span class="n">writeItem</span><span class="p">(</span><span class="n">bundle</span><span class="p">.</span><span class="na">getPointer</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="p">...</span><span class="w"></span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">PointerItem</span><span class="w"> </span><span class="nf">store</span><span class="p">(</span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Encryption to store</span>
+<span class="hll"><span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">encryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+</span><span class="hll"><span class="w">    </span><span class="n">DocumentBundle</span><span class="w"> </span><span class="n">bundle</span><span class="w"> </span><span class="o">=</span>
+</span><span class="hll"><span class="w">        </span><span class="n">DocumentBundle</span><span class="p">.</span><span class="na">fromDataAndContext</span><span class="p">(</span><span class="n">encryptedMessage</span><span class="p">.</span><span class="na">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">context</span><span class="p">);</span>
+</span><span class="w">    </span><span class="n">writeItem</span><span class="p">(</span><span class="n">bundle</span><span class="p">.</span><span class="na">getPointer</span><span class="p">());</span>
+<span class="w">    </span><span class="p">...</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -918,12 +1147,12 @@
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span><span class="w"></span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span>
 
-<span class="c1">// ADD-ESDK-START: Add Encryption to store</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fileStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">encryptStream</span><span class="p">(</span><span class="nx">encryptKeyring</span><span class="p">));</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add Encryption to store</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fileStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">encryptStream</span><span class="p">(</span><span class="nx">encryptKeyring</span><span class="p">));</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -932,12 +1161,12 @@
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span><span class="w"></span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span>
 
-<span class="c1">// ADD-ESDK-START: Add Encryption to store</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fileStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">encryptStream</span><span class="p">(</span><span class="nx">encryptKeyring</span><span class="p">));</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add Encryption to store</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fileStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">encryptStream</span><span class="p">(</span><span class="nx">encryptKeyring</span><span class="p">));</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -990,14 +1219,14 @@
 <span class="normal">5</span>
 <span class="normal">6</span>
 <span class="normal">7</span>
-<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span><span class="w"></span>
-<span class="c1">// Find retrieve(...)</span><span class="w"></span>
-<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getObjectData</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">decryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">decryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span><span class="w"></span>
-</span><span class="w">    </span><span class="n">PointerItem</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getPointerItem</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">DocumentBundle</span><span class="p">.</span><span class="na">fromDataAndPointer</span><span class="p">(</span><span class="n">decryptedMessage</span><span class="p">.</span><span class="na">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">pointer</span><span class="p">);</span><span class="w"></span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/Api.java</span>
+<span class="c1">// Find retrieve(...)</span>
+<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getObjectData</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span>
+<span class="hll"><span class="w">    </span><span class="n">CryptoResult</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]</span><span class="p">,</span><span class="w"> </span><span class="n">KmsMasterKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">decryptedMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">awsEncryptionSdk</span><span class="p">.</span><span class="na">decryptData</span><span class="p">(</span><span class="n">mkp</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+</span><span class="w">    </span><span class="n">PointerItem</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getPointerItem</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span>
+<span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">DocumentBundle</span><span class="p">.</span><span class="na">fromDataAndPointer</span><span class="p">(</span><span class="n">decryptedMessage</span><span class="p">.</span><span class="na">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">pointer</span><span class="p">);</span>
 </span></code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1009,15 +1238,15 @@
 <span class="normal">6</span>
 <span class="normal">7</span>
 <span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/retrieve.ts</span>
 
-<span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span><span class="w"></span>
-<span class="k">return</span><span class="w"> </span><span class="nx">s3</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">));</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span>
+<span class="k">return</span><span class="w"> </span><span class="nx">s3</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span>
+<span class="hll"><span class="w">    </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">));</span>
 </span>
-<span class="c1">// Save and Exit</span><span class="w"></span>
+<span class="c1">// Save and Exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1029,15 +1258,15 @@
 <span class="normal">6</span>
 <span class="normal">7</span>
 <span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./retrieve.js</span>
 
-<span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span><span class="w"></span>
-<span class="k">return</span><span class="w"> </span><span class="nx">s3</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">));</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Add Decryption to retrieve</span>
+<span class="k">return</span><span class="w"> </span><span class="nx">s3</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span><span class="w"> </span><span class="nx">Bucket</span><span class="p">,</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">()</span>
+<span class="hll"><span class="w">    </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">decryptStream</span><span class="p">(</span><span class="nx">decryptKeyring</span><span class="p">));</span>
 </span>
-<span class="c1">// Save and Exit</span><span class="w"></span>
+<span class="c1">// Save and Exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1102,17 +1331,17 @@
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/App.java</span><span class="w"></span>
-<span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AmazonS3ClientBuilder</span><span class="p">.</span><span class="na">defaultClient</span><span class="p">();</span><span class="w"></span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/main/java/sfw/example/esdkworkshop/App.java</span>
+<span class="w">    </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AmazonS3ClientBuilder</span><span class="p">.</span><span class="na">defaultClient</span><span class="p">();</span>
 
-<span class="w">    </span><span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// Load configuration of KMS resources</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateConfig</span><span class="p">.</span><span class="na">contents</span><span class="p">.</span><span class="na">state</span><span class="p">.</span><span class="na">FaytheKmsKey</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span>
+<span class="w">    </span><span class="c1">// Load configuration of KMS resources</span>
+<span class="hll"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateConfig</span><span class="p">.</span><span class="na">contents</span><span class="p">.</span><span class="na">state</span><span class="p">.</span><span class="na">FaytheKmsKey</span><span class="p">;</span>
 </span>
-<span class="w">    </span><span class="c1">// Set up the Master Key Provider to use KMS</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="n">KmsMasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KmsMasterKeyProvider</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">buildStrict</span><span class="p">(</span><span class="n">faytheKmsKey</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// Set up the Master Key Provider to use KMS</span>
+<span class="hll"><span class="w">    </span><span class="n">KmsMasterKeyProvider</span><span class="w"> </span><span class="n">mkp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KmsMasterKeyProvider</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">buildStrict</span><span class="p">(</span><span class="n">faytheKmsKey</span><span class="p">);</span>
 </span>
-<span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Api</span><span class="p">(</span><span class="n">ddbClient</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">,</span><span class="w"> </span><span class="n">s3Client</span><span class="p">,</span><span class="w"> </span><span class="n">bucketName</span><span class="p">,</span><span class="w"> </span><span class="n">mkp</span><span class="p">);</span><span class="w"></span>
+<span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Api</span><span class="p">(</span><span class="n">ddbClient</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">,</span><span class="w"> </span><span class="n">s3Client</span><span class="p">,</span><span class="w"> </span><span class="n">bucketName</span><span class="p">,</span><span class="w"> </span><span class="n">mkp</span><span class="p">);</span>
 </span></code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1132,23 +1361,23 @@
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span><span class="w"></span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./src/store.ts</span>
 
-<span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"></span>
-</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="kt">faytheKmsKey</span><span class="w"></span>
-</span><span class="hll"><span class="p">});</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span>
+</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="kt">faytheKmsKey</span>
+</span><span class="hll"><span class="p">});</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 
-<span class="c1">// Edit ./src/retrieve.ts</span><span class="w"></span>
+<span class="c1">// Edit ./src/retrieve.ts</span>
 
-<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s KMS Key for decrypting.</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheKmsKey</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s KMS Key for decrypting.</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheKmsKey</span><span class="p">]</span><span class="w"> </span><span class="p">});</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1168,23 +1397,23 @@
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span><span class="w"></span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Edit ./store.js</span>
 
-<span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"></span>
-</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"></span>
-</span><span class="hll"><span class="p">});</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Configure the Faythe KMS Key in the Encryption SDK</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">encryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span>
+</span><span class="hll"><span class="nx">generatorKeyId</span><span class="o">:</span><span class="w"> </span><span class="nx">faytheKmsKey</span>
+</span><span class="hll"><span class="p">});</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 
-<span class="c1">// Edit ./retrieve.js</span><span class="w"></span>
+<span class="c1">// Edit ./retrieve.js</span>
 
-<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s KMS Key for decrypting.</span><span class="w"></span>
-<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span><span class="w"></span>
-</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheKmsKey</span><span class="p">]</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="c1">// ADD-ESDK-START: Set up a keyring to use Faythe&#39;s KMS Key for decrypting.</span>
+<span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">faytheKmsKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">getFaytheKmsKey</span><span class="p">();</span>
+</span><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">decryptKeyring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KmsKeyringNode</span><span class="p">({</span><span class="w"> </span><span class="nx">keyIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">faytheKmsKey</span><span class="p">]</span><span class="w"> </span><span class="p">});</span>
 </span>
-<span class="c1">// Save and exit</span><span class="w"></span>
+<span class="c1">// Save and exit</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1228,19 +1457,19 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="6:4"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><input id="__tabbed_6_4" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Java</label><label for="__tabbed_6_2">Typescript Node.JS</label><label for="__tabbed_6_3">JavaScript Node.JS</label><label for="__tabbed_6_4">Python</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/java/add-esdk-complete
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/java/add-esdk-complete
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-typescript/add-esdk-complete
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/node-typescript/add-esdk-complete
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/node-javascript/add-esdk-complete
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/node-javascript/add-esdk-complete
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span> ~/environment/workshop/exercises/python/add-esdk-complete
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/environment/workshop/exercises/python/add-esdk-complete
 </code></pre></div></td></tr></table></div>
 </div>
 </div>
@@ -1277,23 +1506,23 @@
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Compile your code</span><span class="w"></span>
-<span class="n">mvn</span><span class="w"> </span><span class="n">compile</span><span class="w"></span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Compile your code</span>
+<span class="n">mvn</span><span class="w"> </span><span class="n">compile</span>
 
-<span class="c1">// To use the API programmatically, use this target to launch jshell</span><span class="w"></span>
-<span class="n">mvn</span><span class="w"> </span><span class="n">jshell</span><span class="p">:</span><span class="n">run</span><span class="w"></span>
-<span class="o">/</span><span class="n">open</span><span class="w"> </span><span class="n">startup</span><span class="p">.</span><span class="na">jsh</span><span class="w"></span>
-<span class="n">Api</span><span class="w"> </span><span class="n">documentBucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="p">.</span><span class="na">initializeDocumentBucket</span><span class="p">();</span><span class="w"></span>
-<span class="n">documentBucket</span><span class="p">.</span><span class="na">list</span><span class="p">();</span><span class="w"></span>
-<span class="n">documentBucket</span><span class="p">.</span><span class="na">store</span><span class="p">(</span><span class="s">&quot;Store me in the Document Bucket!&quot;</span><span class="p">.</span><span class="na">getBytes</span><span class="p">());</span><span class="w"></span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">PointerItem</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">documentBucket</span><span class="p">.</span><span class="na">list</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">DocumentBundle</span><span class="w"> </span><span class="n">document</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">documentBucket</span><span class="p">.</span><span class="na">retrieve</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="na">partitionKey</span><span class="p">().</span><span class="na">getS</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">document</span><span class="p">.</span><span class="na">getPointer</span><span class="p">().</span><span class="na">partitionKey</span><span class="p">().</span><span class="na">getS</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; : &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">document</span><span class="p">.</span><span class="na">getData</span><span class="p">(),</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">nio</span><span class="p">.</span><span class="na">charset</span><span class="p">.</span><span class="na">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">));</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
-<span class="c1">// Ctrl+D to exit jshell</span><span class="w"></span>
+<span class="c1">// To use the API programmatically, use this target to launch jshell</span>
+<span class="n">mvn</span><span class="w"> </span><span class="n">jshell</span><span class="p">:</span><span class="n">run</span>
+<span class="o">/</span><span class="n">open</span><span class="w"> </span><span class="n">startup</span><span class="p">.</span><span class="na">jsh</span>
+<span class="n">Api</span><span class="w"> </span><span class="n">documentBucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="p">.</span><span class="na">initializeDocumentBucket</span><span class="p">();</span>
+<span class="n">documentBucket</span><span class="p">.</span><span class="na">list</span><span class="p">();</span>
+<span class="n">documentBucket</span><span class="p">.</span><span class="na">store</span><span class="p">(</span><span class="s">&quot;Store me in the Document Bucket!&quot;</span><span class="p">.</span><span class="na">getBytes</span><span class="p">());</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">PointerItem</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">documentBucket</span><span class="p">.</span><span class="na">list</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">DocumentBundle</span><span class="w"> </span><span class="n">document</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">documentBucket</span><span class="p">.</span><span class="na">retrieve</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="na">partitionKey</span><span class="p">().</span><span class="na">getS</span><span class="p">());</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">document</span><span class="p">.</span><span class="na">getPointer</span><span class="p">().</span><span class="na">partitionKey</span><span class="p">().</span><span class="na">getS</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; : &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">document</span><span class="p">.</span><span class="na">getData</span><span class="p">(),</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">nio</span><span class="p">.</span><span class="na">charset</span><span class="p">.</span><span class="na">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="c1">// Ctrl+D to exit jshell</span>
 
-<span class="c1">// Or, to run logic that you write in App.java, use this target after compile</span><span class="w"></span>
-<span class="n">mvn</span><span class="w"> </span><span class="n">exec</span><span class="p">:</span><span class="n">java</span><span class="w"></span>
+<span class="c1">// Or, to run logic that you write in App.java, use this target after compile</span>
+<span class="n">mvn</span><span class="w"> </span><span class="n">exec</span><span class="p">:</span><span class="n">java</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1309,19 +1538,19 @@
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span><span class="w"></span>
-<span class="nx">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./list.js&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="nx">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="nx">retrieve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./retrieve&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
-<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">)).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="c1">// Just storing the s3 key</span><span class="w"></span>
-<span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span><span class="w"></span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
-<span class="p">})</span><span class="w"></span>
-<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
-<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span><span class="w"></span>
-<span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span>
+<span class="nx">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./list.js&quot;</span><span class="p">)</span>
+<span class="nx">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">)</span>
+<span class="nx">retrieve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./retrieve&quot;</span><span class="p">)</span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span>
+<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./store.js&quot;</span><span class="p">)).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Just storing the s3 key</span>
+<span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span>
+<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span>
+<span class="c1">// Ctrl-D when finished to exit the REPL</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1330,12 +1559,12 @@
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.js list
-./cli.js store ./store.js
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.js<span class="w"> </span>list
+./cli.js<span class="w"> </span>store<span class="w"> </span>./store.js
 <span class="c1"># Note the &quot;Key&quot; value</span>
-./cli.js list
+./cli.js<span class="w"> </span>list
 <span class="c1"># Note the &quot;reference&quot; value</span>
-./cli.js retrieve <span class="nv">$KeyOrReferenceValue</span>
+./cli.js<span class="w"> </span>retrieve<span class="w"> </span><span class="nv">$KeyOrReferenceValue</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1351,19 +1580,19 @@
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="nx">ts</span><span class="o">-</span><span class="nx">node</span><span class="o">/</span><span class="nx">register</span><span class="w"></span>
-<span class="p">;({</span><span class="nx">list</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/list.ts&quot;</span><span class="p">))</span><span class="w"></span>
-<span class="p">;({</span><span class="nx">store</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">))</span><span class="w"></span>
-<span class="p">;({</span><span class="nx">retrieve</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/retrieve.ts&quot;</span><span class="p">))</span><span class="w"></span>
-<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
-<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">)).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="c1">// Just storing the s3 key</span><span class="w"></span>
-<span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span><span class="w"></span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"></span>
-<span class="p">})</span><span class="w"></span>
-<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span><span class="w"></span>
-<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span><span class="w"></span>
-<span class="c1">// Ctrl-D when finished to exit the REPL</span><span class="w"></span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">node</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="nx">ts</span><span class="o">-</span><span class="nx">node</span><span class="o">/</span><span class="nx">register</span>
+<span class="p">;({</span><span class="nx">list</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/list.ts&quot;</span><span class="p">))</span>
+<span class="p">;({</span><span class="nx">store</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">))</span>
+<span class="p">;({</span><span class="nx">retrieve</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./src/retrieve.ts&quot;</span><span class="p">))</span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span>
+<span class="nx">store</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&quot;./src/store.ts&quot;</span><span class="p">)).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Just storing the s3 key</span>
+<span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Key</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span>
+<span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="nx">retrieve</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">)})()</span>
+<span class="c1">// Ctrl-D when finished to exit the REPL</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1372,12 +1601,12 @@
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.ts list
-./cli.ts store ./src/store.ts
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code>./cli.ts<span class="w"> </span>list
+./cli.ts<span class="w"> </span>store<span class="w"> </span>./src/store.ts
 <span class="c1"># Note the &quot;Key&quot; value</span>
-./cli.ts list
+./cli.ts<span class="w"> </span>list
 <span class="c1"># Note the &quot;reference&quot; value</span>
-./cli.ts retrieve <span class="nv">$KeyOrReferenceValue</span>
+./cli.ts<span class="w"> </span>retrieve<span class="w"> </span><span class="nv">$KeyOrReferenceValue</span>
 </code></pre></div></td></tr></table></div>
 </div>
 <div class="tabbed-block">
@@ -1389,7 +1618,7 @@
 <span class="normal">6</span>
 <span class="normal">7</span>
 <span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">repl</span>
-<span class="kn">import</span> <span class="nn">document_bucket</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">document_bucket</span>
 <span class="n">ops</span> <span class="o">=</span> <span class="n">document_bucket</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="n">ops</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 <span class="n">item</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some data&#39;</span><span class="p">)</span>
@@ -1411,53 +1640,30 @@
 <h1 id="next-exercise">Next exercise</h1>
 <p>Now that you are encrypting and decrypting, how about <a href="../multi-kms-key/">adding Multiple KMS Keys</a>?</p>
 
-              
-            </article>
-            
-  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
 
-          </div>
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="../getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting Started" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Getting Started
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../multi-kms-key/" class="md-footer__link md-footer__link--next" aria-label="Next: Exercise 2" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Exercise 2
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -1475,42 +1681,51 @@
   
 </div>
       
-        <div class="md-social">
+        
+<div class="md-social">
   
+    
+    
     
     
       
       
     
     <a href="https://awssecworkshops.com" target="_blank" rel="noopener" title="awssecworkshops.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.1c0 2.8-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40h-16c-1.1 0-2.2-.9-3.3-.1-1.4-.8-2.8.1-4.2.1H392c-22.1 0-40-17.9-40-40v-88c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32v88c0 22.1-17.9 40-40 40h-55.9c-1.5 0-3-.1-4.5-.2-1.2.1-2.4.2-3.6.2h-16c-22.09 0-40-17.9-40-40V360c0-.9.03-1.9.09-2.8v-69.6H32.05C14.02 287.6 0 273.5 0 255.5c0-9 3.004-17 10.01-24L266.4 8.016c7-7.014 15-8.016 22-8.016s15 2.004 21.1 7.014L564.8 231.5c8 7 12.1 15 11 24z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272h16v176c0 35.3 28.7 64 64 64h288c35.3 0 64-28.7 64-64V272h16c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1zM240 320h32c26.5 0 48 21.5 48 48v96H192v-96c0-26.5 21.5-48 48-48"/></svg>
     </a>
   
+    
+    
     
     
       
       
     
     <a href="https://aws.amazon.com/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M256-.008c4.7 0 9.2 1.016 13.4 2.921L457.7 82.79c22 9.33 38.5 31.01 38.3 56.31-.5 100.1-41.3 281.6-213.6 364.1-16.7 7.9-36.1 7.9-52.8 0-172.35-82.5-213.11-264-214.5-364.1.77-25.3 17.22-46.98 39.2-56.31L242.7 2.913c4.1-1.905 8.7-2.921 13.3-2.92z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M256 0c4.6 0 9.2 1 13.4 2.9l188.4 79.9c22 9.3 38.4 31 38.3 57.2-.5 99.2-41.3 280.7-213.6 363.2-16.7 8-36.1 8-52.8 0C57.3 420.7 16.6 239.2 16.1 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.9 1 251.4 0 256 0"/></svg>
     </a>
   
+    
+    
     
     
       
       
     
     <a href="https://twitter.com/awssecurityinfo?lang=en" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
     </a>
   
+    
+    
     
     
       
       
     
     <a href="https://aws.amazon.com/blogs/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M384 32H64C28.65 32 0 60.66 0 96v320c0 35.34 28.65 64 64 64h320c35.35 0 64-28.66 64-64V96c0-35.34-28.7-64-64-64zM150.6 374.6c-6.2 6.3-14.4 9.4-22.6 9.4s-16.38-3.121-22.63-9.371c-12.5-12.5-12.5-32.76 0-45.26C111.6 323.1 119.8 320 128 320s16.38 3.121 22.63 9.371C163.1 341.9 163.1 362.1 150.6 374.6zm99 9.3c-.6-.8-1.1.1-2.5.1-12.53 0-23.09-9.75-23.92-22.44C220.5 306.9 173.1 259.5 118.4 255.9c-13.22-.844-23.25-12.28-22.39-25.5.86-13.25 12.41-22.81 25.52-22.38 77.86 5.062 145.3 72.5 150.4 150.4.87 13.28-9.13 24.68-22.33 25.48zm95.4-.8c-.3.9-.7.9-1.9.9-12.8 0-23.42-10.09-23.97-23C315.6 254.6 225.4 164.4 119 159.1c-13.2.3-23.53-10.8-22.98-24.1.56-13.2 11.88-23.8 24.98-23 130.7 5.469 241.5 116.3 246.1 246.1 1.4 14.2-8.8 25.3-22.1 25z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96v320c0 35.3 28.7 64 64 64h320c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64zm32 104c0-13.3 10.7-24 24-24 137 0 248 111 248 248 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-110.5-89.5-200-200-200-13.3 0-24-10.7-24-24m0 96c0-13.3 10.7-24 24-24 83.9 0 152 68.1 152 152 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-57.4-46.6-104-104-104-13.3 0-24-10.7-24-24m0 120a32 32 0 1 1 64 0 32 32 0 1 1-64 0"/></svg>
     </a>
   
 </div>
@@ -1523,10 +1738,15 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "tabs"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

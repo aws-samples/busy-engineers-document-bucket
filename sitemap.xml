@@ -2,37 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://awssecworkshops.com/</loc>
-         <lastmod>2022-07-22</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2026-02-19</lastmod>
     </url>
     <url>
          <loc>https://awssecworkshops.com/adding-the-encryption-sdk/</loc>
-         <lastmod>2022-07-22</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2026-02-19</lastmod>
     </url>
     <url>
          <loc>https://awssecworkshops.com/clean-up-and-closing/</loc>
-         <lastmod>2022-07-22</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2026-02-19</lastmod>
     </url>
     <url>
          <loc>https://awssecworkshops.com/encryption-context/</loc>
-         <lastmod>2022-07-22</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2026-02-19</lastmod>
     </url>
     <url>
          <loc>https://awssecworkshops.com/getting-started/</loc>
-         <lastmod>2022-07-22</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2026-02-19</lastmod>
     </url>
     <url>
          <loc>https://awssecworkshops.com/multi-kms-key/</loc>
-         <lastmod>2022-07-22</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2026-02-19</lastmod>
     </url>
     <url>
          <loc>https://awssecworkshops.com/tips-and-troubleshooting/</loc>
-         <lastmod>2022-07-22</lastmod>
-         <changefreq>daily</changefreq>
+         <lastmod>2026-02-19</lastmod>
     </url>
 </urlset>
