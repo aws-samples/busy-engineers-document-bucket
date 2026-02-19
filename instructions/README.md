@@ -7,10 +7,10 @@ Workshops from https://github.com/aws-samples/aws-security-workshops
 
 ## Requirements
 
-To build locally or build and deploy the site, you need to install the following:
-
-- [MkDocs](https://www.mkdocs.org/)
-- [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+To build locally or build and deploy the site, you need to install dependencies. Run following command to install requirements:
+```
+pip install -r requirements.txt
+```
 
 ## Build Locally
 
